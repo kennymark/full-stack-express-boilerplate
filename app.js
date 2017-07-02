@@ -10,12 +10,12 @@ var path = require('path'),
 
 var app = express();
 var port = process.env.PORT || 8000;
-
-mongoose.connect(process.env.DB_URL, function(){
+var user = require('./models/users');
+mongoose.Promise = global.Promise;
+mongoose.connect(process.env.DB_URL, {useMongoClient: true}, function(err){
+    if (err) throw err;
    console.log('Connected to Database')
 })
-
-mongoose.Promise = global.Promise;
 
 //view engine
 app.engine('hbs', hbs({
@@ -57,6 +57,28 @@ app.use(validator({
 
 app.get('/', function (req, res) {
     res.render('index',{title:'Home'})
+});
+app.get('/register', function (req, res) {
+    res.render('register',{title:'Register'})
+});
+
+app.post('/register', function (req, res) {
+    var data = {
+        name: req.body.name,
+        email: req.body.email,
+        password: req.body.password
+    }
+    console.log(data)
+    var User = new user(data);
+    User.save(function(err, person){
+        if (err){
+            console.log(`Couldn't save to database`)
+        }
+        else{
+            console.log(`New user saved sucessfully ${person}`)
+        }
+    });
+    res.redirect('/')
 });
 
 app.listen(port, function () {
