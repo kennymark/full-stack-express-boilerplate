@@ -1,0 +1,90 @@
+<div class="row">
+  <div class="col-sm-2 border-right sidebar d-flex">
+    <ul class='align-self-center justify-items-center nav'>
+      <li class='nav-item'>
+        <a href="#" class='nav-link'>User</a>
+      </li>
+      <li></li>
+      <li></li>
+    </ul>
+  </div>
+  <div class="col">
+    {{#if users}}
+    <div class="container mt-header">
+      {{!-- <div class="row">
+        <div class="col">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Total No of Users</h5>
+              <h1 class="card-text">
+                {{users.length}}
+              </h1>
+            </div>
+          </div>
+        </div>
+
+        <div class="col">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Add new user</h5>
+              <p class="card-text"></p>
+              <a href="#" class="btn btn-dark">Go somewhere</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="col">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Special title treatment</h5>
+              <p class="card-text"></p>
+              <a href="#" class="btn btn-dark">Go somewhere</a>
+            </div>
+          </div>
+
+        </div>
+      </div> --}}
+
+      <div class="buttons mt-2">
+        <button class="btn btn-light">Create new user</button>
+      </div>
+
+      <div class="input-group mt-4 mb-3">
+        <input type="text" class="form-control" placeholder="Search for user here">
+        <div class="input-group-append">
+          <button class="btn btn-primary" type="button">Search</button>
+        </div>
+      </div>
+
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Created_at</th>
+            <th scope="col">Edit</th>
+            <th scope="col">Delete
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each users}}
+          <tr>
+            <th scope="row">{{@index}}</th>
+            <td>{{this.name}}</td>
+            <td>{{this.email}}</td>
+            <td>{{this.created_at}}</td>
+            <td><button data-id="{{this._id}}" class="btn btn-light">Edit</button></td>
+            <td><button data-id="{{this._id}}" class="btn btn-danger">Delete</button></td>
+          </tr>
+          {{/each}}
+
+        </tbody>
+      </table>
+
+
+    </div>
+    {{/if}}
+  </div>
+</div>

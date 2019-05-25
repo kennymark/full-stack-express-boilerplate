@@ -1,86 +1,54 @@
-var path = require('path'),
-    express = require('express'),
-    bodyParser = require('body-parser'),
-    hbs = require('express-handlebars'),
-    session = require('express-session'),
-    validator = require('express-validator'),
-    mongoose = require('mongoose'),
-    encrypter = require('encrypter');
-    require('dotenv').config();
+import path from 'path';
+import express from 'express';
+import hbs from 'express-handlebars';
+import cors from 'cors';
+import validator from 'express-validator';
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+import { errorFormatter } from './utils/errorFormatter';
+import userRouter from './routes/user.routes';
+import indexRouter from './routes/index.routes';
+import session from 'express-session';
+import config from './utils/config';
+import compression from 'compression';
+import flash from 'express-flash';
+import helmet from 'helmet';
+import { logger } from './utils/util';
 
-var app = express();
-var port = process.env.PORT || 8000;
-var user = require('./models/users');
-mongoose.Promise = global.Promise;
-mongoose.connect(process.env.DB_URL, {useMongoClient: true}, function(err){
-    if (err) throw err;
-   console.log('Connected to Database')
-})
+dotenv.config();
 
-//view engine
-app.engine('hbs', hbs({
-    defaultLayout: 'main',
-    extname: 'hbs'
-}));
+const app = express();
+const port = process.env.PORT || 8000;
 
-app.set('view engine', 'hbs')
-app.set('views', path.join(__dirname, 'views'));
+app.use(session(config.sessionConfig));
+app.use(compression());
+app.use(helmet());
+// app.use(logger);
+
+mongoose
+	.connect(process.env.DB_URL, { useNewUrlParser: true })
+	.then(
+		() => console.log('Connected to Database'),
+		err => console.log('Error connecting to database')
+	);
+
+//view engineconfig
+app.set('view engine', 'hbs');
+app.engine('hbs', hbs(config.hbsConfig));
+app.set('views', path.join('./', 'views'));
 app.use('/public/', express.static('public/'));
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
-app.use(session({
-    secret: 'whateveryoulike',
-    resave: 'true',
-    saveUninitialized: 'true'
-}));
+app.use(cors());
+app.use(flash());
+app.use(validator({ errorFormatter: errorFormatter }));
 
-//body-parsing
-app.use(bodyParser.urlencoded({
-    extended: true
-}));
-app.use(bodyParser.json());
+// routes
+app.get('/', indexRouter);
+app.use('/user', userRouter);
 
+//error 404
+app.get('*', (req, res) => res.render('error404', { data: req.originalUrl }));
 
-app.use(validator({
-    errorFormatter: function (param, msg, value) {
-        var namespace = param.split('.'),
-            root = namespace.shift(),
-            formParam = root;
-
-        while (namespace.length) {
-            formParam += '[' + namespace.shift() + ']';
-        }
-        return {
-            msg: msg,
-        };
-    }
-}));
-
-app.get('/', function (req, res) {
-    res.render('index',{title:'Home'})
-});
-app.get('/register', function (req, res) {
-    res.render('register',{title:'Register'})
-});
-
-app.post('/register', function (req, res) {
-    var data = {
-        name: req.body.name,
-        email: req.body.email,
-        password: req.body.password
-    }
-    console.log(data)
-    var User = new user(data);
-    User.save(function(err, person){
-        if (err){
-            console.log(`Couldn't save to database`)
-        }
-        else{
-            console.log(`New user saved sucessfully ${person}`)
-        }
-    });
-    res.redirect('/')
-});
-
-app.listen(port, function () {
-    console.log(`Running at http://localhost:${port}`)
-})
+app.listen(port, () => console.log(`Running at http://localhost:${port}`));
