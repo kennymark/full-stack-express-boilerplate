@@ -4,7 +4,7 @@ import bcrypt from 'bcryptjs';
 import moment from 'moment/moment';
 
 class UserController {
-	now = moment();
+	now = moment;
 	showLogin(req, res) {
 		res.render('login', { title: 'Login' });
 	}
@@ -17,6 +17,10 @@ class UserController {
 		res.render('register', { title: 'Register' });
 	}
 
+	transformUsers(item) {
+		return (item.created_at = moment(item.created_at, 'YYYYMMDD').fromNow());
+	}
+
 	async isAdmin(person, res) {
 		if (person.isAdmin === true) {
 			const allUsers = await user.find({}).exec();
@@ -24,26 +28,31 @@ class UserController {
 			return res.render('admin', { title: 'Admin', users: allUsers });
 		}
 	}
+
 	async postUserlogin(req, res, next) {
 		const { body } = req;
+		const { render } = res;
 		try {
 			const person = await user.findOne({ email: body.email }).exec();
-			// console.log('person', new Date(), person);
 			if (!person) {
-				return res.render('login', { error: 'User does not exist' });
+				return render('login', { error: 'User does not exist' });
 			}
 			if (person.isAdmin === true) {
 				const allUsers = await user.find({}).exec();
 				console.log(allUsers);
-				return res.render('admin', { title: 'Admin', users: allUsers });
+				return render('admin', { title: 'Admin', users: allUsers });
 			}
 			if (!bcrypt.compareSync(body.password, person.password)) {
-				return res.render('login', { error: 'The password is invalid' });
+				return render('login', { error: 'The password is invalid' });
 			}
-			res.render('profile', { person, date: this.now.format('MMMM Do YYYY') });
+			render('profile', { person, date: moment().format('MMMM Do YYYY') });
 		} catch (error) {
-			res.render('login', { error });
+			render('login', { error });
 		}
+	}
+
+	twitterLogin(req, res) {
+		res.redirect('/');
 	}
 
 	async deleteUser(req, res) {
@@ -60,7 +69,10 @@ class UserController {
 	async updateUser(req, res) {
 		const id = req.body.id || req.params.id;
 		try {
-			const person = await user.findByIdAndDelete(id).exec();
+			const person = await user.findByIdAndUpdate(id, req.body).exec();
+			if (person) {
+				res.render('index', { message: 'User has been sucessfully updated' });
+			}
 		} catch (error) {}
 	}
 
@@ -69,26 +81,37 @@ class UserController {
 		res.redirect('/');
 	}
 
+	validateRequestBody(req) {}
+
 	async postRegister(req, res, next) {
 		const { body } = req;
+		const { render } = res;
 		req.checkBody('name', 'Name should be greater than 5 characters').isLength(5);
 		req.checkBody('name', 'Name cannot be empty').isLength(5);
 		req.checkBody('email', 'Email is not valid').isEmail();
 		req.checkBody('password', 'Password should be greater than 5 characters').isLength(5);
-
-		const errors = req.validationErrors();
-		console.log(errors);
-
-		try {
-			body.password = bcrypt.hashSync(req.body.password, 10);
-			const User = new user(body);
-			User.save().then(person => {
-				console.log(`New user saved sucessfully ${person.name}`);
-				return res.render('index', { message: 'You have been sucessfully registered' });
+		// this.validateRequestBody(req);
+		const bodyErrors = req.validationErrors();
+		const foundUser = await user.findOne({ email: body.email }).exec();
+		if (foundUser) {
+			return render('register', {
+				error: `User ${foundUser.email} already has been registered, login or reset password`
 			});
-		} catch (error) {
-			console.log(`Couldn't save to database`);
-			res.render('register', { error });
+		} else {
+			if (bodyErrors) {
+				return res.render('register', { bodyErrors });
+			} else {
+				try {
+					body.password = bcrypt.hashSync(req.body.password, 10);
+					user.create(body).then(person => {
+						console.log(`New user saved sucessfully ${person.name}`);
+						return render('index', { message: 'You have been sucessfully registered' });
+					});
+				} catch (error) {
+					console.log(`Couldn't save to database`);
+					render('register', { error });
+				}
+			}
 		}
 	}
 }

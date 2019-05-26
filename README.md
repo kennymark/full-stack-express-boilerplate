@@ -9,22 +9,25 @@ This is a custom express + handlebars starter pack I use for simple applications
 - Register
 - Contact
 - Profile
+- Admin Interface
 
 ## Features
 
 - Fully functional web server + web app
 - Handlebars
-- Bootstrap
-- Logging users
-- Registering users
+- UI with Bootstrap
+- User login
+- User signup
 - Error handling
 - Momentjs
 - Authentization
 - Authorization
 - ES6 && ESNext
+- Input Validation
+- Tests
 
 ## Todo
 
 - JWT integration
-- Dashboard?
+- Admin Dashboard completion
 - Passportjs integration

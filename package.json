@@ -4,7 +4,8 @@
 	"description": "",
 	"main": "index.js",
 	"scripts": {
-		"start": "nodemon  --experimental-modules  --es-module-specifier-resolution=node app.js"
+		"start": "nodemon  --experimental-modules  --es-module-specifier-resolution=node app.js",
+		"test": "ava"
 	},
 	"type": "module",
 	"keywords": [],
@@ -23,10 +24,12 @@
 		"helmet": "^3.18.0",
 		"jsonwebtoken": "8.5.1",
 		"moment": "^2.24.0",
-		"mongoose": "5.5.11"
+		"mongoose": "5.5.11",
+		"passport": "^0.4.0",
+		"passport-twitter": "^1.0.4"
 	},
 	"devDependencies": {
-		"jest": "^24.8.0",
+		"ava": "^1.4.1",
 		"supertest": "^4.0.2"
 	}
 }

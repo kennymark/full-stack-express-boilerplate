@@ -2,6 +2,8 @@ body {
 	font-family: 'Noto Sans HK', Avenir, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
 	height: 100vh !important;
 	overflow-x: hidden;
+	font-smooth: always;
+	-webkit-font-smoothing: antialiased;
 }
 
 h1,
@@ -76,4 +78,8 @@ input {
 }
 input:focus {
 	border-bottom: 3px solid coral;
+}
+
+.navbar {
+	height: 70px;
 }

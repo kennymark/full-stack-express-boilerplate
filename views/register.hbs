@@ -1,17 +1,29 @@
 {{#if error}}
-<center>
+<div class="container text-center">
   <div class="app-alert alert alert-danger" role="alert">
     {{error}}
   </div>
-</center>
+</div>
 {{/if}}
 
-<div class="container mt-big">
-  <div class="col">
-    <h1 class="h1">{{title}} Here</h1>
+{{#if bodyErrors}}
+{{#each bodyErrors}}
+<div class="container text-center">
+  <div class="app-alert alert alert-danger" role="alert">
+    {{this.msg}}
   </div>
-  <div class="col-6">
+</div>
+{{/each}}
+{{/if}}
+
+
+<div class="container mt-header">
+
+  <div class="center mx-auto">
     <form method="POST" action="/user/register" method="POST">
+      <h1 class="h3 mb-3 font-weight-normal">
+        Please signup here
+      </h1>
       <div class="form-group">
         <label for="name">Name</label>
         <input type="text" class="form-control" name="name" aria-describedby="emailHelp" placeholder="Enter name">
@@ -30,5 +42,4 @@
     </form>
 
   </div>
-
 </div>
