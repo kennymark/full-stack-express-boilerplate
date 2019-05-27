@@ -1,6 +1,6 @@
-import db from 'mongoose';
-
-const userSchema = new db.Schema({
+import db from 'mongoose'
+const Schema = db.Schema
+const userSchema = new Schema({
 	name: {
 		type: String,
 		required: true
@@ -32,7 +32,8 @@ const userSchema = new db.Schema({
 	isAdmin: {
 		type: Boolean,
 		default: false
-	}
-});
+	},
+	comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }]
+})
 
-export default db.model('users', userSchema);
+export default db.model('users', userSchema)
