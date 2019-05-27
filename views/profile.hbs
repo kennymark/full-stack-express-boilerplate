@@ -1,23 +1,24 @@
-{{#if person}}
+{{#if data}}
+
 <div class="container-small">
-  <h1 class="title-3">{{date}}</h1>
+  <h2 class="title-4">{{date}}</h2>
   <div class="row">
-    <h1 class="title-3">{{title}}</h1>
+    {{#with data}}
     <div class="col">
-      <p>Welcome {{person.name}}</p>
+      <p>Welcome {{name}}</p>
       <form>
 
         <div class="form-group row">
           <label for="staticEmail" class="col-sm-4 col-form-label">Name</label>
           <div class="col">
-            <input type="text" class="form-control-plaintext" value={{person.name}}>
+            <input type="text" class="form-control-plaintext" value={{name}}>
           </div>
         </div>
 
         <div class="form-group row">
           <label for="staticEmail" class="col-sm-4 col-form-label">Email</label>
           <div class="col">
-            <input type="text" class="form-control-plaintext" value={{person.email}}>
+            <input type="text" class="form-control-plaintext" value={{email}}>
           </div>
         </div>
 
@@ -31,14 +32,18 @@
         <div class="form-group row">
           <label for="staticEmail" class="col-sm-4 col-form-label">Account Created on</label>
           <div class="col">
-            <input type="text" readonly class="form-control-plaintext" value="{{person.created_at}}">
+            <label type="text" readonly class="form-control">
+              {{created_at}}
+            </label>
           </div>
         </div>
 
         <div class="form-group row">
           <label for="staticEmail" class="col-sm-4 col-form-label">Last updated on</label>
           <div class="col">
-            <input type="text" readonly class="form-control-plaintext" value="{{person.updated_at}}">
+            <label type="text" readonly class="form-control">
+              {{updated_at}}
+            </label>
           </div>
         </div>
         <div class="btn btn-primary">Save</div>
@@ -49,24 +54,25 @@
     <div class="col">
       <h3>Account Details</h3>
 
-      <p>Do you wish to freeze your account</p>
+      {{!-- <p>Do you wish to freeze your account</p>
       <small id="emailHelp" class="form-text text-muted">Once frozen, your account won't be available to search engines
         or other users
       </small>
       <button class="btn btn-danger">
         Freeze
-      </button>
+      </button> --}}
 
       <p>Do you wish to delete your account</p>
-      <button class="btn btn-danger">
+      <button class="btn btn-danger" data-id={{_id}}>
         Delete
       </button>
     </div>
+    {{/with}}
   </div>
 </div>
 {{/if}}
 
-{{#unless person}}
+{{#unless data}}
 <div class="container-small">
   <h1 class="title-3">You need to login to view your profile</h1>
   <a href="/user/login">
@@ -76,3 +82,10 @@
   </a>
 </div>
 {{/unless}}
+
+{{#if token}}
+<script type="text/javascript" async>
+  const token = '{{token}}';
+  localStorage.setItem("token", token)
+</script>
+{{/if}}

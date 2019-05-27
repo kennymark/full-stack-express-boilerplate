@@ -1,11 +1,11 @@
 import jwt from 'jsonwebtoken';
-import express from 'express';
-
+import config from '../utils/config';
 class JwtConfig {
-	token = '';
-
-	encode({ payload, secret }) {
-		return (this.token = jwt.sign(payload, secret, { expiresIn: '2 days', issuer: 'Kenny Mark' }));
+	encode(payload) {
+		return jwt.sign(payload, config.jwtSecret, {
+			expiresIn: '2 days',
+			issuer: 'Kenny Mark'
+		});
 	}
 
 	decode(secret) {
@@ -15,15 +15,24 @@ class JwtConfig {
 		});
 	}
 
-	verify(req, res) {
-		const header = !req.headers['Authorization'] || req.headers['authorization'];
-		if (!header) {
-			console.log('Please login as request does not include auth header');
-			res.sendStatus(403).render('login');
+	verify(req, res, next) {
+		const excludedRoutes = 'login' || 'register';
+		if (req.originalUrl.includes(excludedRoutes)) {
+			next();
+		} else {
+			const header = req.headers.authorization;
+			if (!header) {
+				console.log('Please login as request does not include auth header');
+				return res.redirect('/user/login');
+			}
+			const payload = header;
+			req.token = payload;
+
+			jwt.verify(req.token, config.jwtSecret, (err, decoded) => {
+				if (err) return res.render('index', { error: 'Session has expired please login again' });
+				return res.redirect(req.originalUrl);
+			});
 		}
-		const payload = header.split(' ')[1];
-		req.token = payload;
 	}
 }
-
 export default new JwtConfig();

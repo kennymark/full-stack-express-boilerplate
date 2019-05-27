@@ -1,11 +1,11 @@
 {
 	"name": "express-starter",
 	"version": "1.0.0",
-	"description": "",
+	"description": "A simple starter pack for express apps",
 	"main": "index.js",
 	"scripts": {
 		"start": "nodemon  --experimental-modules  --es-module-specifier-resolution=node app.js",
-		"test": "ava"
+		"test": "jest"
 	},
 	"type": "module",
 	"keywords": [],
@@ -23,13 +23,14 @@
 		"express-validator": "5.3.1",
 		"helmet": "^3.18.0",
 		"jsonwebtoken": "8.5.1",
+		"lodash": "^4.17.11",
 		"moment": "^2.24.0",
 		"mongoose": "5.5.11",
 		"passport": "^0.4.0",
 		"passport-twitter": "^1.0.4"
 	},
 	"devDependencies": {
-		"ava": "^1.4.1",
+		"jest": "24.8.0",
 		"supertest": "^4.0.2"
 	}
 }

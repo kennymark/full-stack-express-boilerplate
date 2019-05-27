@@ -9,6 +9,7 @@ function authenticate() {
 }
 
 router.get('/login', UserController.showLogin);
+
 router.get('/profile', UserController.showProfile);
 router.post('/login', UserController.postUserlogin);
 router.get('/login/twitter', passport.authenticate('twitter'));
@@ -17,7 +18,10 @@ router.get('/register', UserController.showRegister);
 router.post('/register', UserController.postRegister);
 router.get('/logout', UserController.logUserOut);
 router.delete('/delete/:id', UserController.deleteUser);
-router.put('/update/:id', UserController.updateUser);
+
+router.get('/edit/:id', UserController.showEdituser);
+router.put('/edit/:id', UserController.updateUser);
+
 // router.get('/user/:id'), UserController.;
 
 export default router;

@@ -1,3 +1,12 @@
+{{#if msg}}
+<div class="container text-center">
+  <div class="app-alert alert alert-{{type}}" role="alert">
+    {{msg}}
+  </div>
+</div>
+{{/if}}
+
+
 <div class="row">
   <div class="col-sm-2 border-right sidebar d-flex">
     <ul class='align-self-center justify-items-center nav'>
@@ -50,9 +59,9 @@
       </div>
 
       <div class="input-group mt-4 mb-3">
-        <input type="text" class="form-control" placeholder="Search for user here">
+        <input type="text" class="form-control" id='searchUser' placeholder="Search for user here">
         <div class="input-group-append">
-          <button class="btn btn-primary" type="button">Search</button>
+          <button class="btn btn-primary" type="button" id='submitSearch'>Search</button>
         </div>
       </div>
 
@@ -62,21 +71,33 @@
             <th scope="col">#</th>
             <th scope="col">Name</th>
             <th scope="col">Email</th>
-            <th scope="col">Created_at</th>
             <th scope="col">Edit</th>
             <th scope="col">Delete
             </th>
           </tr>
         </thead>
-        <tbody>
+        <tbody id='tBody'>
           {{#each users}}
           <tr>
             <th scope="row">{{@index}}</th>
-            <td>{{this.name}}</td>
-            <td>{{this.email}}</td>
-            <td>{{this.created_at}}</td>
-            <td><button data-id="{{this._id}}" class="btn btn-light">Edit</button></td>
-            <td><button data-id="{{this._id}}" class="btn btn-danger">Delete</button></td>
+            <td>
+              {{this.name}}
+            </td>
+            <td>
+              {{this.email}}
+            </td>
+            <td>
+              <a href="/user/edit/{{this._id}}">
+                <button data-id="{{this._id}}" class="btn editBtn btn-light">
+                  Edit
+                </button>
+              </a>
+            </td>
+            <td id='deleteCol'>
+              <button data-id="{{this._id}}" class="btn  deleteBtn btn-danger">
+                Delete
+              </button>
+            </td>
           </tr>
           {{/each}}
 

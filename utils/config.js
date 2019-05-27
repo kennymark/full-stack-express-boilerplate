@@ -10,5 +10,6 @@ export default {
 		resave: false,
 		saveUninitialized: true,
 		cookie: { secure: true }
-	}
+	},
+	jwtSecret: 'lol im a big man'
 };

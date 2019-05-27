@@ -1,8 +1,6 @@
 import db from 'mongoose';
-const Schema = db.Schema;
-import moment from 'moment/moment';
 
-const userSchema = new Schema({
+const userSchema = new db.Schema({
 	name: {
 		type: String,
 		required: true
@@ -37,10 +35,4 @@ const userSchema = new Schema({
 	}
 });
 
-const User = db.model('users', userSchema);
-
-userSchema.post('find', docs => {
-	console.log(this, docs);
-	next();
-});
-export default User;
+export default db.model('users', userSchema);
