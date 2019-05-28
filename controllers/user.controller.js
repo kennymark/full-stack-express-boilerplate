@@ -1,11 +1,14 @@
 import user from '../models/users.model'
-import jwt from 'jsonwebtoken'
-import bcrypt from 'bcryptjs'
 import moment from 'moment/moment'
 import config from '../utils/config'
 import _ from 'lodash'
+import messages from '../data/messages'
+import emailController from './email.controller'
+import passport from 'passport'
+import jwt from 'jsonwebtoken'
 class UserController {
 	constructor() {
+		this.self = this
 		if (UserController.instance == null) {
 			UserController.instance = this
 		}
@@ -22,6 +25,33 @@ class UserController {
 
 	showRegister(req, res) {
 		res.render('register', { title: 'Register' })
+	}
+
+	async confirmEmail(req, res) {
+		const { id } = req.params
+		const data = user.findByIdAndUpdate(id, { isConfirmed: true }).exec()
+		if (person) {
+			res.render('profile', { title: 'Profile', data })
+		}
+	}
+
+	showforgottenPassword(req, res) {
+		res.render('forgotten-password', { title: ' Forgotten password' })
+	}
+
+	async resetPassword(req, res) {
+		const { email, password } = req.body
+		const personemail = await user.findOne({ email })
+		try {
+			if (personemail) {
+				await user.findOneAndUpdate({ email }, { password })
+				emailController.send()
+			}
+		} catch (error) {
+			res.render('forgotten-password', { error })
+		}
+
+		//send-email
 	}
 
 	parseSinglePerson(person) {
@@ -42,6 +72,7 @@ class UserController {
 			return res.render('admin', { title: 'Admin Error', msg: err, type: 'danger' })
 		}
 	}
+
 	async searchUserById(req, res) {
 		const id = req.params.id
 		try {
@@ -52,55 +83,43 @@ class UserController {
 		}
 	}
 
-	async isAdmin(person) {
-		if (person && person.admin === true) {
-			const allUsers = await user.find({}).exec()
-			return render('admin', { title: 'Admin', users: allUsers })
+	checkIfUserConfirm(person, res) {
+		if (!person.isConfirmed) {
+			return res.render('login', { title: 'User not', msg: message })
 		}
 	}
 
-	parseSinglePerson(person) {
-		return {
-			_id: person._id,
-			name: person.name,
-			email: person.email,
-			created_at: moment(person.created_at, 'YYYYMMDD').fromNow(),
-			updated_at: moment(person.updated_at, 'YYYYMMDD').fromNow()
+	async isAdmin(person, res) {
+		if (person && person.admin === true) {
+			const allUsers = await user.find({}).exec()
+			return res.render('admin', { title: 'Admin', users: allUsers })
 		}
 	}
 
 	async postUserlogin(req, res, next) {
-		const { body } = req
 		const { render } = res
-		const person = await user.findOne({ email: body.email }).exec()
-		console.log(this)
 
-		try {
-			if (!person) {
-				return render('login', { error: 'User does not exist' })
+		await passport.authenticate('login', { session: false }, async (err, user, info) => {
+			try {
+				if (err || !user) {
+					onsole.log(error, info)
+					return render('login', { error: messages.user_not_found })
+				}
+				req.login(user, { session: false }, async error => {
+					if (error) return next(error)
+					const body = { _id: user._id, email: user.email }
+					return render('profile', {
+						data: user,
+						token: jwt.sign({ user: body }, config.jwtSecret),
+						title: 'Profile'
+					})
+				})
+			} catch (error) {
+				return next(error)
 			}
-
-			if (!bcrypt.compareSync(body.password, person.password)) {
-				return render('login', { title: 'Login Error', error: 'The password is invalid' })
-			}
-			// const data = {
-			// 	_id: person._id,
-			// 	name: person.name,
-			// 	email: person.email,
-			// 	created_at: moment(person.created_at, 'YYYYMMDD').fromNow(),
-			// 	updated_at: moment(person.updated_at, 'YYYYMMDD').fromNow()
-			// };
-			// const token = jwt.sign(data, config.jwtSecret);
-			return render('profile', {
-				// data: this.parseSinglePerson.call(this, person),
-				// token: token,
-				title: 'Profile',
-				date: moment().format('MMMM Do YYYY')
-			})
-		} catch (error) {
-			console.error(error)
-			render('login', { error })
-		}
+		})(req, res, next),
+			console.log('auth', req.isAuthenticated())
+		console.log('auth', req.user)
 	}
 
 	twitterLogin(req, res) {
@@ -109,76 +128,61 @@ class UserController {
 
 	async deleteUser(req, res) {
 		const id = req.params.id || req.body._id
-		try {
-			const person = await user.findByIdAndDelete(id).exec()
-			if (!person) {
-				return res.render('profile', { error: 'No such person exist ' })
-			}
-			res.redirect('/', { message: 'Your account has been sucessfully deleted' })
-		} catch (error) {}
+		const person = await user.findByIdAndDelete(id)
+
+		if (!person) {
+			return res.render('profile', { error: messages.user_not_found })
+		}
+		res.redirect('/', { message: messages.account_deleted })
 	}
 
 	async showEdituser(req, res) {
 		const { id } = req.params
 		try {
-			const person = await user.findById({ _id: id }).exec()
+			const person = await user.findById({ _id: id })
 			if (person) {
 				res.render('edit-user', { data: person })
 			}
 		} catch (error) {
-			res.render('index', { error: 'No such user found' })
+			res.render('index', { error: messages.user_not_found })
 		}
 	}
 
 	async updateUser(req, res) {
 		const { id } = req.params
 		try {
-			const person = await user.findById({ _id: id }).exec()
+			const person = await user.findById({ _id: id })
 			if (person) {
-				res.render('index', { message: 'User has been sucessfully updated' })
+				res.render('index', { message: messages.user_updated })
 			}
 		} catch (error) {
-			res.render('index', { error: 'No such user found' })
+			res.render('index', { error: messages.user_not_found })
 		}
 	}
 
 	logUserOut(req, res) {
-		req.user = null
+		req.logout()
 		res.redirect('/')
 	}
 
-	validateRequestBody(req) {}
-
 	async postRegister(req, res) {
-		const { body } = req
 		const { render } = res
-		req.checkBody('name', 'Name should be greater than 5 characters').isLength(5)
-		req.checkBody('name', 'Name cannot be empty').isLength(5)
-		req.checkBody('email', 'Email is not valid').isEmail()
-		req.checkBody('password', 'Password should be greater than 5 characters').isLength(5)
-
 		const bodyErrors = req.validationErrors()
-		const foundUser = await user.findOne({ email: body.email }).exec()
-		if (foundUser) {
-			return render('register', {
-				error: `User ${foundUser.email} already has been registered, login or reset password`
-			})
-		} else {
-			if (bodyErrors) {
-				return res.render('register', { bodyErrors })
-			} else {
-				try {
-					body.password = bcrypt.hashSync(req.body.password, 10)
-					user.create(body).then(person => {
-						console.log(`New user saved sucessfully ${person.name}`)
-						return render('index', { message: 'You have been sucessfully registered' })
-					})
-				} catch (error) {
-					console.log(`Couldn't save to database`)
-					render('register', { error })
-				}
-			}
+		if (bodyErrors) {
+			return res.render('register', { bodyErrors })
 		}
+		passport.authenticate('signup', async (err, user, info) => {
+			try {
+				if (err || !user) {
+					console.log(err, info)
+					return render('Register', { title: 'Register', error: info.message })
+				} else {
+					return render('home', { title: 'Home', message: info.message })
+				}
+			} catch (error) {
+				render('register', { error: error })
+			}
+		})(req, res)
 	}
 }
 
