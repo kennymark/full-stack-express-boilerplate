@@ -8,8 +8,8 @@ export default {
 	sessionConfig: {
 		secret: 'keyboard cat',
 		resave: false,
-		saveUninitialized: true,
-		cookie: { secure: true }
+		saveUninitialized: true
+		// cookie: { secure: true }
 	},
 	jwtSecret: 'lol im a big man'
-};
+}

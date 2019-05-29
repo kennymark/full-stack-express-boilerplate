@@ -23,6 +23,8 @@ h6 {
 	top: 100px;
 	left: 50%;
 	transform: translateX(-50%);
+	z-index: 3;
+	transition: all 0.5s cubic-bezier(0.785, 0.135, 0.15, 0.86);
 }
 .sidebar {
 	position: relative;

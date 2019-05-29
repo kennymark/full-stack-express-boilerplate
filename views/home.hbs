@@ -4,6 +4,12 @@
 </div>
 {{/if}}
 
+{{#if error}}
+<div class="app-alert alert alert-danger" role="alert">
+  {{error}}
+</div>
+{{/if}}
+
 <div class="position-relative p-5 p-md-5 text-center bg-light">
   <div class="col-md-5 p-lg-5 mx-auto my-5">
     <h1 class="display-4 ">Express Starter</h1>

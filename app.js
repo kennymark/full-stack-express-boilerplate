@@ -10,21 +10,23 @@ import config from './utils/config'
 import compression from 'compression'
 import flash from 'express-flash'
 import helmet from 'helmet'
-import passport from './utils/passport.config'
+import passportConfig from './controllers/auth.controller'
+import passport from 'passport'
+
 dotenv.config()
 
 //user routes
 import userRouter from './routes/user.routes'
 import indexRouter from './routes/index.routes'
-import { logger } from './utils/util'
+import { logger, setLocals } from './utils/util'
 import jwt from './controllers/jwt'
 
 const app = express()
 const port = process.env.PORT || 8000
 
-app.use(session(config.sessionConfig))
 app.use(compression())
 app.use(helmet())
+app.use(session(config.sessionConfig))
 app.use(passport.initialize())
 app.use(passport.session())
 app.use(logger)
@@ -46,7 +48,7 @@ app.use(express.json())
 app.use(cors())
 app.use(flash())
 app.use(validator({ errorFormatter: errorFormatter }))
-
+app.use(setLocals)
 // routes
 app.use('/', indexRouter)
 app.use('/user', userRouter)

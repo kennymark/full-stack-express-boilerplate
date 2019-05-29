@@ -9,13 +9,15 @@
       <li class="nav-item active">
         <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
       </li>
+      {{#if user}}
       <li class="nav-item">
         <a class="nav-link" href="/user/login">Login</a>
       </li>
+
       <li class="nav-item">
         <a class="nav-link" href="/user/register">Register</a>
       </li>
-
+      {{/if }}
     </ul>
   </div>
 
@@ -26,6 +28,11 @@
       </li>
       <li class="nav-item">
         <a class="nav-link" href="/contact">Contact</a>
+      </li>
+      <li class="nav-item">
+        {{#if user}}
+        <a href="/user/logout" class="btn btn-primary " role="button" aria-pressed="true">Log out</a>
+        {{/if}}
       </li>
     </ul>
   </div>
