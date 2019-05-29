@@ -11,5 +11,9 @@ export default {
 		saveUninitialized: true
 		// cookie: { secure: true }
 	},
-	jwtSecret: 'lol im a big man'
+	jwtSecret: 'lol im a big man',
+	jwtOptions: {
+		expiresIn: '2 days',
+		issuer: 'Kenny Mark'
+	}
 }

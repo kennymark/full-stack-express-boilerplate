@@ -6,15 +6,10 @@ export default {
 	account_deleted: 'Your account has been sucessfully deleted',
 	account_registered: 'You have been sucessfully registered',
 	email_confirmation: 'Please check your email',
+	no_auth_header: 'Please login as request does not include auth header',
+	login_session_expired: 'Session has expired please login again',
 	userAlreadyExists(user) {
 		return `User ${user.email} already has been registered, login or reset password`
-	},
-	send_email_confirmation(link) {
-		return `Plase confirm your account in order to use.
-					Click this link <a>${link}</a>`
-	},
-	passwordResetSucessfull(user) {
-		return `Your password has been reset sucessfully, you can login with your new password`
 	},
 	validation_errors: {}
 }
