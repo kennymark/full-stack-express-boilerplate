@@ -10,8 +10,9 @@ import config from './utils/config'
 import compression from 'compression'
 import flash from 'express-flash'
 import helmet from 'helmet'
-import passportConfig from './controllers/auth.controller'
 import passport from 'passport'
+import lusca from 'lusca'
+import passportConfig from './controllers/auth.controller'
 
 dotenv.config()
 
@@ -19,7 +20,6 @@ dotenv.config()
 import userRouter from './routes/user.routes'
 import indexRouter from './routes/index.routes'
 import { logger, setLocals } from './utils/util'
-import jwt from './controllers/jwt'
 
 const app = express()
 const port = process.env.PORT || 8000
@@ -29,14 +29,11 @@ app.use(helmet())
 app.use(session(config.sessionConfig))
 app.use(passport.initialize())
 app.use(passport.session())
+app.use(lusca(config.luscaConfig))
 app.use(logger)
 
-mongoose
-	.connect(process.env.DB_URL, { useNewUrlParser: true })
-	.then(
-		() => console.log('Connected to Database'),
-		err => console.log('Error connecting to database', err.name)
-	)
+mongoose.set('useNewUrlParser', true)
+mongoose.connect(process.env.DB_URL)
 
 //view engineconfig
 app.set('view engine', 'hbs')

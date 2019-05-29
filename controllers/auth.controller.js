@@ -60,14 +60,16 @@ passport.use(
 		}
 	)
 )
+// used to serialize the user for the session
+passport.serializeUser(function(user, done) {
+	done(null, user._id)
+})
 
-// passport.authenticate('local', function(err, user, info) {
-// 	if (err) { return next(err); }
-// 	if (!user) { return res.redirect('/login'); }
-// 	req.logIn(user, function(err) {
-// 		if (err) { return next(err); }
-// 		return res.redirect('/users/' + user.username);
-// 	});
-// })(req, res, next);
+// used to deserialize the user
+passport.deserializeUser(function(id, done) {
+	user.findById(id, function(err, user) {
+		done(err, user)
+	})
+})
 
 export default passport

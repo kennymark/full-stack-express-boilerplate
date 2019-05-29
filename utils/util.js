@@ -12,6 +12,5 @@ export function setLocals(req, res, next) {
 	res.locals.year = time.year()
 	res.locals.date = date
 	res.locals.user = req.user
-	console.log(res.locals)
 	next()
 }

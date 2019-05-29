@@ -1,11 +1,9 @@
 import user from '../models/users.model'
 import moment from 'moment/moment'
-import config from '../utils/config'
-import _ from 'lodash'
 import messages from '../data/messages'
 import emailController from './email.controller'
 import passport from 'passport'
-import jwt from 'jsonwebtoken'
+
 class UserController {
 	constructor() {
 		this.self = this
@@ -99,27 +97,24 @@ class UserController {
 	async postUserlogin(req, res, next) {
 		const { render } = res
 
-		await passport.authenticate('login', { session: false }, async (err, user, info) => {
+		passport.authenticate('login', { session: true }, async (err, user, info) => {
 			try {
 				if (err || !user) {
-					onsole.log(error, info)
+					console.log(error, info)
 					return render('login', { error: messages.user_not_found })
 				}
-				req.login(user, { session: false }, async error => {
+				req.login(user, { session: true }, async error => {
+					res.locals.user = req.isAuthenticated()
 					if (error) return next(error)
-					const body = { _id: user._id, email: user.email }
 					return render('profile', {
-						data: user,
-						token: jwt.sign({ user: body }, config.jwtSecret),
+						user,
 						title: 'Profile'
 					})
 				})
 			} catch (error) {
 				return next(error)
 			}
-		})(req, res, next),
-			console.log('auth', req.isAuthenticated())
-		console.log('auth', req.user)
+		})(req, res, next)
 	}
 
 	twitterLogin(req, res) {

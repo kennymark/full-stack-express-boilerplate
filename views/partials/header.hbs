@@ -1,5 +1,4 @@
 <nav class="navbar navbar-expand-lg fixed-top navbar-light bg-light  shadow-sm">
-  {{!-- <a class="navbar-brand" href="#">Navbar</a> --}}
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav"
     aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
@@ -9,7 +8,17 @@
       <li class="nav-item active">
         <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
       </li>
+    </ul>
+  </div>
+
+  <div class="float-right">
+    <ul class="navbar-nav">
       {{#if user}}
+      <li class="nav-item">
+        <a class="nav-link" href="/user/profile">Profile</a>
+      </li>
+      {{/if}}
+      {{#unless user}}
       <li class="nav-item">
         <a class="nav-link" href="/user/login">Login</a>
       </li>
@@ -17,23 +26,20 @@
       <li class="nav-item">
         <a class="nav-link" href="/user/register">Register</a>
       </li>
-      {{/if }}
-    </ul>
-  </div>
-
-  <div class="float-right">
-    <ul class="navbar-nav">
-      <li class="nav-item">
-        <a class="nav-link" href="/user/profile">Profile</a>
-      </li>
       <li class="nav-item">
         <a class="nav-link" href="/contact">Contact</a>
       </li>
+      {{/unless}}
+      {{#if user}}
       <li class="nav-item">
-        {{#if user}}
-        <a href="/user/logout" class="btn btn-primary " role="button" aria-pressed="true">Log out</a>
-        {{/if}}
+      <li class="nav-item">
+        <a class="nav-link font-weight-bold" href="#">{{user.name}}</a>
       </li>
+      </li>
+      <li class="nav-item">
+        <a href="/user/logout" class="btn btn-primary " role="button" aria-pressed="true">Log out</a>
+      </li>
+      {{/if}}
     </ul>
   </div>
 </nav>

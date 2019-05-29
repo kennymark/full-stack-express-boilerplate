@@ -8,8 +8,17 @@ export default {
 	sessionConfig: {
 		secret: 'keyboard cat',
 		resave: false,
-		saveUninitialized: true
-		// cookie: { secure: true }
+		saveUninitialized: false,
+		cookie: { secure: false }
+	},
+	luscaConfig: {
+		// csrf: true,
+		xframe: 'SAMEORIGIN',
+		p3p: 'ABCDEF',
+		hsts: { maxAge: 31536000, includeSubDomains: true, preload: true },
+		xssProtection: true,
+		nosniff: true,
+		referrerPolicy: 'same-origin'
 	},
 	jwtSecret: 'lol im a big man',
 	jwtOptions: {

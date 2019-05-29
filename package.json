@@ -25,6 +25,7 @@
 		"helmet": "^3.18.0",
 		"jsonwebtoken": "8.5.1",
 		"lodash": "^4.17.11",
+		"lusca": "^1.6.1",
 		"moment": "^2.24.0",
 		"mongoose": "5.5.11",
 		"nodemailer": "^6.2.1",
