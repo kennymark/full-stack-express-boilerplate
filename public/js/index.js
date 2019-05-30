@@ -1,7 +1,7 @@
 const inputText = document.querySelector('#searchUser')
 const submitButton = document.querySelector('#submitSearch')
 const tableBody = document.querySelector('#tBody')
-const appAlert = document.querySelector('.app-alert')
+const appAlert = document.querySelectorAll('.app-alert')
 
 let userInput
 

@@ -1,4 +1,4 @@
-import user from '../models/users.model'
+import user from '../models/user.model'
 import moment from 'moment/moment'
 import messages from '../data/messages'
 import emailController from './email.controller'
@@ -17,8 +17,10 @@ class UserController {
 		res.render('login', { title: 'Login' })
 	}
 
-	showProfile(req, res, next) {
-		res.render('profile', { title: 'Profile' })
+	async showProfile(req, res, next) {
+		const _id = req.params.id
+		const person = await user.findById({ _id })
+		res.render('profile', { title: 'Profile', user: person })
 	}
 
 	showRegister(req, res) {
@@ -48,7 +50,6 @@ class UserController {
 		} catch (error) {
 			res.render('forgotten-password', { error })
 		}
-
 		//send-email
 	}
 
@@ -95,21 +96,14 @@ class UserController {
 	}
 
 	async postUserlogin(req, res, next) {
+		console.log(req.body)
 		const { render } = res
-
-		passport.authenticate('login', { session: true }, async (err, user, info) => {
+		passport.authenticate('login', async (err, user, info) => {
 			try {
-				if (err || !user) {
-					console.log(error, info)
-					return render('login', { error: messages.user_not_found })
-				}
-				req.login(user, { session: true }, async error => {
-					res.locals.user = req.isAuthenticated()
+				if (err || !user) return render('login', { error: messages.user_not_found })
+				req.login(user, async error => {
 					if (error) return next(error)
-					return render('profile', {
-						user,
-						title: 'Profile'
-					})
+					res.redirect('/user/profile/' + user.id)
 				})
 			} catch (error) {
 				return next(error)
@@ -118,7 +112,24 @@ class UserController {
 	}
 
 	twitterLogin(req, res) {
-		res.redirect('/')
+		passport.authenticate('twitter', async (err, user, msg) => {
+			req.login(user, error => {
+				console.log('twitter user', user)
+				console.log(user)
+				res.redirect('/user/profile/' + user.id)
+				if (error) res.redirect('/')
+			})
+		})(req, res)
+	}
+
+	googleLogin(req, res) {
+		passport.authenticate('google', async (err, user, msg) => {
+			console.log('google user', user)
+			req.login(user, error => {
+				res.redirect('/user/profile/' + user.id)
+				if (error) res.redirect('/')
+			})
+		})(req, res)
 	}
 
 	async deleteUser(req, res) {
@@ -162,6 +173,11 @@ class UserController {
 
 	async postRegister(req, res) {
 		const { render } = res
+		req.checkBody('name', 'Name should be greater than 5 characters').isLength(5)
+		req.checkBody('name', 'Name cannot be empty').notEmpty()
+		req.checkBody('email', 'Email is not valid').isEmail()
+		req.checkBody('password', 'Password should be greater than 5 characters').isLength(5)
+		req.checkBody('password', 'Password is show not be empty').notEmpty()
 		const bodyErrors = req.validationErrors()
 		if (bodyErrors) {
 			return res.render('register', { bodyErrors })

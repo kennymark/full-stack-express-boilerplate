@@ -105,3 +105,4 @@ In production use a proper session store to store sessions in a database instead
 
 - Account deletion
 - Proper error handling
+- Include at least one oauth provider

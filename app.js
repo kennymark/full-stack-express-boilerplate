@@ -22,7 +22,7 @@ import indexRouter from './routes/index.routes'
 import { logger, setLocals } from './utils/util'
 
 const app = express()
-const port = process.env.PORT || 8000
+const port = process.env.PORT || 3000
 
 app.use(compression())
 app.use(helmet())
@@ -38,6 +38,8 @@ mongoose.connect(process.env.DB_URL)
 //view engineconfig
 app.set('view engine', 'hbs')
 app.engine('hbs', hbs(config.hbsConfig))
+app.enable('view cache');
+
 app.use('/public/', express.static('public/'))
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())

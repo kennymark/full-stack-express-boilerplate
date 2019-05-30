@@ -20,7 +20,7 @@ export default {
 		nosniff: true,
 		referrerPolicy: 'same-origin'
 	},
-	jwtSecret: 'lol im a big man',
+	jwtSecret: 'God bless america',
 	jwtOptions: {
 		expiresIn: '2 days',
 		issuer: 'Kenny Mark'

@@ -30,9 +30,10 @@
 		"mongoose": "5.5.11",
 		"nodemailer": "^6.2.1",
 		"nodemailer-express-handlebars": "^3.0.0",
-		"nodemailer-sendgrid-transport": "^0.2.0",
 		"passport": "^0.4.0",
+		"passport-google-oauth2": "^0.2.0",
 		"passport-local": "^1.0.0",
+		"passport-remember-me": "^0.0.1",
 		"passport-twitter": "^1.0.4"
 	},
 	"devDependencies": {
