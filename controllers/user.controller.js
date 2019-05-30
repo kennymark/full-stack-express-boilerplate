@@ -103,7 +103,7 @@ class UserController {
 				if (err || !user) return render('login', { error: messages.user_not_found })
 				req.login(user, async error => {
 					if (error) return next(error)
-					res.redirect('/user/profile/' + user.id)
+					res.redirect('/user/profile/' + user.id, 302)
 				})
 			} catch (error) {
 				return next(error)

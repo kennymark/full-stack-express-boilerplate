@@ -2,6 +2,12 @@
 
 This is a custom express + handlebars starter pack I use for simple applications
 
+[![Build Status][build-badge]][build]
+[![MIT License][license-badge]][license]
+
+
+
+
 ## Table of Contents
 
 - [Features](#features)
@@ -106,3 +112,9 @@ In production use a proper session store to store sessions in a database instead
 - Account deletion
 - Proper error handling
 - Include at least one oauth provider
+
+[build]: https://travis-ci.org/kennymark/Express-starter.svg?branch=master
+[build-badge]: https://travis-ci.org/kennymark/Express-starter.svg?branch=master
+[license-badge]: https://img.shields.io/npm/l/@testing-library/react.svg?style=flat-square
+[license]: https://github.com/testing-library/react-testing-library/blob/master/LICENSE
+
