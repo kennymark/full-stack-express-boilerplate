@@ -7,6 +7,6 @@ notifications:
 sudo: false
 
 env:
-- PORT=3000
+
 - NODE_ENV=DEVELOPEMENT
 
