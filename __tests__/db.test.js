@@ -4,7 +4,7 @@ const dotenv = require('dotenv')
 dotenv.config()
 process.env.NODE_ENV = 'test';
 
-db.connect(process.env.DB_URL)
+db.connect(process.env.DB_URL, { useNewUrlParser: true })
 
 
 describe('Test database activities', () => {
@@ -20,12 +20,12 @@ describe('Test database activities', () => {
   //   await db.connection.dropCollection('nothing')
   // });
 
-  test('should connection successfully to the db', async () => {
+  test('should connection successfully to the db', async() => {
     const dbState = await db.connection.readyState
     expect(dbState).toBe(2)
   })
 
-  test('should disconnect ', async () => {
+  test('should disconnect ', async() => {
     await db.connection.close()
     const dbState = await db.connection.readyState
     expect(dbState).toBe(0)

@@ -1,12 +1,11 @@
 language: node_js
 node_js:
-  - "12.2.0"
+  - "12.3.1"
 install: npm install
 notifications:
   email: false
 sudo: false
 
 env:
-
 - NODE_ENV=DEVELOPEMENT
 

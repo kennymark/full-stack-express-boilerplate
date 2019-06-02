@@ -10,103 +10,103 @@ const { Strategy: googleStrategy } = GoogleStrategy
 
 
 dotenv.config()
-// console.log(process.env)
+  // console.log(process.env)
 import user from '../models/user.model'
 import messages from '../data/messages'
 
 //passport middle to handle user registration
 passport.use('signup', new localStrategy({
-	usernameField: 'email',
-	passwordField: 'password',
-	passReqToCallback: true
-}, async (req, email, password, done) => {
-	try {
-		const { name } = req.body
-		const userExists = await user.findOne({ email })
-		if (userExists) {
-			done(null, false, { message: messages.userAlreadyExists(userExists) })
-		} else if (!userExists) {
-			const person = await user.create({ email, password, name })
-			return done(null, person, { message: messages.account_registered })
-		}
-	} catch (error) {
-		done(error)
-	}
+  usernameField: 'email',
+  passwordField: 'password',
+  passReqToCallback: true
+}, async(req, email, password, done) => {
+  try {
+    const { name } = req.body
+    const userExists = await user.findOne({ email })
+    if (userExists) {
+      done(null, false, { message: messages.userAlreadyExists(userExists) })
+    } else if (!userExists) {
+      const person = await user.create({ email, password, name })
+      return done(null, person, { message: messages.account_registered })
+    }
+  } catch (error) {
+    done(error)
+  }
 }))
 
 passport.use('login', new localStrategy({
-	usernameField: 'email',
-	passwordField: 'password'
-}, async (email, password, done) => {
-	try {
-		const person = await user.findOne({ email })
-		if (!person) {
-			return done(null, false, { message: messages.user_not_found })
-		}
-		if (await !user.isValidPassword(password)) {
-			return done(null, false, { message: messages.invalid_password })
-		} else {
-			return done(null, person, { message: messages.account_registered })
-		}
-	} catch (error) {
-		return done(error)
-	}
+  usernameField: 'email',
+  passwordField: 'password'
+}, async(email, password, done) => {
+  try {
+    const person = await user.findOne({ email })
+    if (!person) {
+      return done(null, false, { message: messages.user_not_found })
+    }
+    if (await !user.isValidPassword(password)) {
+      return done(null, false, { message: messages.invalid_password })
+    } else {
+      return done(null, person, { message: messages.account_registered })
+    }
+  } catch (error) {
+    return done(error)
+  }
 }))
 
 passport.use('twitter', new twitterStrategy({
-	consumerKey: process.env.TWITTER_CONSUMER_KEY,
-	consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
-	callbackURL: process.env.TWIITER_CALLBACK_URL
-}, async (token, refreshToken, profile, done) => {
-	const user = await user.findById({ _id: profile.id })
+  consumerKey: process.env.TWITTER_CONSUMER_KEY,
+  consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
+  callbackURL: process.env.TWIITER_CALLBACK_URL
+}, async(token, refreshToken, profile, done) => {
 
-	if (!user) {
-		const twitterUser = {
-			_id: profile.id,
-			email: profile.email + '@twitter.com',
-			name: profile.name,
-			provider: 'twitter'
-		}
-		const newUser = await user.create(twitterUser)
-		done(null, newUser)
-	}
+  const person = await user.findOne({ twitterId: profile.id })
+  if (person) done(null, person, { message: messages.login_sucess })
+  else {
+    const twitterUser = {
+      twitterId: profile.id,
+      email: profile.email + '@twitter.com',
+      name: profile.displayName,
+      provider: profile.provider,
+      gender: profile.gender,
+      website: profile._json.url
+    }
+    const newUser = await user.create(twitterUser)
+    return done(null, newUser, { message: messages.account_registered })
+  }
+
 
 }))
-
 
 passport.use('google', new googleStrategy({
-	clientID: process.env.GOOGLE_CLIENT_ID,
-	clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-	callbackURL: process.env.GOOGLE_CALLBACK_URL
-}, async (token, refreshToken, profile, done) => {
-	console.log(token, profile)
-
-	const user = await user.findById({ _id: profile.id })
-	if (!user) {
-		const googleUser = {
-			_id: profile.id,
-			email: profile.email,
-			name: profile.name,
-			provider: profile.provider
-		}
-		const newUser = await user.create(googleUser)
-
-		done(null, newUser, { message: messages.login_sucess })
-	}
-
-}))
-
+  clientID: process.env.GOOGLE_CLIENT_ID,
+  clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+  callbackURL: process.env.GOOGLE_CALLBACK_URL
+}, async(token, refreshToken, profile, done) => {
+  ``
+  const person = await user.findOne({ googleId: profile.id })
+  if (person) return done(null, person, { message: messages.login_sucess })
+  else {
+    const googleUser = {
+      googleId: profile.id,
+      email: profile.email,
+      name: profile.displayName,
+      provider: profile.provider,
+    }
+    const newUser = await user.create(googleUser)
+    return done(null, newUser, { message: messages.account_registered })
+  }
+}));
 
 // used to serialize the user for the session
-passport.serializeUser(function (user, done) {
-	done(null, user._id)
+passport.serializeUser(function(user, done) {
+  done(null, user._id)
 })
 
 // used to deserialize the user
-passport.deserializeUser(function (id, done) {
-	user.findById(id, function (err, user) {
-		done(err, user)
-	})
+passport.deserializeUser(function(id, done) {
+  user.findById(id, function(err, user) {
+    done(err, user)
+  })
 })
 
 export default passport

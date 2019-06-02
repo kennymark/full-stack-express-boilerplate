@@ -1,9 +1,55 @@
 <div class="container mt-header">
 
-  <h1 class="title-3"> {{title}} </h1>
-  <div class="row">
-    <div class="col"></div>
-    <div class="col"></div>
-    <div class="col"></div>
+  <h2 class="display-4"> {{title}} Us </h2>
+  <div class="row mt-4  mb-5">
+    <div class="col">
+      <form action="" class="form">
+
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input type="text" class="form-control" name='name' required>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" class="form-control" name='email' required>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Reason</label>
+          <select name="" id="" name='reason'>
+            <option value="business">Business</option>
+            <option value="finance">Finance</option>
+          </select>
+        </div>
+
+
+        <div class="form-group">
+          <label for="message">Message</label>
+          <textarea name="message" class="form-control" cols="30" rows="10"></textarea>
+        </div>
+
+        <button class="btn btn-primary">Send Message</button>
+      </form>
+    </div>
+    {{!-- <div class="col">
+      <div class="card" style="width: 18rem;">
+        <div class="card-body">
+          <h5 class="card-title">Twitter, Inc.</h5>
+          <h6 class="card-subtitle mb-2 text-muted">1355 Market St, Suite 900</h6>
+          <p class="card-text">
+            San Francisco, CA 94103
+            <div>
+              <p>
+                P: (123) 456-7890
+              </p>
+              Jason Miller
+              jason.miller@example.com
+            </div>
+          </p>
+          <a href="#" class="card-link">Card link</a>
+        </div>
+      </div>
+    </div> --}}
   </div>
 </div>

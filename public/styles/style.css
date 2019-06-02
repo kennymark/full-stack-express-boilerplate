@@ -1,0 +1,93 @@
+@import url('./normalize.css');
+
+body {
+	font-family: 'Noto Sans HK', Avenir, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+	height: 100vh !important;
+	overflow-x: hidden;
+	/* font-smooth: always; */
+	-webkit-font-smoothing: antialiased;
+}
+li {
+	list-style-type: none;
+}
+h1,h2,h3,h4,h5,h6 {
+	font-weight: 600;
+	color: #000000ab;
+}
+.app-alert {
+	position: relative;
+	width: 80%;
+	top: 100px;
+	left: 50%;
+	transform: translateX(-50%);
+	z-index: 3;
+	transition: all 0.5s cubic-bezier(0.785, 0.135, 0.15, 0.86);
+}
+.sidebar {
+	position: relative;
+	height: calc(100vh - 57px);
+}
+.mt-big {
+	margin-top: 200px;
+}
+.mt-header {
+	margin-top: 100px;
+}
+.center {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.container-small {
+	width: 80%;
+	margin: 100px auto 0 auto;
+}
+.form-signin {
+	width: 100%;
+	max-width: 330px;
+	padding: 15px;
+	margin: auto;
+}
+.form-signin .checkbox {
+	font-weight: 400;
+}
+.form-signin .form-control {
+	position: relative;
+	box-sizing: border-box;
+	height: auto;
+	padding: 10px;
+	font-size: 16px;
+}
+.form-signin .form-control:focus {
+	z-index: 2;
+}
+.form-signin input[type='email'] {
+	margin-bottom: -1px;
+	border-bottom-right-radius: 0;
+	border-bottom-left-radius: 0;
+}
+.form-signin input[type='password'] {
+	margin-bottom: 10px;
+	border-top-left-radius: 0;
+	border-top-right-radius: 0;
+}
+
+input {
+	outline: none;
+	transition: border-bottom 0.3s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+input:focus {
+	border-bottom: 3px solid coral;
+}
+
+.navbar {
+	height: 70px;
+}
+
+ion-icon{
+	font-size: 20px;
+	position: relative;
+	top: 3px;
+	color:whitesmoke;
+}

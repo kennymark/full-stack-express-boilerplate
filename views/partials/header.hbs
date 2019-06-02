@@ -1,45 +1,58 @@
-<nav class="navbar navbar-expand-lg fixed-top navbar-light bg-light  shadow-sm">
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav"
-    aria-expanded="false" aria-label="Toggle navigation">
+<nav class="navbar navbar-expand-lg fixed-top navbar-light bg-light shadow-sm">
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
-  <div class="collapse navbar-collapse" id="navbarNav">
-    <ul class="navbar-nav">
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
       <li class="nav-item active">
         <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
       </li>
     </ul>
-  </div>
+    <form class="form-inline my-2 my-lg-0">
+      <ul class="navbar-nav">
+        {{#if user}}
 
-  <div class="float-right">
-    <ul class="navbar-nav">
-      {{#if user}}
-      <li class="nav-item">
-        <a class="nav-link" href="/user/profile/{{user._id}}">Profile</a>
-      </li>
-      {{/if}}
-      {{#unless user}}
-      <li class="nav-item">
-        <a class="nav-link" href="/user/login">Login</a>
-      </li>
+        {{/if}}
+        {{#unless user}}
+          <li class="nav-item">
+            <a class="nav-link" href="/user/login">Login</a>
+          </li>
 
-      <li class="nav-item">
-        <a class="nav-link" href="/user/register">Register</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/contact">Contact</a>
-      </li>
-      {{/unless}}
-      {{#if user}}
-      <li class="nav-item">
-      <li class="nav-item">
-        <a class="nav-link font-weight-bold" href="#">{{user.name}}</a>
-      </li>
-      </li>
-      <li class="nav-item">
-        <a href="/user/logout" class="btn btn-primary " role="button" aria-pressed="true">Log out</a>
-      </li>
-      {{/if}}
-    </ul>
+          <li class="nav-item">
+            <a class="nav-link" href="/user/register">Register</a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="/contact">Contact</a>
+          </li>
+        {{/unless}}
+
+        {{#if user}}
+          <div class="dropdown">
+            <a class="btn btn-light dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false">
+              {{user.name}}
+            </a>
+
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+              <a class="dropdown-item" href="/user/profile/{{user._id}}">Profile
+              </a>
+              {{#if user.isAdmin}}
+                <a class="dropdown-item" href="/user/profile/admin/">Admin Page
+                </a>
+              {{/if}}
+              <a class="dropdown-item" href="/user/logout">Log Out</a>
+            </div>
+          </div>
+          {{!-- <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search"> --}}
+        {{/if}}
+      </ul>
+
+
+
+    </form>
   </div>
 </nav>

@@ -9,6 +9,7 @@ export default {
 	email_confirmation: 'Please check your email',
 	no_auth_header: 'Please login as request does not include auth header',
 	login_session_expired: 'Session has expired please login again',
+	cant_access_resource: 'Please login to view this resource',
 
 	userAlreadyExists(user) {
 		return `User ${user.email} already has been registered, login or reset password`

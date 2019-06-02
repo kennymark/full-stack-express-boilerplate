@@ -1,86 +1,76 @@
 {{#if msg}}
-<div class="container text-center">
-  <div class="app-alert alert alert-{{type}}" role="alert">
-    {{msg}}
+  <div class="container text-center">
+    <div class="app-alert alert alert-{{type}}" role="alert">
+      {{msg}}
+    </div>
   </div>
-</div>
 {{/if}}
 
+{{#if data.docs}}
+  <div class="container mt-header">
 
-<div class="row">
-  <div class="col-sm-2 border-right sidebar d-flex">
-    <ul class='align-self-center justify-items-center nav'>
-      <li class='nav-item'>
-        <a href="#" class='nav-link'>User</a>
-      </li>
-      <li></li>
-      <li></li>
-    </ul>
-  </div>
+    <div class="buttons mt-2">
+      <button class="btn btn-light">Create new user</button>
+    </div>
 
-  <div class="col">
-    {{#if users}}
-    <div class="container mt-header">
-      {{!-- <div class="row">
-        <div class="col">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">Total No of Users</h5>
-              <h1 class="card-text">
-                {{users.length}}
-              </h1>
-            </div>
+    <div class="row mt-3">
+      <div class="col">
+        <div class="card bg-primary shadow">
+          <div class="card-body">
+            <h4 class="display-4 text-white">{{data.totalDocs}}
+              <p class="lead text-white">Total Users</p>
+            </h4>
           </div>
-        </div>
-
-        <div class="col">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">Add new user</h5>
-              <p class="card-text"></p>
-              <a href="#" class="btn btn-dark">Go somewhere</a>
-            </div>
-          </div>
-        </div>
-
-        <div class="col">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">Special title treatment</h5>
-              <p class="card-text"></p>
-              <a href="#" class="btn btn-dark">Go somewhere</a>
-            </div>
-          </div>
-
-        </div>
-      </div> --}}
-
-      <div class="buttons mt-2">
-        <button class="btn btn-light">Create new user</button>
-      </div>
-
-      <div class="input-group mt-4 mb-3">
-        <input type="text" class="form-control" id='searchUser' placeholder="Search for user here">
-        <div class="input-group-append">
-          <button class="btn btn-primary" type="button" id='submitSearch'>Search</button>
         </div>
       </div>
 
-      <table class="table table-bordered">
-        <thead>
+      <div class="col">
+        <div class="card bg-success shadow">
+          <div class="card-body">
+            <h4 class="display-4 text-white">
+              {{data.totalDocs}}
+              <p class="lead text-white">Active Users</p>
+            </h4>
+          </div>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="card bg-danger shadow">
+          <div class="card-body">
+            <h4 class="display-4 text-white">
+              23
+              <p class="lead text-white">Deleted Users</p>
+            </h4>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <form class="input-group mt-4 mb-3" action="/user/profile/admin/search/">
+      <input type="text" class="form-control" id='searchUser' name="search" placeholder="Search for user here">
+      <div class="input-group-append">
+        <button class="btn btn-primary" type="submit" id='submitSearch'>Search</button>
+      </div>
+    </form>
+
+    <table class="table table-borderless ">
+      <thead>
+        <tr>
+          <th scope="col">Name</th>
+          <th scope="col">Email</th>
+          <th scope="col" style="text-align:center">Edit
+            <ion-icon name="create" style="color:black"></ion-icon>
+          </th>
+          <th scope="col" style="text-align: center" sorted="">Delete
+            <ion-icon name="trash" style="color:black"></ion-icon>
+          </th>
+        </tr>
+      </thead>
+      <tbody id='tBody'>
+        {{#each data.docs}}
           <tr>
-            <th scope="col">#</th>
-            <th scope="col">Name</th>
-            <th scope="col">Email</th>
-            <th scope="col">Edit</th>
-            <th scope="col">Delete
-            </th>
-          </tr>
-        </thead>
-        <tbody id='tBody'>
-          {{#each users}}
-          <tr>
-            <th scope="row">{{@index}}</th>
             <td>
               {{this.name}}
             </td>
@@ -89,24 +79,64 @@
             </td>
             <td>
               <a href="/user/edit/{{this._id}}">
-                <button data-id="{{this._id}}" class="btn editBtn btn-light">
+                <button data-id="{{this._id}}" class="btn w-100 editBtn btn-dark">
                   Edit
                 </button>
               </a>
             </td>
             <td id='deleteCol'>
-              <button data-id="{{this._id}}" class="btn  deleteBtn btn-danger">
+              <button data-id="{{this._id}}" class="btn w-100 deleteBtn btn-danger">
                 Delete
               </button>
             </td>
           </tr>
-          {{/each}}
+        {{/each}}
 
-        </tbody>
-      </table>
+      </tbody>
+    </table>
 
-
-    </div>
-    {{/if}}
   </div>
+{{/if}}
+
+
+<div class="container mb-4">
+  <div class="list-group-item d-flex justify-content-between align-items-center">
+    <span>
+      {{#if data.prevPage}}
+        <a class="nav-link" href="/user/profile/admin/?page={{data.prevPage}}">
+          {{!-- <ion-icon name="arrow-dropleft" style="color: black"></ion-icon> --}}
+          Prev
+        </a>
+      {{else}}
+        <a class="nav-link" aria-disabled="true">Prev</a>
+      {{/if}}
+    </span>
+
+    <span>
+      <strong>Page {{data.page}} of {{data.totalPages}}</strong>
+    </span>
+
+    <span>
+      {{#if data.nextPage}}
+        <a class="nav-link" href="/user/profile/admin/?page={{data.nextPage}}">Next
+          {{!-- <ion-icon name="arrow-dropright" style="color:black"></ion-icon> --}}
+        </a>
+      {{else}}
+        <a class="disabled" aria-disabled="true">Next</a>
+      {{/if}}
+    </span>
+
+  </div>
+  {{!-- <nav aria-label="...">
+    <ul class="pagination ">
+
+      {{#each pages}}
+        <li class="page-item">
+          <a class="page-link" href="/user/profile/admin/?page={{this}}">{{this}}
+          </a>
+        </li>
+      {{/each}}
+
+    </ul>
+  </nav> --}}
 </div>

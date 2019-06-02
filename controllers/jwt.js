@@ -10,12 +10,9 @@ class JwtConfig {
 		const header = req.headers.authorization
 		if (!header) return res.redirect('/user/login')
 		const token = header.split(' ')[1]
-
 		const decoded = await jwt.verify(token, config.jwtSecret)
+		if (!decoded) req.flash('error', messages.login_session_expired)
 
-		if (!decoded) return res.render('index', { error: messages.login_session_expired })
-
-		return res.redirect('/' + '?')
 	}
 }
 export default new JwtConfig()
