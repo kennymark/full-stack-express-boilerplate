@@ -119,7 +119,7 @@ In production use a proper session store to store sessions in a database instead
 - [ ] Implement csrf via csurf or lusca config
 - [ ] Flash messages
 - [ ] Emails
-
+- [ ] Implement offline messaging support
 
 [build]: https://travis-ci.org/kennymark/Express-starter.svg?branch=master
 [build-badge]: https://travis-ci.org/kennymark/Express-starter.svg?branch=master

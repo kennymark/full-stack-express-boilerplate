@@ -1,7 +1,14 @@
+before_script:
+– npm update -g npm
+sudo: required
+
 language: node_js
 node_js:
   - "12.3.1"
 install: npm install
+test: npm test 
+services: 
+– mongodb
 notifications:
   email: false
 sudo: false
