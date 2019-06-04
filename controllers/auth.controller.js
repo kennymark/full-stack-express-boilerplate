@@ -2,11 +2,16 @@ import passport from 'passport'
 import LocalStrategy from 'passport-local'
 import TwiterStrategy from 'passport-twitter'
 import GoogleStrategy from 'passport-google-oauth2'
+import FacebookStrategy from 'passport-facebook'
+import GithubStrategy from 'passport-github'
 import dotenv from 'dotenv'
 
 const { Strategy: localStrategy } = LocalStrategy
 const { Strategy: twitterStrategy } = TwiterStrategy
 const { Strategy: googleStrategy } = GoogleStrategy
+const { Strategy: facebookStrategy } = FacebookStrategy
+const { Strategy: githubStrategy } = GithubStrategy
+
 
 
 dotenv.config()
@@ -64,7 +69,7 @@ passport.use('twitter', new twitterStrategy({
   else {
     const twitterUser = {
       twitterId: profile.id,
-      email: profile.email + '@twitter.com',
+      email: profile.username + '@twitter.com',
       name: profile.displayName,
       provider: profile.provider,
       gender: profile.gender,
@@ -82,7 +87,7 @@ passport.use('google', new googleStrategy({
   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
   callbackURL: process.env.GOOGLE_CALLBACK_URL
 }, async(token, refreshToken, profile, done) => {
-  ``
+
   const person = await user.findOne({ googleId: profile.id })
   if (person) return done(null, person, { message: messages.login_sucess })
   else {
@@ -97,7 +102,51 @@ passport.use('google', new googleStrategy({
   }
 }));
 
-// used to serialize the user for the session
+
+passport.use('facebook', new facebookStrategy({
+  clientID: process.env.FB_CLIENT_ID,
+  clientSecret: process.env.FB_CLIENT_SECRET,
+  callbackURL: process.env.FB_CALLBACK_URL
+}, async(token, refreshToken, profile, done) => {
+  const person = await user.findOne({ facebookId: profile.id })
+  if (person) return done(null, person, { message: messages.login_sucess })
+  else {
+    const fbUser = {
+      facebookId: profile.id,
+      name: profile.name,
+      provider: profile.provide,
+      gender: profile.gender,
+      email: profile.username + '@facebook.com',
+      website: profile._json.url
+    }
+
+    const newUser = await user.create(fbUser)
+    return done(null, newUser, { message: messages.account_registered })
+  }
+}))
+
+passport.use('github', new githubStrategy({
+    clientID: process.env.GITHUB_CLIENT_ID,
+    clientSecret: process.env.GITHUB_CLIENT_SECRET,
+    callbackURL: process.env.GITHUB_CALLBACK_URL,
+  }, async(token, refreshToken, profile, done) => {
+    console.log(profile)
+    const person = await user.findOne({ githubId: profile.id })
+    if (person) return done(null, person, { message: messages.login_sucess })
+    else {
+      const githubUser = {
+        githubId: profile.id,
+        name: profile.displayName,
+        provider: profile.provider,
+        gender: profile.gender,
+        email: profile.username + '@github.com',
+        website: profile.profileUrl
+      }
+      const newUser = await user.create(githubUser)
+      return done(null, newUser, { message: messages.account_registered })
+    }
+  }))
+  // used to serialize the user for the session
 passport.serializeUser(function(user, done) {
   done(null, user._id)
 })

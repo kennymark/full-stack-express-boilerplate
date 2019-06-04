@@ -12,16 +12,11 @@ export function ensureAuthenticated(req, res, next) {
 
 router.get('/login', UserController.showLogin)
 router.post('/login', UserController.postUserlogin)
-
-router.get('/profile/admin/', ensureAuthenticated, UserController.showAdminProfile)
-
-router.get('/profile/admin/search/', ensureAuthenticated, UserController.searchUser)
-
-router.get('/profile/:id', ensureAuthenticated, UserController.showProfile)
-
 router.post('/logout', UserController.logUserOut)
 
 router.get('/login/twitter', passport.authenticate('twitter'))
+router.get('/login/facebook', passport.authenticate('facebook'))
+router.get('/login/github', passport.authenticate('github'))
 router.get('/login/google', passport.authenticate('google', { scope: ['profile', 'email'] }))
 
 
@@ -36,6 +31,9 @@ router.put('/edit/:id', ensureAuthenticated, UserController.updateUser)
 
 router.get('/confirm_email/:id', UserController.confirmEmail)
 
-// router.get('/user/:id'), UserController.;
+//Authenticated router
+router.get('/profile/admin/', ensureAuthenticated, UserController.showAdminProfile)
+router.get('/profile/admin/search/', ensureAuthenticated, UserController.searchUser)
+router.get('/profile/:id', ensureAuthenticated, UserController.showProfile)
 
 export default router

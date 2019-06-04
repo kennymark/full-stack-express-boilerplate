@@ -11,14 +11,11 @@ router.get('/pricing', indexController.showPricing)
 router.get('/about', indexController.showAbout)
 router.get('/forgotten-password', userController.showforgottenPassword)
 
-// Authentication 
-// router.get('/login/twitter', passport.authenticate('twitter'))
-router.get('/_oauth/twitter/', userController.twitterLogin)
-
-// router.get('/login/google', passport.authenticate('google', { scope: ['profile', 'email'] }))
-
+// Social Authentication for redirects 
 router.get('/oauth/google', userController.googleLogin)
+router.get('/_oauth/twitter/', userController.twitterLogin)
+router.get('/oauth/facebook/', userController.facebookLogin)
+router.get('/oauth/github/', userController.githubLogin)
 
-router.get('/forgotten-password', userController.showforgottenPassword)
 
 export default router

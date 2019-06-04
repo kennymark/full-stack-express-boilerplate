@@ -1,7 +1,10 @@
 {{#if error}}
-<div class="app-alert alert alert-danger" role="alert">
-  {{error}}
-</div>
+  <div class="app-alert alert alert-danger" role="alert">
+    {{error}}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
 {{/if}}
 
 
@@ -23,13 +26,23 @@
       <button class="btn btn-primary btn-block" type="submit">Sign in</button>
 
       <a href="/user/login/twitter">
-        <button class="btn btn-primary mt-2 btn-block" type="button">Twitter
+        <button class="btn  twitter mt-2 btn-block" type="button">Twitter
           <ion-icon name="logo-twitter"></ion-icon>
         </button>
       </a>
       <a href="/user/login/google">
-        <button class="btn btn-primary mt-2 btn-block" type="button">Google
+        <button class="btn google mt-2 btn-block" type="button">Google
           <ion-icon name="logo-googleplus"></ion-icon>
+        </button>
+      </a>
+      <a href="/user/login/facebook">
+        <button class="btn fb mt-2 btn-block" type="button">Facebook
+          <ion-icon name="logo-facebook"></ion-icon>
+        </button>
+      </a>
+      <a href="/user/login/github">
+        <button class="btn github mt-2 btn-block" type="button">Github
+          <ion-icon name="logo-github"></ion-icon>
         </button>
       </a>
     </form>

@@ -1,9 +1,9 @@
 import session from 'express-session'
-import env from 'dotenv'
+import db from 'mongoose'
 import MongoStore from 'connect-mongo'
 
 const Store = MongoStore(session)
-env.config()
+
 
 
 export default {
@@ -29,7 +29,9 @@ export default {
     cookie: { maxAge: 24 * 60 * 60 * 1000 },
     saveUninitialized: false,
     cookie: { secure: false },
-    store: new Store({ url: process.env.DB_URL, })
+    store: new Store({
+      mongooseConnection: db.connection
+    })
   },
 
   luscaConfig: {

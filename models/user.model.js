@@ -49,9 +49,9 @@ const userSchema = new Schema({
   website: String,
   twitterId: String,
   googleId: String,
-  gender: {
-    enum: ['male', 'female', 'other']
-  },
+  facebookId: String,
+  githubId: String,
+  gender: String,
   comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }]
 })
 

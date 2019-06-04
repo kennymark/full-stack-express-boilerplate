@@ -1,9 +1,10 @@
-# Simple Exress handlebars starter pack
+# The modern Exress handlebars starter pack
 
-This is a custom express + handlebars starter pack I use for simple applications
+This is an opinionated but yet simple and custom express applicaton that should include all the basics needs of mordern web apps. This 
 
 [![Build Status][build-badge]][build]
 [![MIT License][license-badge]][license]
+[![Dependencies][dependencies]][dependencies]
 
 
 
@@ -17,26 +18,15 @@ This is a custom express + handlebars starter pack I use for simple applications
 - [Packages](#packages)
 - [Todo](#todo)
 
-## Pages
-
-
-- Home
-- Login
-- Register
-- Contact
-- Profile
-- Forgot password
-- About
-- Contact
-- Admin Interface
 
 ## Features
 
 - Fully functional web server + web app
+- Written with es6 and exNext Javascript
 - Handlebars templating engine
 - UI with Bootstrap 4
 - User signin
-- Third party authentication with Google and Twitter
+- SSO auth with Google, Twitter, Facebook
 - User signup
 - Delete account
 - Emailing with templates
@@ -48,8 +38,27 @@ This is a custom express + handlebars starter pack I use for simple applications
 - ES6 && ESNext
 - Input Validation
 - Reset Password / Forgetten Password
-- MVC Project Structure 
+- MVC Pattern 
+- Password Reset
+- Routing
+- Pagination
+- Incredibly modular, heck even your 
 - Tests with jest
+
+
+## Pages
+
+```
+- Home
+- Login
+- Register
+- Contact
+- Profile
+- Forgot password
+- About
+- Contact
+- Admin Interface
+```
 
 ## Requirements
 - Any decent laptop
@@ -110,19 +119,18 @@ In production use a proper session store to store sessions in a database instead
 
 ## Todo
 
-
-
 - [ ] Account deletion
 - [ ] Update account
-- [ ] Improved error handling
+- [X] Improved error handling
 - [ ] Enable view-caching in production
 - [ ] Implement csrf via csurf or lusca config
-- [ ] Flash messages
+- [X] Flash messages
 - [ ] Emails
 - [ ] Implement offline messaging support
 
-[build]: https://travis-ci.org/kennymark/Express-starter.svg?branch=master
+[build]: https://travis-ci.org/kennymark/Express-starter
 [build-badge]: https://travis-ci.org/kennymark/Express-starter.svg?branch=master
 [license-badge]: https://img.shields.io/npm/l/@testing-library/react.svg?style=flat-square
-[license]: https://github.com/testing-library/react-testing-library/blob/master/LICENSE
+[license]: https://github.com/IQAndreas/markdown-licenses/blob/master/mit.md
+[dependencies]: https://david-dm.org/kennymark/express-starter.svg
 

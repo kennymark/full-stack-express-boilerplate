@@ -4,15 +4,14 @@ import cors from 'cors'
 import validator from 'express-validator'
 import mongoose from 'mongoose'
 import dotenv from 'dotenv'
-import { errorFormatter } from './utils/errorFormatter'
 import session from 'express-session'
 import config from './utils/config'
 import compression from 'compression'
-import flash from 'express-flash'
+import flash from 'connect-flash'
 import helmet from 'helmet'
 import passport from 'passport'
 import lusca from 'lusca'
-import passportConfig from './controllers/auth.controller'
+import './controllers/auth.controller'
 
 dotenv.config()
 
@@ -42,12 +41,12 @@ app.set('view engine', 'hbs')
 app.engine('hbs', hbs(config.hbsConfig))
 
 
-app.use('/public/', express.static('public/'))
+app.use(express.static('public'))
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 
 app.use(flash())
-app.use(validator({ errorFormatter }))
+app.use(validator())
 app.use(setLocals)
 
 // routes

@@ -18,7 +18,7 @@
   if (appAlert) {
     setTimeout(() => {
       appAlert.forEach(el => el.remove())
-    }, 16000)
+    }, 1000 * 60 * 2)
   }
 
 
