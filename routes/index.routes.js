@@ -13,9 +13,9 @@ router.get('/forgotten-password', userController.showforgottenPassword)
 
 // Social Authentication for redirects 
 router.get('/oauth/google', userController.googleLogin)
-router.get('/_oauth/twitter/', userController.twitterLogin)
 router.get('/oauth/facebook/', userController.facebookLogin)
 router.get('/oauth/github/', userController.githubLogin)
+router.get('/_oauth/twitter/', userController.twitterLogin)
 
 
 export default router

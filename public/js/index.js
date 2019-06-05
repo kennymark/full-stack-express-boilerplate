@@ -21,6 +21,9 @@
     }, 1000 * 60 * 2)
   }
 
+  if (!navigator.onLine) {
+    //
+  }
 
   function searchUser() {
     fetch('/user/search')

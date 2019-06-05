@@ -1,68 +1,64 @@
 import nodemailer from 'nodemailer'
 import hbs from 'nodemailer-express-handlebars'
 import dotenv from 'dotenv'
+import sgTransport from 'nodemailer-sendgrid-transport';
 
 dotenv.config({ path: '../.env' })
+
+
 const { SENDGRID_USERNAME, SENDGRID_API_KEY } = process.env
+
 const log = console.log;
 
 class Email {
-	constructor() {
-		this.options = {
-			service: 'sengrid',
-			auth: {
-				api_user: SENDGRID_USERNAME,
-				api_key: SENDGRID_API_KEY
-			}
-		}
-		this.transporter = nodemailer.createTransport(this.options)
-		this.transport()
-	}
+  emailRoutes = process.cwd() + '/../email-templates/'
+  options = {
+    auth: {
+      api_user: SENDGRID_USERNAME,
+      api_key: SENDGRID_API_KEY
+    }
+  }
+  transporter = nodemailer.createTransport(sgTransport(this.options))
 
-	transport() {
-		// const options = {
-		// 	viewEngine: {
-		// 		extName: '.hbs',
-		// 		partialsDir: '../templates/partials/',
-		// 		layoutsDir: '../templates/emails',
-		// 		// defaultLayout: 'email.body.hbs',
-		// 	},
-		// 	viewPath: '../templates/emails',
-		// 	extName: '.hbs',
-		// }
-		this.transporter.use('compile', hbs({
-			viewEngine: 'express-handlebars',
-			viewPath: './../templates/emails',
-			partialsDir: '../templates/partials/',
-			extName: '.hbs',
-		}));
-	}
+  constructor() {
+    this.templateConfig()
+  }
 
-	emailOptions = () => {
-		return {
-			from: 'kennymark14@gmail.com',
-			to: 'geniounico@outlook.com',
-			subject: 'Long time no see bro',
-			template: 'welcome',
-			context: {
-				name: 'Kenny Mark',
-				company_name: 'Big Corp Inc'
-			}
-		}
-	}
+  templateConfig() {
+    const config = {
+      viewEngine: {
+        extName: '.hbs',
+        partialsDir: `${this.emailRoutes}partials/`,
+        layoutsDir: `${this.emailRoutes}main`,
+        defaultLayout: `${this.emailRoutes}main.hbs`,
+      },
+      viewPath: `${this.emailRoutes}emails`,
+      extName: '.hbs',
+    }
+    this.transporter.use('compile', hbs(config));
+  }
 
-	async send() {
-		this.transporter.sendMail(this.emailOptions, (err, data) => {
-			if (err) return log('Error occurs');
-
-			return log('Email sent!!!');
-		});
-	}
+  async send() {
+    const options = {
+      from: 'marthekvernvik@hotmail.com',
+      to: 'markcoffiekenneth@gmail.com',
+      subject: 'Long time no see bro',
+      template: 'welcome',
+      context: {
+        name: 'Kenny Mark',
+        company_name: 'Big Corp Inc'
+      }
+    }
+    this.transporter.sendMail(options, (err, data) => {
+      if (err) return log('Error occurs', err);
+      return log('Email sent!!!', data, new Date());
+    });
+  }
 }
 
 
-// const email = new Email()
-// email.send()
+const email = new Email()
+email.send()
 
 
-export default new Email()
+// export default new Email()

@@ -14,9 +14,7 @@ import lusca from 'lusca'
 import './controllers/auth.controller'
 
 dotenv.config()
-
-const currEnv = 'development' || 'test';
-//user routes
+  //user routes
 import userRouter from './routes/user.routes'
 import indexRouter from './routes/index.routes'
 import { logger, setLocals } from './utils/util'
@@ -61,5 +59,7 @@ app.listen(port)
   .on('listening', async() => {
     await console.log(`Listening at http://localhost:${port}`)
   })
+
+process.env.NODE_ENV.includes('prod') ? app.set('view-cache', true) : app.set('view-cache', false)
 
 export default app
