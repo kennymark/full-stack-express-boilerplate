@@ -4,15 +4,21 @@ sudo: required
 
 language: node_js
 node_js:
-  - "12.3.1"
-install: npm install
-test: npm test 
-services: 
-– mongodb
+  - "8"
+  - "10"
+  - "12"
+services: mongodb  
+cache:  
+  directories:
+    - "node_modules"
+install:
+  - npm install
+script:
+  - npm run lint
+  - npm test
+  
 notifications:
   email: false
-sudo: false
 
 env:
 - NODE_ENV=DEVELOPEMENT
-
