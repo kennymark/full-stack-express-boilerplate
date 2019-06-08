@@ -64,10 +64,11 @@
 
   (function scrollToLastPosition() {
     let lastYPos = localStorage.getItem('sPosition');
-    window.scrollTo(0, lastYPos)
+    if (location.href.includes('user')) {
+      window.scrollTo(0, lastYPos)
+    }
 
     window.addEventListener('scroll', setDefaultScrollPosition)
-
 
     function setDefaultScrollPosition(e) {
       return localStorage.setItem('sPosition', window.scrollY)

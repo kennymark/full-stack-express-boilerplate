@@ -9,7 +9,6 @@ router.get('/', indexController.showHome)
 router.get('/contact', indexController.showContact)
 router.get('/pricing', indexController.showPricing)
 router.get('/about', indexController.showAbout)
-router.get('/forgotten-password', userController.showforgottenPassword)
 
 // Social Authentication for redirects 
 router.get('/oauth/google', userController.googleLogin)

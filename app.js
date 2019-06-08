@@ -12,17 +12,21 @@ import helmet from 'helmet'
 import passport from 'passport'
 import lusca from 'lusca'
 import './controllers/auth.controller'
-
 dotenv.config()
-  //user routes
+
+//user routes
 import userRouter from './routes/user.routes'
 import indexRouter from './routes/index.routes'
 import { logger, setLocals } from './utils/util'
 
 const app = express()
 const port = process.env.PORT || 3000
-app.use(cors())
 
+
+mongoose.connect(process.env.DB_URL, { useNewUrlParser: true })
+mongoose.connection.on('error', error => console.log(error));
+
+app.use(cors())
 app.use(compression())
 app.use(helmet())
 app.use(session(config.sessionConfig))
@@ -30,9 +34,8 @@ app.use(passport.initialize())
 app.use(passport.session())
 app.use(lusca(config.luscaConfig))
 app.use(logger)
+app.enable('trust proxy')
 
-
-mongoose.connect(process.env.DB_URL, { useNewUrlParser: true })
 
 //view engineconfig
 app.set('view engine', 'hbs')
@@ -54,12 +57,12 @@ app.use('/user', userRouter)
 //error 404
 app.get('*', (req, res) => res.render('error404', { data: req.originalUrl }))
 
+process.env.NODE_ENV.includes('prod') ? app.set('view cache', true) : app.set('view cache', false)
 
 app.listen(port)
   .on('listening', async() => {
     await console.log(`Listening at http://localhost:${port}`)
   })
 
-process.env.NODE_ENV.includes('prod') ? app.set('view-cache', true) : app.set('view-cache', false)
 
 export default app

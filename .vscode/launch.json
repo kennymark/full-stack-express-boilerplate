@@ -8,8 +8,7 @@
       "type": "node",
       "request": "attach",
       "name": "Attach",
-      "port": 9229,
-      "restart": true
+      "port": 9229
     },
     {
       "type": "node",
@@ -20,6 +19,7 @@
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
       "sourceMaps": false,
+      "restart": true,
       "runtimeArgs": [
         "-r",
         "esm",

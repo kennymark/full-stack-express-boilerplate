@@ -81,12 +81,13 @@ To run tests `npm test` in the terminal
 
 ## Notes
 
-In production use a proper session store to store sessions in a database instead of memory which is only for local development.
+### Session Store
+In production ensure you are using own session store. This application uses connect mongo by default, if you do not like that. You can change it in the config file in the utils folders.
 
 ### Auth 
 If you want to use one the auth service providers please ensure that you have the correct credentials as demonstrated in the .env file. Also also ensure yoou have set up an app for the correct provider in the developer service for said provider..
 
-## Emailing
+### Emailing
 Emailing for this appplication is fairly simple to implement. Emails should be written in handlebars with the `.hbs` extension in the emails-templates/emails folder. Just write whatever you wanna write, and wrap the dynamic data in double curly brackets `{{}}` as its done in handlebars. 
 **Send an email**
 
@@ -107,7 +108,7 @@ const emailOptions =  {
 email.send(emailOptions)
     
 /* Template refers to whatever email template you want to use, create one of your choice in the emails found//
-// Any key you add to the context is accessible in the template using {{}} 
+Any key you add to the context is accessible in the template using {{}} 
 For example
 
 Hi {{name}},
@@ -126,7 +127,6 @@ Thats how you send an email, just ensure
 - Admin Dashboard completion
 
 ## Packages
-
 
 
 ```json
@@ -167,7 +167,7 @@ Thats how you send an email, just ensure
 - [ ] Implement csrf via csurf or lusca config
 - [X] Flash messages
 - [X] Emails
-- [ ] Implement offline messaging support
+- [ ] Password Reset
 
 [build]: https://travis-ci.org/kennymark/Express-starter
 [build-badge]: https://travis-ci.org/kennymark/Express-starter.svg?branch=master

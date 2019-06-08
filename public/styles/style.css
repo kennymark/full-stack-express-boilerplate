@@ -52,10 +52,11 @@ h6 {
 
 .github {
   background: var(--github-brand-color);
-  color: white;
+  color: rgb(173, 173, 173);
+  transition: color .3s cubic-bezier(0.19, 1, 0.22, 1);
 }
 
-.github a:hover {
+.github:hover {
   color: white !important;
 }
 

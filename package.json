@@ -49,6 +49,7 @@
     "@babel/core": "^7.4.5",
     "@babel/plugin-proposal-class-properties": "^7.4.4",
     "@babel/preset-env": "^7.4.5",
+    "@types/express": "^4.17.0",
     "@types/jest": "^24.0.13",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.7.2",
