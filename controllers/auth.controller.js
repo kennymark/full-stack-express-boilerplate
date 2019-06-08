@@ -25,7 +25,7 @@ passport.use('signup', new localStrategy({
     const { name } = req.body
     const user = await userModel.findOne({ email })
     if (user) {
-      done(null, false, { message: messages.userAlreadyExists(user) })
+      return done(null, false, { message: messages.userAlreadyExists(user) })
     } else {
       const newUser = await userModel.create({ email, password, name })
       return done(null, newUser, { message: messages.account_registered })
@@ -125,10 +125,8 @@ passport.use('github', new githubStrategy({
   clientSecret: process.env.GITHUB_CLIENT_SECRET,
   callbackURL: process.env.GITHUB_CALLBACK_URL,
 }, async(token, refreshToken, profile, done) => {
-
   const user = await userModel.findOne({ githubId: profile.id })
-
-  if (!user) return done(null, user, { message: messages.login_sucess })
+  if (user) return done(null, user, { message: messages.login_sucess })
   else {
     const githubUser = {
       githubId: profile.id,
@@ -136,7 +134,7 @@ passport.use('github', new githubStrategy({
       provider: profile.provider,
       gender: profile.gender,
       email: profile.username + '@github.com',
-      website: profile.profileUrl
+      website: profile._json.blog
     }
     const newUser = await userModel.create(githubUser)
     return done(null, newUser, { message: messages.account_registered })

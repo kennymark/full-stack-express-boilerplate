@@ -10,11 +10,11 @@ const userSchema = new Schema({
   password: { type: String, required: false },
   created_at: { type: Date, default: Date.now },
   updated_at: { type: Date, default: Date.now },
-  deleted: { type: Boolean, default: false },
-  isActive: { type: Boolean, default: true },
-  isConfirmed: { type: Boolean, default: false },
-  isAdmin: { type: Boolean, default: false },
-  provider: String,
+  is_deleted: { type: Boolean, default: false },
+  is_active: { type: Boolean, default: true },
+  is_confirmed: { type: Boolean, default: false },
+  is_admin: { type: Boolean, default: false },
+  provider: { type: String, default: 'local' },
   website: String,
   twitterId: String,
   googleId: String,
@@ -47,7 +47,6 @@ userSchema.pre('update', async function(next) {
 
 userSchema.methods.isValidPassword = async function(password) {
   const user = this;
-  console.log('this', this)
   const compare = await bcrypt.compare(password, user.password);
   return compare;
 }

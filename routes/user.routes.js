@@ -12,8 +12,8 @@ export function ensureAuthenticated(req, res, next) {
 }
 
 router.get('/login', UserController.showLogin)
-router.post('/login', UserController.postUserlogin)
-router.post('/logout', UserController.logUserOut)
+router.post('/login', UserController.localLogin)
+router.post('/logout', ensureAuthenticated, UserController.logUserOut)
 
 router.get('/login/twitter', passport.authenticate('twitter'))
 router.get('/login/facebook', passport.authenticate('facebook'))

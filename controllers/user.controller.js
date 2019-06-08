@@ -31,81 +31,19 @@ class UserController {
 
   async showAdminProfile(req, res) {
     const page = req.query.page || 1
+    const activeUsers = await userModel.find({ is_active: true })
+    const deletedUsers = await userModel.find({ is_deleted: true })
     const result = await userModel.paginate({}, { page, limit: 10 })
     let pagesArr = []
-    res.render('admin', { title: 'Admin Page', pages: pagesArr, data: result })
+    res.render('admin', {
+      title: 'Admin Page',
+      pages: pagesArr,
+      data: result,
+      deletedUsers,
+      activeUsers
+    })
   }
 
-  async resetPassword(req, res) {
-    const { password, new_password } = req.body
-    const { token, id } = req.params
-    req.checkBody('password', 'Password is show not be empty').notEmpty()
-    req.checkBody('new_password', 'Password is show not be empty').notEmpty()
-    req.checkBody('password', 'Password should be greater than 5 characters').isLength(5)
-    req.checkBody('password', 'Make ensure the passwords are equal').equals(new_password)
-
-    const validationErrors = req.validationErrors()
-
-    if (validationErrors) {
-      req.flash('validationErrors', validationErrors)
-    }
-
-    try {
-      const { resetToken } = await userModel.findById(id)
-      const userHasToken = await userModel.findOne({ resetToken })
-      if (userHasToken) {
-        const isTokenValid = await jwt.verify(token, config.jwtSecret)
-        if (isTokenValid) {
-          const newPass = await userModel.findOneAndUpdate({ password })
-          res.redirect('/user/login')
-        }
-      }
-
-    } catch (error) {
-      res.render('', { error })
-    }
-  }
-
-  async forgotPassword(req, res) {
-    const { email } = req.body
-    const user = await userModel.findOne({ email })
-
-    if (user) {
-      req.flash('message', messages.passwordResetSuccess(user))
-      const token = await jwt.sign({ email: user.email }, config.jwtSecret, { expiresIn: '1h' })
-      const { _id } = user
-
-      await userModel.findByIdAndUpdate(user._id, { resetToken: token })
-      const emailData = {
-        from: 'mycompany@hotmail.com',
-        to: user.email,
-        subject: 'Reset Password',
-        template: 'password-reset',
-        context: {
-          name: user.name,
-          link: `http://localhost:3000/user/reset-password/${token}/${_id}`
-        }
-      }
-      emailController.send(emailData)
-      req.flash('message', messages.passwordResetSuccess(user))
-      res.redirect('/user/reset-password')
-    } else {
-      req.flash('error', messages.passwordResetFail(user))
-      res.redirect('/user/forgotten-password')
-    }
-  }
-
-  async searchUserById(req, res) {
-    const { search } = req.query
-    const page = req.query.page || 1
-    try {
-      userModel.paginate({}, { page, limit: 10 }, (_, result) => {
-        return res.render('admin', { title: 'Admin Page', data: result })
-      });
-    } catch (err) {
-      return res.render('admin', { title: 'Admin Error', msg: err, type: 'danger' })
-    }
-  }
 
   async searchUser(req, res) {
     const { search } = req.query
@@ -120,16 +58,21 @@ class UserController {
   }
 
 
-  async postUserlogin(req, res, next) {
+  async localLogin(req, res, next) {
     passport.authenticate('login', async(err, user, _info) => {
       try {
         if (err || !user) return res.render('login', { error: messages.user_not_found })
         req.login(user, err => {
-          if (user.isAdmin) res.redirect('/user/profile/admin/')
+          if (user.is_admin) res.redirect('/user/profile/admin/')
           else { return res.redirect(302, '/user/profile/' + user.id) }
         })
       } catch (error) { return next(error) }
     })(req, res, next)
+  }
+
+  logUserOut(req, res) {
+    req.logout()
+    res.redirect('/')
   }
 
   twitterLogin(req, res, next) {
@@ -202,9 +145,9 @@ class UserController {
   }
 
   async showEdituser(req, res) {
-    const { id: _id } = req.params
+    const { id } = req.params
     try {
-      const user = await userModelfindById({ _id })
+      const user = await userModelfindById(id)
       if (user) {
         res.render('edit-user', { data: user })
       }
@@ -217,7 +160,7 @@ class UserController {
   async updateUser(req, res) {
     const id = req.params.id || req.body.id
     try {
-      const user = await userModelfindByIdAndUpdate(id)
+      const user = await userModelfindByIdAndUpdate(id, req.body)
       if (user) {
         req.flash('message', messages.user_updated)
         res.render('index')
@@ -228,10 +171,6 @@ class UserController {
     }
   }
 
-  logUserOut(req, res) {
-    req.logout()
-    res.redirect('/')
-  }
 
   async postRegister(req, res) {
     req.checkBody('name', 'Name should be greater than 5 characters').isLength(5)
@@ -260,6 +199,64 @@ class UserController {
       }
     })(req, res)
   }
-}
+  async resetPassword(req, res) {
+    const { password, new_password } = req.body
+    const { token, id } = req.params
+    req.checkBody('password', 'Password is show not be empty').notEmpty()
+    req.checkBody('new_password', 'Password is show not be empty').notEmpty()
+    req.checkBody('password', 'Password should be greater than 5 characters').isLength(5)
+    req.checkBody('password', 'Make ensure the passwords are equal').equals(new_password)
 
+    const validationErrors = req.validationErrors()
+
+    if (validationErrors) {
+      req.flash('validationErrors', validationErrors)
+    }
+
+    try {
+      const { resetToken } = await userModel.findById(id)
+      const userHasToken = await userModel.findOne({ resetToken })
+      if (userHasToken) {
+        const isTokenValid = await jwt.verify(token, config.jwtSecret)
+        if (isTokenValid) {
+          const newPass = await userModel.findOneAndUpdate({ password })
+          res.redirect('/user/login')
+        }
+      }
+
+    } catch (error) {
+      res.render('', { error })
+    }
+  }
+
+  async forgotPassword(req, res) {
+    const { email } = req.body
+    const user = await userModel.findOne({ email })
+
+    if (user) {
+      req.flash('message', messages.passwordResetSuccess(user))
+      const token = await jwt.sign({ email: user.email }, config.jwtSecret, { expiresIn: '1h' })
+      const { id } = user
+
+      await userModel.findByIdAndUpdate(id, { resetToken: token })
+      const emailData = {
+        from: 'mycompany@hotmail.com',
+        to: user.email,
+        subject: 'Reset Password',
+        template: 'password-reset',
+        context: {
+          name: user.name,
+          link: `http://localhost:3000/user/reset-password/${token}/${_id}`
+        }
+      }
+      emailController.send(emailData)
+      req.flash('message', messages.passwordResetSuccess(user))
+      res.redirect('/user/reset-password')
+    } else {
+      req.flash('error', messages.passwordResetFail(user))
+      res.redirect('/user/forgotten-password')
+    }
+  }
+
+}
 export default new UserController()
