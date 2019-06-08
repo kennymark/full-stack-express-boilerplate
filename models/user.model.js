@@ -1,8 +1,8 @@
-import db from 'mongoose'
+import mongoose from 'mongoose'
 import paginate from 'mongoose-paginate-v2'
 import bcrypt from 'bcryptjs'
 
-const Schema = db.Schema
+const Schema = mongoose.Schema
 
 const userSchema = new Schema({
   name: { type: String, required: true, maxlength: 100 },
@@ -26,10 +26,20 @@ const userSchema = new Schema({
 })
 
 userSchema.plugin(paginate);
+
 userSchema.pre('save', async function(next) {
   if (this.password) {
     let hash = await bcrypt.hash(this.password, 10)
     this.password = hash
+  }
+  next()
+})
+
+userSchema.pre('update', async function(next) {
+  if (this.password) {
+    let hash = await bcrypt.hash(this.password, 10)
+    this.password = hash
+    this.updated_at = new Date()
   }
   next()
 })
@@ -43,4 +53,4 @@ userSchema.methods.isValidPassword = async function(password) {
 }
 
 
-export default db.model('user', userSchema)
+export default mongoose.model('user', userSchema)
