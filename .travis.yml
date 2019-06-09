@@ -1,7 +1,4 @@
-before_script:
-– npm update -g npm
-sudo: required
-
+sudo: false
 language: node_js
 node_js:
   - "8"
@@ -19,6 +16,7 @@ script:
   
 notifications:
   email: false
-
+after_successs:
+  # npm run deploy 
 env:
 - NODE_ENV=DEVELOPEMENT

@@ -1,35 +1,21 @@
 (function() {
   const pagination = document.querySelector('.pagination')
+  const page = document.querySelectorAll('.nav-item')
   const url = new URL(window.location.href)
-  let currPage = url.searchParams.get('page')
-  const inputText = document.querySelector('#searchUser')
-  const submitButton = document.querySelector('#submitSearch')
-  const tableBody = document.querySelector('#tBody')
+  let currSearch = url.searchParams.get('page')
+    // const inputText = document.querySelector('#searchUser')
+    // const submitButton = document.querySelector('#submitSearch')
+    // const tableBody = document.querySelector('#tBody')
   const appAlert = document.querySelectorAll('.app-alert')
 
-  let userInput;
 
-  if (inputText) {
-    inputText.addEventListener('keyup', getUserVal)
-    submitButton.addEventListener('click', searchUser)
-      // tableBody.addEventListener('click', updateUser)
-  }
+
+
 
   if (appAlert) {
     setTimeout(() => {
       appAlert.forEach(el => el.remove())
     }, 1000 * 60 * 2)
-  }
-
-  if (!navigator.onLine) {
-    //
-  }
-
-  function searchUser() {
-    fetch('/user/search')
-      .then(res => res.json())
-      .then(data => console.log(console.log(data)))
-      .catch(err => console.log(err))
   }
 
   function deleteUser(e) {
@@ -52,28 +38,45 @@
     userInput = e.target.value
   }
 
-  if (pagination) {
-    Array.from(pagination.children).forEach(child => {
-      if (!currPage) currPage = 1
-      if (parseInt(child.innerText) == currPage) {
-        child.classList.add('active')
-      } else child.classList.remove('active')
+  function paginate() {
+    if (pagination) {
+      Array.from(pagination.children).forEach(child => {
+        if (!currSearch) currSearch = 1
+        if (parseInt(child.innerText) == currSearch) {
+          child.classList.add('active')
+        } else child.classList.remove('active')
+      })
+    }
+  }
+
+
+  function setNavItemActive() {
+    Array.from(page).forEach(child => {
+      const val = child.textContent.toLowerCase()
+      val == 'home' ? '/' : null;
+      console.log(val)
+      console.log(url.href.includes(val))
+
+      console.dir(child)
     })
   }
 
 
-  (function scrollToLastPosition() {
+  function scrollToLastPosition() {
     let lastYPos = localStorage.getItem('sPosition');
+    window.addEventListener('scroll', setDefaultScrollPosition)
+
     if (location.href.includes('user')) {
       window.scrollTo(0, lastYPos)
     }
 
-    window.addEventListener('scroll', setDefaultScrollPosition)
-
-    function setDefaultScrollPosition(e) {
+    function setDefaultScrollPosition(_) {
       return localStorage.setItem('sPosition', window.scrollY)
     }
-  }())
+  }
 
+  scrollToLastPosition()
+  setNavItemActive()
+  paginate()
 
 }())

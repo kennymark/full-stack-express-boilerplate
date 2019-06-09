@@ -7,6 +7,7 @@ const Store = MongoStore(session)
 
 
 export default {
+
   hbsConfig: {
     defaultLayout: 'main',
     extname: '.hbs',
@@ -32,6 +33,15 @@ export default {
     store: new Store({
       mongooseConnection: db.connection
     })
+  },
+
+  dbOptions: {
+    useNewUrlParser: true,
+    useFindAndModify: false,
+    autoReconnect: true,
+    reconnectTries: Number.MAX_VALUE,
+    reconnectInterval: 1000,
+    keepAlive: 300000,
   },
 
   luscaConfig: {

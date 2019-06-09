@@ -12,16 +12,20 @@ export default {
   cant_access_resource: 'Please login to view this resource',
   cant_reuse_password: 'The same password cannot be used more than once',
   password_reset_success: 'Congratulations, your password has been reset, you can now log in',
+  password_reset_fail: 'Looks like your password reset time has expired, please resetting your password again',
+  account_frozen: 'Your account has been frozen, to unfreeze it login again',
 
   userAlreadyExists(user) {
     return `User ${user.email} already has been registered, login or reset password`
   },
-  passwordResetSuccess(user) {
-    return `The link to reset your password has been sent to ${user.email}, please check your email`
+
+  passwordForgotSuccess(user) {
+    return `The link to reset your password has been sent to ${user.email}, please check your email.`
   },
-  passwordResetFail(user) {
-    return `No such email ${user.email} exists in our database, please register for an account`
+  passwordForgotFail(email) {
+    return `No such email ${email} exists in our database, please register for an account.`
   },
+
   validation_errors: {},
 
 }

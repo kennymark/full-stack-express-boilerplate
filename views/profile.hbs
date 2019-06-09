@@ -3,15 +3,15 @@
 
     <h2 class="title-5">Your Profile on {{date}}</h2>
     <hr>
+    {{#with user}}
+      <div class="row mt-4 mb-5">
 
-    <div class="row mt-4 mb-5">
-      {{#with user}}
         <div class="card-body">
           <form action="#" method="POST">
             <div class="form-group row">
               <label for="staticEmail" class="col-sm-4 col-form-label">Name</label>
               <div class="col">
-                <input type="text" class="form-control-plaintext" value="{{name}}">
+                <input type="text" class="form-control" value="{{name}}">
               </div>
             </div>
 
@@ -19,18 +19,15 @@
               <label for="staticEmail" class="col-sm-4 col-form-label">Sex</label>
               <div class="col">
                 <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1"
-                    value="option1">
+                  <input class="form-check-input" type="radio" name="inlineRadioOptions" value="male">
                   <label class="form-check-label" for="inlineRadio1">Male</label>
                 </div>
                 <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2"
-                    value="option2">
+                  <input class="form-check-input" type="radio" name="inlineRadioOptions" value="female">
                   <label class="form-check-label" for="inlineRadio2">Female</label>
                 </div>
                 <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3"
-                    value="option3">
+                  <input class="form-check-input" type="radio" name="inlineRadioOptions" value="other">
                   <label class="form-check-label" for="inlineRadio3">Other</label>
                 </div>
               </div>
@@ -40,7 +37,7 @@
             <div class="form-group row">
               <label for="staticEmail" class="col-sm-4 col-form-label">Email</label>
               <div class="col">
-                <input type="text" class="form-control-plaintext" value="{{email}}">
+                <input type="text" class="form-control" value="{{email}}">
               </div>
             </div>
 
@@ -76,62 +73,62 @@
           </form>
         </div>
 
-      {{/with}}
-    </div>
+      </div>
 
-    <h2 class="mt-4 mb-3">Account Settings</h2>
-    <hr>
-    <div class="row mb-5">
+      <h2 class="mt-4 mb-3">Account Settings</h2>
       <hr>
-      <div class="col-sm-6">
-        <div class="card">
-          <div class="card-body">
+      <div class="row mb-5">
+        <hr>
+        <div class="col-sm-6">
+          <div class="card">
+            <div class="card-body">
 
-            <form method="POST" action="#">
-              <div class="form-group row">
-                <label for="staticEmail" class="col-sm-4 col-form-label">Password</label>
-                <div class="col">
-                  <input type="password" class="form-control" name='password'>
+              <form method="POST" action="#">
+                <div class="form-group row">
+                  <label for="staticEmail" class="col-sm-4 col-form-label">Password</label>
+                  <div class="col">
+                    <input type="password" class="form-control" name='password'>
+                  </div>
                 </div>
-              </div>
 
-              <div class="form-group row">
-                <label for="staticEmail" class="col-sm-4 col-form-label">Confirm Password</label>
-                <div class="col">
-                  <input type="password" class="form-control" name='newpassword'>
+                <div class="form-group row">
+                  <label for="staticEmail" class="col-sm-4 col-form-label">Confirm Password</label>
+                  <div class="col">
+                    <input type="password" class="form-control" name='newpassword'>
+                  </div>
                 </div>
-              </div>
-              <input hidden name='csrfToken'>
-              <a href="#" class="btn btn-primary">Change Password
-                <ion-icon name="key"></ion-icon>
+                <input hidden name='csrfToken'>
+                <a href="#" class="btn btn-primary">Change Password
+                  <ion-icon name="key"></ion-icon>
+                </a>
+              </form>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="col-sm-6">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Modify Account</h5>
+              <p class="card-text">Do you wish to delete your account?</p>
+              <a href="#" class="btn btn-danger">
+                <ion-icon name="trash"></ion-icon>
+                Delete Account
               </a>
-            </form>
+
+              <hr>
+              <p class="card-text mt-3">Do you wish to freeze your account?</p>
+              <a href="/user/freeze/{{id}}" class="btn btn-info">
+                <ion-icon name="lock"></ion-icon>
+                Freeze Account
+              </a>
+            </div>
           </div>
         </div>
+
       </div>
-
-
-      <div class="col-sm-6">
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title">Modify Account</h5>
-            <p class="card-text">Do you wish to delete your account?</p>
-            <a href="#" class="btn btn-danger">
-              <ion-icon name="trash"></ion-icon>
-              Delete Account
-            </a>
-
-            <hr>
-            <p class="card-text mt-3">Do you wish to freeze your account?</p>
-            <a href="#" class="btn btn-info">
-              <ion-icon name="lock"></ion-icon>
-              Freeze Account
-            </a>
-          </div>
-        </div>
-      </div>
-
-    </div>
+    {{/with}}
 
   </div>
 {{/if}}

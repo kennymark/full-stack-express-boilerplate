@@ -30,15 +30,18 @@ router.delete('/delete/:id', ensureAuthenticated, UserController.deleteUser)
 router.get('/edit/:id', ensureAuthenticated, UserController.showEdituser)
 router.put('/edit/:id', ensureAuthenticated, UserController.updateUser)
 
+router.get('/freeze/:id', ensureAuthenticated, UserController.freezeUser)
+
 router.post('/forgot-password/', UserController.forgotPassword)
 router.get('/forgot-password', UserController.showforgottenPassword)
-router.get('/reset-password', UserController.showResetPassword)
-router.post('/reset-password/:token/:id', UserController.resetPassword)
+
+router.get('/reset-password/:token/:id', UserController.showResetPassword)
+router.post('/reset-password/', UserController.resetPassword)
 
 
 //Authenticated routes
 router.get('/profile/admin/', ensureAuthenticated, UserController.showAdminProfile)
-router.get('/profile/admin/search/', ensureAuthenticated, UserController.searchUser)
+router.get('/profile/admin/search/', ensureAuthenticated, UserController.search)
 router.get('/profile/:id', ensureAuthenticated, UserController.showProfile)
 
 export default router

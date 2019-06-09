@@ -5,7 +5,7 @@ import validator from 'express-validator'
 import mongoose from 'mongoose'
 import dotenv from 'dotenv'
 import session from 'express-session'
-import config from './utils/config'
+import config from './config/config'
 import compression from 'compression'
 import flash from 'connect-flash'
 import helmet from 'helmet'
@@ -17,13 +17,13 @@ dotenv.config()
 //user routes
 import userRouter from './routes/user.routes'
 import indexRouter from './routes/index.routes'
-import { logger, setLocals } from './utils/util'
+import { logger, setLocals } from './config/util'
 
 const app = express()
 const port = process.env.PORT || 3000
 
 
-mongoose.connect(process.env.DB_URL, { useNewUrlParser: true })
+mongoose.connect(process.env.DB_URL, config.dbOptions)
 mongoose.connection.on('error', error => console.log(error));
 
 app.use(cors())

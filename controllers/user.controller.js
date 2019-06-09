@@ -3,7 +3,7 @@ import messages from '../data/messages'
 import emailController from './email.controller'
 import passport from 'passport'
 import jwt from 'jsonwebtoken'
-import config from '../utils/config';
+import config from '../config/config';
 import userModel from '../models/user.model';
 class UserController {
 
@@ -45,12 +45,17 @@ class UserController {
   }
 
 
-  async searchUser(req, res) {
-    const { search } = req.query
+  async search(req, res) {
+    const { search, query } = req.query
     const page = req.query.page || 1
 
     try {
-      const result = await userModel.paginate({ name: /search/ }, { page, limit: 10 })
+      const result = await userModel.paginate({
+        [query]: { $regex: `${search}` }
+      }, { page, limit: 10 })
+      console.log(': result', result)
+
+
       return res.render('admin', { title: 'Admin Page', data: result })
     } catch (err) {
       return res.render('admin', { title: 'Admin Error', msg: err, type: 'danger' })
@@ -64,6 +69,10 @@ class UserController {
         if (err || !user) return res.render('login', { error: messages.user_not_found })
         req.login(user, err => {
           if (user.is_admin) res.redirect('/user/profile/admin/')
+            // if (!user.is_active) {
+            // req.flash('error', messages.)
+            //   next()
+            // }
           else { return res.redirect(302, '/user/profile/' + user.id) }
         })
       } catch (error) { return next(error) }
@@ -131,16 +140,17 @@ class UserController {
   }
 
   async deleteUser(req, res) {
-    const _id = req.params.id || req.body.id
-    await userModel.findOneAndUpdate({ _id }, { deleted: true })
+    const id = req.params.id || req.body.id
+    await userModel.findOneAndUpdate(id, { deleted: true })
     req.flash('message', messages.account_deleted)
     res.redirect('/')
   }
 
   async freezeUser(req, res) {
-    const _id = req.params.id || req.body.id
-    await userModel.findOneAndUpdate({ _id }, { isActive: false })
-    req.flash('message', messages.user_updated)
+    const { id } = req.params
+    await userModel.findOneAndUpdate(id, { is_active: false })
+    req.flash('message', messages.account_frozen)
+    req.logout()
     res.redirect('/')
   }
 
@@ -199,6 +209,37 @@ class UserController {
       }
     })(req, res)
   }
+
+  async forgotPassword(req, res) {
+    const { email } = req.body
+    const user = await userModel.findOne({ email })
+    const website = 'http://localhost:3000'
+    if (user) {
+      req.flash('message', messages.passwordResetSuccess(user))
+      const token = await jwt.sign({ email: user.email }, config.jwtSecret, { expiresIn: '1h' })
+      const { id, name, email } = user
+
+      await userModel.findByIdAndUpdate(id, { resetToken: token })
+
+      const emailData = {
+        from: 'mycompany@hotmail.com',
+        to: email,
+        subject: 'Reset Password',
+        template: 'password-reset',
+        context: {
+          name: name,
+          link: `${website}/user/reset-password/${token}/${id}`
+        }
+      }
+      emailController.send(emailData)
+      res.redirect('/user/reset-password')
+
+    } else {
+      req.flash('error', messages.passwordResetFail(email))
+      res.redirect('/user/forgot-password')
+    }
+  }
+
   async resetPassword(req, res) {
     const { password, new_password } = req.body
     const { token, id } = req.params
@@ -206,7 +247,6 @@ class UserController {
     req.checkBody('new_password', 'Password is show not be empty').notEmpty()
     req.checkBody('password', 'Password should be greater than 5 characters').isLength(5)
     req.checkBody('password', 'Make ensure the passwords are equal').equals(new_password)
-
     const validationErrors = req.validationErrors()
 
     if (validationErrors) {
@@ -219,42 +259,18 @@ class UserController {
       if (userHasToken) {
         const isTokenValid = await jwt.verify(token, config.jwtSecret)
         if (isTokenValid) {
-          const newPass = await userModel.findOneAndUpdate({ password })
+          await userModel.findOneAndUpdate({ password })
+          req.flash('message', messages.password_reset_success)
           res.redirect('/user/login')
         }
+      } else {
+        req.flash('error', messages.pas)
+        res.redirect('/user/login')
       }
 
     } catch (error) {
-      res.render('', { error })
-    }
-  }
-
-  async forgotPassword(req, res) {
-    const { email } = req.body
-    const user = await userModel.findOne({ email })
-
-    if (user) {
-      req.flash('message', messages.passwordResetSuccess(user))
-      const token = await jwt.sign({ email: user.email }, config.jwtSecret, { expiresIn: '1h' })
-      const { id } = user
-
-      await userModel.findByIdAndUpdate(id, { resetToken: token })
-      const emailData = {
-        from: 'mycompany@hotmail.com',
-        to: user.email,
-        subject: 'Reset Password',
-        template: 'password-reset',
-        context: {
-          name: user.name,
-          link: `http://localhost:3000/user/reset-password/${token}/${_id}`
-        }
-      }
-      emailController.send(emailData)
-      req.flash('message', messages.passwordResetSuccess(user))
+      req.flash('error', error)
       res.redirect('/user/reset-password')
-    } else {
-      req.flash('error', messages.passwordResetFail(user))
-      res.redirect('/user/forgotten-password')
     }
   }
 

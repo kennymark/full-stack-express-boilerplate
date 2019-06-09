@@ -6,98 +6,109 @@
   </div>
 {{/if}}
 
-{{#if data.docs}}
-  <div class="container mt-header">
 
-    <div class="buttons mt-2">
-      <button class="btn btn-light">Create new user</button>
+<div class="container mt-header">
+
+
+  <div class="row mt-3">
+    <div class="col">
+      <div class="card bg-primary shadow">
+        <div class="card-body">
+          <h4 class="display-4 text-white">{{data.totalDocs}}
+            <p class="lead text-white">Total Users</p>
+          </h4>
+        </div>
+      </div>
     </div>
 
-    <div class="row mt-3">
-      <div class="col">
-        <div class="card bg-primary shadow">
-          <div class="card-body">
-            <h4 class="display-4 text-white">{{data.totalDocs}}
-              <p class="lead text-white">Total Users</p>
-            </h4>
-          </div>
+    <div class="col">
+      <div class="card bg-success shadow">
+        <div class="card-body">
+          <h4 class="display-4 text-white">
+            {{data.totalDocs}}
+            <p class="lead text-white">Active Users</p>
+          </h4>
         </div>
       </div>
-
-      <div class="col">
-        <div class="card bg-success shadow">
-          <div class="card-body">
-            <h4 class="display-4 text-white">
-              {{data.totalDocs}}
-              <p class="lead text-white">Active Users</p>
-            </h4>
-          </div>
-        </div>
-      </div>
-
-      <div class="col">
-        <div class="card bg-danger shadow">
-          <div class="card-body">
-            <h4 class="display-4 text-white">
-              23
-              <p class="lead text-white">Deleted Users</p>
-            </h4>
-          </div>
-        </div>
-      </div>
-
     </div>
 
-    <form class="input-group mt-4 mb-3" action="/user/profile/admin/search/">
-      <input type="text" class="form-control" id='searchUser' name="search" placeholder="Search for user here">
-      <div class="input-group-append">
-        <button class="btn btn-primary" type="submit" id='submitSearch'>Search</button>
+    <div class="col">
+      <div class="card bg-danger shadow">
+        <div class="card-body">
+          <h4 class="display-4 text-white">
+            23
+            <p class="lead text-white">Deleted Users</p>
+          </h4>
+        </div>
       </div>
-    </form>
-
-    <table class="table table-borderless ">
-      <thead>
-        <tr>
-          <th scope="col">Name</th>
-          <th scope="col">Email</th>
-          <th scope="col" style="text-align:center">Edit
-            <ion-icon name="create" style="color:black"></ion-icon>
-          </th>
-          <th scope="col" style="text-align: center" sorted="">Delete
-            <ion-icon name="trash" style="color:black"></ion-icon>
-          </th>
-        </tr>
-      </thead>
-      <tbody id='tBody'>
-        {{#each data.docs}}
-          <tr>
-            <td>
-              {{this.name}}
-            </td>
-            <td>
-              {{this.email}}
-            </td>
-            <td>
-              <a href="/user/edit/{{this._id}}">
-                <button data-id="{{this._id}}" class="btn w-100 editBtn btn-dark">
-                  Edit
-                </button>
-              </a>
-            </td>
-            <td id='deleteCol'>
-              <button data-id="{{this._id}}" class="btn w-100 deleteBtn btn-danger">
-                Delete
-              </button>
-            </td>
-          </tr>
-        {{/each}}
-
-      </tbody>
-    </table>
+    </div>
 
   </div>
-{{/if}}
 
+  <form class="input-group mt-4 mb-3" action="/user/profile/admin/search/">
+    <div class="mr-2">
+      <label class="mr-sm-2 sr-only" for="inlineFormCustomSelect">Preference</label>
+      <select class="custom-select mr-sm-2" name="field">
+        <option selected>Choose...</option>
+        <option value="name">Name</option>
+        <option value="email">Email</option>
+        <option value="provider">Provider</option>
+        <option value="is_active">Active Users</option>
+        <option value="is_deleted">Deleted Users</option>
+        <option value="is_confirmed">Confirmed Users</option>
+      </select>
+    </div>
+    <input type="text" class="form-control" id='searchUser' name="search" placeholder="Search for user here">
+    <div class="input-group-append">
+      <button class="btn btn-primary" type="submit" id='submitSearch'>Search</button>
+    </div>
+  </form>
+
+  <table class="table table-borderless ">
+    <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Email</th>
+        <th scope="col">Provider</th>
+        <th scope="col" style="text-align:center">Edit
+          <ion-icon name="create" style="color:black"></ion-icon>
+        </th>
+        <th scope="col" style="text-align: center" sorted="">Delete
+          <ion-icon name="trash" style="color:black"></ion-icon>
+        </th>
+      </tr>
+    </thead>
+    <tbody id='tBody'>
+      {{#each data.docs}}
+        <tr>
+          <td>
+            {{this.name}}
+          </td>
+          <td>
+            {{this.email}}
+          </td>
+          <td>
+            {{this.provider}}
+          </td>
+          <td>
+            <a href="/user/edit/{{this._id}}">
+              <button data-id="{{this._id}}" class="btn w-100 editBtn btn-dark">
+                Edit
+              </button>
+            </a>
+          </td>
+          <td id='deleteCol'>
+            <button data-id="{{this._id}}" class="btn w-100 deleteBtn btn-danger">
+              Delete
+            </button>
+          </td>
+        </tr>
+      {{/each}}
+
+    </tbody>
+  </table>
+
+</div>
 
 <div class="container mb-4">
   <div class="list-group-item d-flex justify-content-between align-items-center">
