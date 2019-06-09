@@ -15,6 +15,7 @@ This is an opinionated but yet simple and custom express applicaton that should 
 - [Pages](#pages)
 - [Requirements](#requirements)
 - [Notes](#notes)
+- [Project Structure](#projectstructure)
 - [Packages](#packages)
 - [Todo](#todo)
 
@@ -77,12 +78,35 @@ on port 3000 by default but if you want to modify that behaviour add a port numb
 
 To run tests `npm test` in the terminal 
 
+## Project Structure
+Project Structure
+-----------------
+
+| Name                               | Description                                                  |
+| ---------------------------------- | ------------------------------------------------------------ |
+| **__tests__**/                     | Contains tests files used in the application                 |
+| **config**/config.js               | Contains config for packages being used in the application   |
+| **controllers**/auth.controller.js | Passport Local and OAuth strategies, plus login middleware.  |
+| **controllers**/email.controller.js| Controller for emails                                        |
+| **controllers**/index.controller.js| Controller for index routes                                  |
+| **controllers**/user.controller.js | Controller for user account management and views             |
+| **routes**/user.routes.js          | Has a a list of routes pertaining to a user                  |
+| **routes**/index.rouotes.js        | Router for handling index routes                             |
+| **models**/user.model.js           | Mongoose schema for user model                               |
+| **models**/comments.model.js       | Contains dummy comment schema does thats not used here       |
+| **public**/                        | Static assets (fonts, css, js, img).                         |
+| **views/api**/                     | Templates for API Examples.                                  |
+| **views/partials**/                | Contains handlebars partials for footer,header and flash     |
+| **views**/                         | All your views should be found here                          |
+| **.env**/                          | All secrets keys for oauth providers, db_url and app port    |
+| app.js                             | Main application file.                                       |
 
 
 ## Notes
 
 ### Session Store
-In production ensure you are using own session store. This application uses connect mongo by default, if you do not like that. You can change it in the config file in the utils folders.
+In production ensure you are using own session store. This application uses connect mongo by default, if you do not like that. You can change it in the config file in the utils folders. There are a lot of session stores out there some of which could be found [here](https://github.com/expressjs/session/blob/master/README.md)
+
 
 ### Auth 
 If you want to use one the auth service providers please ensure that you have the correct credentials as demonstrated in the .env file. Also also ensure yoou have set up an app for the correct provider in the developer service for said provider..
@@ -121,10 +145,7 @@ Welcome to Apple inc
 /*
 
 ```
-Thats how you send an email, just ensure 
-[Available here](https://github.com/expressjs/session/blob/master/README.md)
 
-- Admin Dashboard completion
 
 ## Packages
 
@@ -163,11 +184,11 @@ Thats how you send an email, just ensure
 - [ ] Account deletion
 - [ ] Update account
 - [X] Improved error handling
-- [ ] Enable view-caching in production
+- [X] Enable view-caching in production
 - [ ] Implement csrf via csurf or lusca config
 - [X] Flash messages
 - [X] Emails
-- [ ] Password Reset
+- [X] Password Reset
 
 [build]: https://travis-ci.org/kennymark/Express-starter
 [build-badge]: https://travis-ci.org/kennymark/Express-starter.svg?branch=master
