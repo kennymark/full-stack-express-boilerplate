@@ -90,16 +90,18 @@ Project Structure
 | **controllers**/email.controller.js| Controller for emails                                        |
 | **controllers**/index.controller.js| Controller for index routes                                  |
 | **controllers**/user.controller.js | Controller for user account management and views             |
-| **routes**/user.routes.js          | Has a a list of routes pertaining to a user                  |
-| **routes**/index.rouotes.js        | Router for handling index routes                             |
+| **data**/messages.js               | Stores flash messages used across the application            |
+| **email-templates**/'              | All emails to be used across the application                 |
 | **models**/user.model.js           | Mongoose schema for user model                               |
 | **models**/comments.model.js       | Contains dummy comment schema does thats not used here       |
 | **public**/                        | Static assets (fonts, css, js, img).                         |
+| **routes**/index.routes.js         | Router for handling index routes                             |
+| **routes**/user.routes.js          | Has a a list of routes pertaining to a user                  |
 | **views/api**/                     | Templates for API Examples.                                  |
 | **views/partials**/                | Contains handlebars partials for footer,header and flash     |
 | **views**/                         | All your views should be found here                          |
 | **.env**/                          | All secrets keys for oauth providers, db_url and app port    |
-| app.js                             | Main application file.                                       |
+| *app.js*                             | Main application file.                                      |
 
 
 ## Notes
@@ -111,7 +113,7 @@ In production ensure you are using own session store. This application uses conn
 ### Auth 
 If you want to use one the auth service providers please ensure that you have the correct credentials as demonstrated in the .env file. Also also ensure yoou have set up an app for the correct provider in the developer service for said provider..
 
-### Emailing
+### Emails
 Emailing for this appplication is fairly simple to implement. Emails should be written in handlebars with the `.hbs` extension in the emails-templates/emails folder. Just write whatever you wanna write, and wrap the dynamic data in double curly brackets `{{}}` as its done in handlebars. 
 **Send an email**
 
@@ -142,7 +144,7 @@ Should compile to:
 Hi John Doe,
 Welcome to Apple inc
 
-/*
+*/
 
 ```
 
