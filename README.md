@@ -1,6 +1,7 @@
-# The modern Exress handlebars starter pack
+# The Exress handlebars starter pack
 
-This is an opinionated but yet simple and custom express applicaton that should include all the basics needs of mordern web apps. This 
+This is an opinionated but yet simple and custom express applicaton that should include all the basics needed in mordern web apps. 
+This application is created to be fast,secure, modular and incredibly extensibly. 
 
 [![Build Status][build-badge]][build]
 [![MIT License][license-badge]][license]
