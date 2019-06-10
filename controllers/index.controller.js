@@ -1,5 +1,5 @@
 class IndexController {
-  showHome(req, res) {
+  showHome(_, res) {
     res.render('home', { title: 'Home' })
   }
   showContact(_, res) {

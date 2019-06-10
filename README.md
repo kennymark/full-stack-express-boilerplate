@@ -11,6 +11,7 @@ This application is created to be fast,secure, modular and incredibly extensibly
 
 
 ## Table of Contents
+-----------------------
 
 - [Features](#features)
 - [Pages](#pages)
@@ -22,7 +23,7 @@ This application is created to be fast,secure, modular and incredibly extensibly
 
 
 ## Features
-
+------------
 - Fully functional web server + web app
 - Written with es6 and exNext Javascript
 - Handlebars templating engine
@@ -49,7 +50,7 @@ This application is created to be fast,secure, modular and incredibly extensibly
 
 
 ## Pages
-
+--------
 ```
 - Home
 - Login
@@ -63,6 +64,7 @@ This application is created to be fast,secure, modular and incredibly extensibly
 ```
 
 ## Requirements
+---------------
 - Any decent laptop
 - Mongodb local or use a service like mlab or mongodb atlas
 - Nodejs
@@ -70,7 +72,7 @@ This application is created to be fast,secure, modular and incredibly extensibly
 - Some prior node, express and JS knowledge, especially the es6 syntax, classes, import modules etc
 
 ## Usage
-
+--------
 Once youo have ensure nodemon or node is started. First 
 `npm i` all the packages in the terminal
 
@@ -80,8 +82,7 @@ on port 3000 by default but if you want to modify that behaviour add a port numb
 To run tests `npm test` in the terminal 
 
 ## Project Structure
-Project Structure
------------------
+--------------------
 
 | Name                               | Description                                                  |
 | ---------------------------------- | ------------------------------------------------------------ |
@@ -106,7 +107,7 @@ Project Structure
 
 
 ## Notes
-
+---------
 ### Session Store
 In production ensure you are using own session store. This application uses connect mongo by default, if you do not like that. You can change it in the config file in the utils folders. There are a lot of session stores out there some of which could be found [here](https://github.com/expressjs/session/blob/master/README.md)
 
@@ -151,7 +152,7 @@ Welcome to Apple inc
 
 
 ## Packages
-
+-----------
 
 ```json
 "bcryptjs": "^2.4.3",
@@ -183,7 +184,7 @@ Welcome to Apple inc
 ```
 
 ## Todo
-
+--------
 - [ ] Account deletion
 - [ ] Update account
 - [X] Improved error handling
