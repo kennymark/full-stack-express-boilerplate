@@ -193,6 +193,25 @@ Welcome to Apple inc
 - [X] Emails
 - [X] Password Reset
 
+
+## Screenshots
+### Home Page
+![](/screenshots/home.png)
+
+## Login Page
+![](/screenshots/login.png)
+
+### Register Page
+![](/screenshots/register.png)
+
+### User Profile Page
+![](/screenshots/account.png)
+
+
+### Admin Profile Page
+![](/screenshots/admin.png)
+
+
 [build]: https://travis-ci.org/kennymark/Express-starter
 [build-badge]: https://travis-ci.org/kennymark/Express-starter.svg?branch=master
 [license-badge]: https://img.shields.io/npm/l/@testing-library/react.svg?style=flat-square
