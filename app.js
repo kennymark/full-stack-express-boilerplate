@@ -11,13 +11,13 @@ import flash from 'connect-flash'
 import helmet from 'helmet'
 import passport from 'passport'
 import lusca from 'lusca'
+import { logger, setLocals } from './config/util'
 import './controllers/auth.controller'
 dotenv.config()
 
-//user routes
+//routes
 import userRouter from './routes/user.routes'
 import indexRouter from './routes/index.routes'
-import { logger, setLocals } from './config/util'
 
 const app = express()
 const port = process.env.PORT || 3000
