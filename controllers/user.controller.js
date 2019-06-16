@@ -1,10 +1,9 @@
-import moment from 'moment/moment'
-import messages from '../data/messages'
-import emailController from './email.controller'
-import passport from 'passport'
-import jwt from 'jsonwebtoken'
+import jwt from 'jsonwebtoken';
+import passport from 'passport';
 import config from '../config/config';
+import messages from '../data/messages';
 import userModel from '../models/user.model';
+import emailController from './email.controller';
 class UserController {
 
   showLogin(_, res) {
@@ -54,8 +53,6 @@ class UserController {
         [query]: { $regex: `${search}` }
       }, { page, limit: 10 })
       console.log(': result', result)
-
-
       return res.render('admin', { title: 'Admin Page', data: result })
     } catch (err) {
       return res.render('admin', { title: 'Admin Error', msg: err, type: 'danger' })
@@ -64,16 +61,16 @@ class UserController {
 
 
   async localLogin(req, res, next) {
-    passport.authenticate('login', async(err, user, _info) => {
+    passport.authenticate('login', async (err, user, _info) => {
       try {
         if (err || !user) return res.render('login', { error: messages.user_not_found })
         req.login(user, err => {
           if (user.is_admin) res.redirect('/user/profile/admin/')
-            // if (!user.is_active) {
-            // req.flash('error', messages.)
-            //   next()
-            // }
-          else { return res.redirect(302, '/user/profile/' + user.id) }
+          // if (!user.is_active) {
+          // req.flash('error', messages.)
+          //   next()
+          // }
+          else return res.redirect(302, '/user/profile/' + user.id)
         })
       } catch (error) { return next(error) }
     })(req, res, next)
@@ -85,7 +82,7 @@ class UserController {
   }
 
   twitterLogin(req, res, next) {
-    passport.authenticate('twitter', async(err, user, _info) => {
+    passport.authenticate('twitter', async (err, user, _info) => {
       try {
         if (err || !user) return res.render('login', { error: messages.user_not_found })
         req.login(user, err => {
@@ -114,7 +111,7 @@ class UserController {
     passport.authenticate('github', (_err, user, _info) => {
       try {
         if (user) {
-          req.login(user, _err => {
+          req.login(user, _ => {
             res.redirect('/user/profile/' + user.id)
           })
         }
@@ -157,31 +154,42 @@ class UserController {
   async showEdituser(req, res) {
     const { id } = req.params
     try {
-      const user = await userModelfindById(id)
+      const user = await userModel.findById(id)
       if (user) {
         res.render('edit-user', { data: user })
       }
     } catch (error) {
-      req.flash('error', messages.user_not_found)
-      res.render('index')
+      req.flash('error', error)
+      res.render('home')
     }
   }
 
   async updateUser(req, res) {
     const id = req.params.id || req.body.id
     try {
-      const user = await userModelfindByIdAndUpdate(id, req.body)
+      const user = await userModel.findByIdAndUpdate(id, req.body)
       if (user) {
         req.flash('message', messages.user_updated)
-        res.render('index')
+        res.render('home')
       }
     } catch (error) {
       req.flash('error', messages.user_not_found)
-      res.render('index')
+      res.render('home')
     }
   }
 
+  async updateUserPassword(req, res, next) {
+    const { password, id } = req.body
+    const user = await userModel.findByIdAndUpdate(id, { password })
 
+    if (user) {
+      res.redirect(req.baseUrl)
+    }
+    else {
+      req.flash('error', messages.general_error)
+      next()
+    }
+  }
   async postRegister(req, res) {
     req.checkBody('name', 'Name should be greater than 5 characters').isLength(5)
     req.checkBody('name', 'Name cannot be empty').notEmpty()
@@ -194,7 +202,7 @@ class UserController {
       return res.redirect('/user/register')
     }
 
-    passport.authenticate('signup', async(err, user, info) => {
+    passport.authenticate('signup', async (err, user, info) => {
       try {
         if (err || !user) {
           req.flash('error', info.message)

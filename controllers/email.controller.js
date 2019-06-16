@@ -39,19 +39,13 @@ class Email {
 
   send({ from, to, subject, template, context }) {
     const options = { from, to, subject, template, context }
-
     this.transporter.sendMail(options, (err, data) => {
       if (err) return log('Error occurs', err);
       return log('Email sent!!!', data, new Date());
     });
+
   }
 }
-
-
-const email = new Email()
-
-log(email.emailRoutes)
-  // email.send()
 
 
 export default new Email()

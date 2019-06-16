@@ -1,23 +1,23 @@
-import express from 'express'
-import hbs from 'express-handlebars'
-import cors from 'cors'
-import validator from 'express-validator'
-import mongoose from 'mongoose'
-import dotenv from 'dotenv'
-import session from 'express-session'
-import config from './config/config'
-import compression from 'compression'
-import flash from 'connect-flash'
-import helmet from 'helmet'
-import passport from 'passport'
-import lusca from 'lusca'
-import { logger, setLocals } from './config/util'
-import './controllers/auth.controller'
+import compression from 'compression';
+import flash from 'connect-flash';
+import cors from 'cors';
+import dotenv from 'dotenv';
+import express from 'express';
+import hbs from 'express-handlebars';
+import session from 'express-session';
+import validator from 'express-validator';
+import helmet from 'helmet';
+import lusca from 'lusca';
+import mongoose from 'mongoose';
+import passport from 'passport';
+import morgan from 'morgan'
+import './controllers/auth.controller'; //runs passport authentication 
+import config from './config/config';
+import { setLocals } from './config/util';
+import indexRouter from './routes/index.routes';
+import userRouter from './routes/user.routes';
 dotenv.config()
 
-//routes
-import userRouter from './routes/user.routes'
-import indexRouter from './routes/index.routes'
 
 const app = express()
 const port = process.env.PORT || 3000
@@ -33,7 +33,7 @@ app.use(session(config.sessionConfig))
 app.use(passport.initialize())
 app.use(passport.session())
 app.use(lusca(config.luscaConfig))
-app.use(logger)
+app.use(morgan('dev'))
 app.enable('trust proxy')
 
 
@@ -60,7 +60,7 @@ app.get('*', (req, res) => res.render('error404', { data: req.originalUrl }))
 process.env.NODE_ENV.includes('prod') ? app.set('view cache', true) : app.set('view cache', false)
 
 app.listen(port)
-  .on('listening', async() => {
+  .on('listening', async () => {
     await console.log(`Listening at http://localhost:${port}`)
   })
 

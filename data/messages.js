@@ -14,6 +14,8 @@ export default {
   password_reset_success: 'Congratulations, your password has been reset, you can now log in',
   password_reset_fail: 'Looks like your password reset time has expired, please resetting your password again',
   account_frozen: 'Your account has been frozen, to unfreeze it login again',
+  general_error: 'An error has occurred, please try again later',
+  admin_only: 'Page is restricted to admins only',
 
   userAlreadyExists(user) {
     return `User ${user.email} already has been registered, login or reset password`
@@ -22,10 +24,13 @@ export default {
   passwordForgotSuccess(user) {
     return `The link to reset your password has been sent to ${user.email}, please check your email.`
   },
+
   passwordForgotFail(email) {
     return `No such email ${email} exists in our database, please register for an account.`
   },
 
-  validation_errors: {},
+  validation_errors: {
+
+  },
 
 }

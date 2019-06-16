@@ -11,6 +11,12 @@ export function ensureAuthenticated(req, res, next) {
   res.redirect('/user/login?user_login_err')
 }
 
+export function isAdmin(req, res, next) {
+  if (req.user.is_admin) return next()
+  req.flash('error', messages.cant_access_resource)
+  res.redirect(req.baseUrl)
+}
+
 router.get('/login', UserController.showLogin)
 router.post('/login', UserController.localLogin)
 router.post('/logout', ensureAuthenticated, UserController.logUserOut)
@@ -21,14 +27,15 @@ router.get('/login/github', passport.authenticate('github'))
 router.get('/login/google', passport.authenticate('google', { scope: ['profile', 'email'] }))
 
 
-router.get('/register', UserController.showRegister)
-router.post('/register', UserController.postRegister)
+router.router('/register')
+  .get(UserController.showRegister)
+  .post(UserController.postRegister)
 
 router.get('/logout', UserController.logUserOut)
 router.delete('/delete/:id', ensureAuthenticated, UserController.deleteUser)
 
-router.get('/edit/:id', ensureAuthenticated, UserController.showEdituser)
-router.put('/edit/:id', ensureAuthenticated, UserController.updateUser)
+router.get('/edit/:id', ensureAuthenticated, isAdmin, UserController.showEdituser)
+router.put('/edit/:id', ensureAuthenticated, isAdmin, UserController.updateUser)
 
 router.get('/freeze/:id', ensureAuthenticated, UserController.freezeUser)
 

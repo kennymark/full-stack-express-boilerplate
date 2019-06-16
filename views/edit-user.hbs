@@ -1,62 +1,89 @@
 {{#if data}}
-<div class="container-small">
-  <h2 class="title-4">{{date}}</h2>
-  <div class="row">
-    {{#with data}}
-    <div class="col-sm-10">
+  <div class="container-small">
+    <h2 class="title-4">{{date}}</h2>
+    <div class="row">
+      {{#with data}}
+        <div class="col-sm-10">
+          <form action='/user/edit/{{id}}' method="post">
+            <div class="form-group row">
+              <label for="staticEmail" class="col-sm-4 col-form-label">Name</label>
+              <div class="col">
+                <input type="text" name='name' class="form-control-plaintext" value="{{name}}">
+              </div>
+            </div>
 
-      <form action='/user/edit/{{id}}' method="post">
-        <div class="form-group row">
-          <label for="staticEmail" class="col-sm-4 col-form-label">Name</label>
-          <div class="col">
-            <input type="text" name='name' class="form-control-plaintext" value="{{name}}">
-          </div>
-        </div>
+            <div class="form-group row">
+              <label for="staticEmail" class="col-sm-4 col-form-label">Email</label>
+              <div class="col">
+                <input type="text" name='email' class="form-control-plaintext" value="{{email}}">
+              </div>
+            </div>
 
-        <div class="form-group row">
-          <label for="staticEmail" class="col-sm-4 col-form-label">Email</label>
-          <div class="col">
-            <input type="text" name='email' class="form-control-plaintext" value="{{email}}">
-          </div>
-        </div>
+            <div class="form-group row">
+              <label for="inputPassword" class="col-sm-4 col-form-label">Password</label>
+              <div class="col">
+                <input type="password" class="form-control" id="inputPassword" placeholder="Password">
+              </div>
+            </div>
 
-        <div class="form-group row">
-          <label for="inputPassword" class="col-sm-4 col-form-label">Password</label>
-          <div class="col">
-            <input type="password" class="form-control" id="inputPassword" placeholder="Password">
-          </div>
-        </div>
+            <div class="form-group row">
+              <label class="col-sm-4 col-form-label">Last updated on</label>
+              <div class="col">
+                <label type="text" readonly class="form-control">
+                  {{updated_at}}
+                </label>
+              </div>
+            </div>
 
-        <div class="form-group row">
-          <label for="staticEmail" class="col-sm-4 col-form-label">Last updated on</label>
-          <div class="col">
-            <label type="text" readonly class="form-control">
-              {{updated_at}}
-            </label>
-          </div>
-        </div>
 
-        <div class="form-group row">
-          <label for="inputPassword" class="col-sm-4 col-form-label">Is Admin</label>
-          <div class="col">
-            <input type="checkbox" name='isAdmin' class="form-control" placeholder="Password">
-          </div>
+            <div class="form-group row">
+              <label for="website" class="col-sm-4 col-form-label">Website</label>
+              <div class="col">
+                <input type="text" class="form-control" id="website" placeholder="website" value="{{website}}">
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label for="staticEmail" class="col-sm-4 col-form-label">Sex</label>
+              <div class="col">
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="inlineRadioOptions" value="male">
+                  <label class="form-check-label" for="inlineRadio1">Male</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="inlineRadioOptions" value="female">
+                  <label class="form-check-label" for="inlineRadio2">Female</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="inlineRadioOptions" value="other">
+                  <label class="form-check-label" for="inlineRadio3">Other</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label for="inputPassword" class="col-sm-4 col-form-label">Is Admin</label>
+              <div class="col">
+                <input type="checkbox" name='isAdmin' class="form-control" placeholder="Password">
+              </div>
+            </div>
+
+            <button class="btn btn-primary" type="submit">Update User</button>
+
+          </form>
         </div>
-        <button class="btn btn-primary" type="submit">Save</button>
-      </form>
+      {{/with}}
     </div>
-    {{/with}}
   </div>
-</div>
 {{/if}}
 
 {{#unless data}}
-<div class="container-small">
-  <h1 class="title-3">You need to login to edit your profile</h1>
-  <a href="/user/login">
-    <button class="btn btn-primary">
-      Login
-    </button>
-  </a>
-</div>
+  <div class="container-small">
+    <h1 class="title-3">You need to login to edit your profile</h1>
+    <a href="/user/login">
+      <button class="btn btn-primary">
+        Login
+      </button>
+    </a>
+  </div>
 {{/unless}}
