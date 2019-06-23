@@ -27,7 +27,7 @@ router.get('/login/github', passport.authenticate('github'))
 router.get('/login/google', passport.authenticate('google', { scope: ['profile', 'email'] }))
 
 
-router.router('/register')
+router.route('/register')
   .get(UserController.showRegister)
   .post(UserController.postRegister)
 

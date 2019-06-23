@@ -32,7 +32,7 @@ class UserController {
     const page = req.query.page || 1
     const activeUsers = await userModel.find({ is_active: true })
     const deletedUsers = await userModel.find({ is_deleted: true })
-    const result = await userModel.paginate({}, { page, limit: 10 })
+    const result = await userModel.paginate({ is_deleted: false }, { page, limit: 10 })
     let pagesArr = []
     res.render('admin', {
       title: 'Admin Page',
@@ -64,12 +64,8 @@ class UserController {
     passport.authenticate('login', async (err, user, _info) => {
       try {
         if (err || !user) return res.render('login', { error: messages.user_not_found })
-        req.login(user, err => {
+        req.login(user, _ => {
           if (user.is_admin) res.redirect('/user/profile/admin/')
-          // if (!user.is_active) {
-          // req.flash('error', messages.)
-          //   next()
-          // }
           else return res.redirect(302, '/user/profile/' + user.id)
         })
       } catch (error) { return next(error) }
@@ -206,7 +202,7 @@ class UserController {
       try {
         if (err || !user) {
           req.flash('error', info.message)
-          return res.render('Register', { title: 'Register' })
+          return res.redirect('/user/register')
         } else {
           req.flash('message', info.message)
           return res.redirect('/')

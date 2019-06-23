@@ -33,7 +33,7 @@ app.use(session(config.sessionConfig))
 app.use(passport.initialize())
 app.use(passport.session())
 app.use(lusca(config.luscaConfig))
-app.use(morgan('dev'))
+app.use(morgan('short'))
 app.enable('trust proxy')
 
 
