@@ -1,5 +1,5 @@
 export default {
-  user_not_found: 'User does not exist',
+  user_not_found: 'User does not have an account registered. Please signup in order to login',
   user_updated: 'User has been sucessfully updated',
   confirm_email: 'Please confirm email to login',
   invalid_password: 'The password is invalid',
