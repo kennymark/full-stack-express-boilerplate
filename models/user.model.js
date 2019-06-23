@@ -33,15 +33,6 @@ userSchema.pre('save', async function (next) {
   next()
 })
 
-userSchema.pre('update', async function (next) {
-  if (this.password) {
-    let hash = await bcrypt.hash(this.password, 10)
-    this.password = hash
-    this.updated_at = new Date()
-  }
-  next()
-})
-
 
 userSchema.methods.isValidPassword = async function (password) {
   const user = this;
