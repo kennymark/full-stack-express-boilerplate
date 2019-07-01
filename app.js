@@ -11,11 +11,13 @@ import lusca from 'lusca';
 import mongoose from 'mongoose';
 import passport from 'passport';
 import morgan from 'morgan'
+import methodOverride from 'method-override'
 import './controllers/auth.controller'; //runs passport authentication 
 import config from './config/config';
 import { setLocals } from './config/util';
 import indexRouter from './routes/index.routes';
 import userRouter from './routes/user.routes';
+
 dotenv.config()
 
 
@@ -27,6 +29,7 @@ mongoose.connect(process.env.DB_URL, config.dbOptions)
 mongoose.connection.on('error', error => console.log(error));
 
 app.use(cors())
+app.use(methodOverride('_method'))
 app.use(compression())
 app.use(helmet())
 app.use(session(config.sessionConfig))

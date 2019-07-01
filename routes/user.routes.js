@@ -17,38 +17,47 @@ export function isAdmin(req, res, next) {
   res.redirect(req.baseUrl)
 }
 
-router.get('/login', UserController.showLogin)
-router.post('/login', UserController.localLogin)
+router.route('/login')
+  .get(UserController.showLogin)
+  .post(UserController.localLogin)
+
 router.post('/logout', ensureAuthenticated, UserController.logUserOut)
 
 router.get('/login/twitter', passport.authenticate('twitter'))
 router.get('/login/facebook', passport.authenticate('facebook'))
 router.get('/login/github', passport.authenticate('github'))
 router.get('/login/google', passport.authenticate('google', { scope: ['profile', 'email'] }))
+router.get('/logout', UserController.logUserOut)
 
 
-router.route('/register')
+router
+  .route('/register')
   .get(UserController.showRegister)
   .post(UserController.postRegister)
 
-router.get('/logout', UserController.logUserOut)
-router.delete('/delete/:id', ensureAuthenticated, UserController.deleteUser)
 
-router.get('/edit/:id', ensureAuthenticated, isAdmin, UserController.showEdituser)
-router.put('/edit/:id', ensureAuthenticated, isAdmin, UserController.updateUser)
+
+router
+  .route('/edit/:id')
+  .get(ensureAuthenticated, isAdmin, UserController.showEdituser)
+  .put(ensureAuthenticated, isAdmin, UserController.updateUser)
+
+router.delete('/delete/:id', ensureAuthenticated, UserController.deleteUser)
 
 router.get('/freeze/:id', ensureAuthenticated, UserController.freezeUser)
 
-router.post('/forgot-password/', UserController.forgotPassword)
-router.get('/forgot-password', UserController.showforgottenPassword)
+router
+  .route('/forgot-password/')
+  .post(UserController.forgotPassword)
+  .get(UserController.showforgottenPassword)
 
 router.get('/reset-password/:token/:id', UserController.showResetPassword)
 router.post('/reset-password/', UserController.resetPassword)
 
 
 //Authenticated routes
-router.get('/profile/admin/', ensureAuthenticated, UserController.showAdminProfile)
-router.get('/profile/admin/search/', ensureAuthenticated, UserController.search)
+router.get('/profile/admin/', ensureAuthenticated, isAdmin, UserController.showAdminProfile)
+router.get('/profile/admin/search/', ensureAuthenticated, isAdmin, UserController.search)
 router.get('/profile/:id', ensureAuthenticated, UserController.showProfile)
 
 export default router

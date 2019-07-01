@@ -81,7 +81,7 @@
           <div class="card">
             <div class="card-body">
 
-              <form method="POST" action="#">
+              <form method="POST" action="/user/edit/{{id}}">
                 <div class="form-group row">
                   <label for="staticEmail" class="col-sm-4 col-form-label">Password</label>
                   <div class="col">
@@ -96,10 +96,11 @@
                   </div>
                 </div>
                 <input hidden name='csrfToken'>
-                <a href="#" class="btn btn-primary">Change Password
+                <button type="submit" class="btn btn-primary">Change Password
                   <ion-icon name="key"></ion-icon>
-                </a>
+                </button>
               </form>
+
             </div>
           </div>
         </div>
@@ -110,10 +111,13 @@
             <div class="card-body">
               <h5 class="card-title">Modify Account</h5>
               <p class="card-text">Do you wish to delete your account?</p>
-              <a href="#" class="btn btn-danger">
-                <ion-icon name="trash"></ion-icon>
-                Delete Account
-              </a>
+
+              <form action="/user/delete/{{id}}?_method=DELETE" method="post">
+                <button type='submit' class="btn btn-danger">
+                  <ion-icon name="trash"></ion-icon>
+                  Delete Account
+                </button>
+              </form>
 
               <hr>
               <p class="card-text mt-3">Do you wish to freeze your account?</p>

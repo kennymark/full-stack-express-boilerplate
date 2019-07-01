@@ -31,7 +31,7 @@ This application is created to be fast,secure, modular and incredibly extensibly
 - SSO auth with Google, Twitter, Facebook
 - User signup
 - Delete account
-- Emailing with templates
+- Emailing with local templates
 - Error handling
 - Relative dates with Momentjs
 - Authentization

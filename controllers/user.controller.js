@@ -66,6 +66,10 @@ class UserController {
         if (err || !user) return res.render('login', { error: messages.user_not_found })
         req.login(user, _ => {
           if (user.is_admin) res.redirect('/user/profile/admin/')
+          if (user.is_deleted) {
+            req.flash('error', messages.user_not_found)
+            res.redirect('/')
+          }
           else return res.redirect(302, '/user/profile/' + user.id)
         })
       } catch (error) { return next(error) }
@@ -133,7 +137,7 @@ class UserController {
   }
 
   async deleteUser(req, res) {
-    const id = req.params.id || req.body.id
+    const { id } = req.params
     await userModel.findOneAndUpdate(id, { deleted: true })
     req.flash('message', messages.account_deleted)
     res.redirect('/')

@@ -5,7 +5,7 @@ export default {
   invalid_password: 'The password is invalid',
   account_deleted: 'Your account has been sucessfully deleted',
   login_sucess: 'You have been sucessfully loggedin',
-  account_registered: 'You have been sucessfully registered',
+  account_registered: 'You have been sucessfully registered, please check your email for confirmation and log in',
   email_confirmation: 'Please check your email',
   no_auth_header: 'Please login as request does not include auth header',
   login_session_expired: 'Session has expired please login again',
