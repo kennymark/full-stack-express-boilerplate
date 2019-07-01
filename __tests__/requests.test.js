@@ -65,7 +65,7 @@ describe('Test routes', () => {
       .post('/user/login')
       .send({
         email: 'test@test.com',
-        password: 'test'
+        password: 'test1'
       })
       .set('Accept', 'application/json')
       .then(res => {
@@ -107,7 +107,6 @@ describe('Test routes', () => {
       .get('/user/logout')
       .then(res => {
         expect(res.redirect).toBe(true);
-        console.log(res.links)
       });
   });
 })
