@@ -1,6 +1,7 @@
 export default {
   user_not_found: 'User does not have an account registered. Please signup in order to login',
   user_updated: 'User has been sucessfully updated',
+  user_update_error: 'Could not update user, error occurred, please try again later',
   confirm_email: 'Please confirm email to login',
   invalid_password: 'The password is invalid',
   account_deleted: 'Your account has been sucessfully deleted',
@@ -16,7 +17,6 @@ export default {
   account_frozen: 'Your account has been frozen, to unfreeze it login again',
   general_error: 'An error has occurred, please try again later',
   admin_only: 'Page is restricted to admins only',
-
   userAlreadyExists(user) {
     return `User ${user.email} already has been registered, login or reset password`
   },

@@ -10,11 +10,13 @@ body {
   font-family: 'Noto Sans HK', Avenir, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
   height: 100vh !important;
   overflow-x: hidden;
-  font-smooth: always;
   -webkit-font-smoothing: antialiased;
   -moz-font-smoothing: antialiased;
 }
-
+ 
+button{
+  outline: none;
+}
 li {
   list-style-type: none;
 }

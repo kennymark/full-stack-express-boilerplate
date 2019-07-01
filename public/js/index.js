@@ -1,41 +1,19 @@
-(function() {
+(function () {
   const pagination = document.querySelector('.pagination')
   const page = document.querySelectorAll('.nav-item')
+  const profile_pwd = document.querySelector('#profile_pwd')
+  const profile_new_pwd = document.querySelector('#profile_new_pwd')
+  const pwd_confirmation = document.querySelector('#pwd_confirmation')
+  const pwdUpdateBtn = document.querySelector('#update_pwd_btn')
   const url = new URL(window.location.href)
+  let passwordVal = null;
   let currSearch = url.searchParams.get('page')
-    // const inputText = document.querySelector('#searchUser')
-    // const submitButton = document.querySelector('#submitSearch')
-    // const tableBody = document.querySelector('#tBody')
   const appAlert = document.querySelectorAll('.app-alert')
-
-
-
-
 
   if (appAlert) {
     setTimeout(() => {
       appAlert.forEach(el => el.remove())
     }, 1000 * 60 * 2)
-  }
-
-  function deleteUser(e) {
-    console.log(e)
-    const id = e.target.dataset.id
-    dbInteractor('edit', id, 'put');
-  }
-
-  function dbInteractor(route, id, reqType = 'get') {
-    return fetch(`/user/${route}/${id}`, {
-        method: `${reqType}`
-      })
-      .then(res => res.json())
-      .then(data => console.log(data))
-      .catch(err => console.log(err))
-  }
-
-
-  function getUserVal(e) {
-    userInput = e.target.value
   }
 
   function paginate() {
@@ -56,8 +34,6 @@
       val == 'home' ? '/' : null;
       console.log(val)
       console.log(url.href.includes(val))
-
-      console.dir(child)
     })
   }
 
@@ -72,6 +48,28 @@
 
     function setDefaultScrollPosition(_) {
       return localStorage.setItem('sPosition', window.scrollY)
+    }
+  }
+
+  profile_new_pwd.addEventListener('keyup', comparePasswords)
+  profile_pwd.addEventListener('keyup', e => {
+    passwordVal = e.target.value
+  })
+
+  function comparePasswords(e) {
+    if (e.target.value !== passwordVal) {
+      console.log(': comparePasswords -> value', e.target.value)
+      pwd_confirmation.textContent = 'Passwords do not match'
+      pwd_confirmation.classList.add('text-danger')
+      pwd_confirmation.classList.remove('text-success')
+      pwdUpdateBtn.disabled = true
+    }
+
+    else {
+      pwd_confirmation.textContent = 'Passwords match correctly'
+      pwd_confirmation.classList.remove('text-danger')
+      pwd_confirmation.classList.add('text-success')
+      pwdUpdateBtn.disabled = false
     }
   }
 

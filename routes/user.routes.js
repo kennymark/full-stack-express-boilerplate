@@ -14,7 +14,7 @@ export function ensureAuthenticated(req, res, next) {
 export function isAdmin(req, res, next) {
   if (req.user.is_admin) return next()
   req.flash('error', messages.cant_access_resource)
-  res.redirect(req.baseUrl)
+  res.redirect('/')
 }
 
 router.route('/login')
@@ -39,12 +39,13 @@ router
 
 router
   .route('/edit/:id')
-  .get(ensureAuthenticated, isAdmin, UserController.showEdituser)
-  .put(ensureAuthenticated, isAdmin, UserController.updateUser)
+  .get(ensureAuthenticated, UserController.showEdituser)
+  .put(ensureAuthenticated, UserController.updateUser)
 
+router.put('/update_password/:id', UserController.updateUserPassword)
 router.delete('/delete/:id', ensureAuthenticated, UserController.deleteUser)
 
-router.get('/freeze/:id', ensureAuthenticated, UserController.freezeUser)
+router.put('/freeze/:id', ensureAuthenticated, UserController.freezeUser)
 
 router
   .route('/forgot-password/')

@@ -44,10 +44,10 @@ class UserController {
   }
 
 
+
   async search(req, res) {
     const { search, query } = req.query
     const page = req.query.page || 1
-
     try {
       const result = await userModel.paginate({
         [query]: { $regex: `${search}` }
@@ -140,6 +140,7 @@ class UserController {
     const { id } = req.params
     await userModel.findOneAndUpdate(id, { deleted: true })
     req.flash('message', messages.account_deleted)
+    req.logout()
     res.redirect('/')
   }
 
@@ -165,24 +166,26 @@ class UserController {
   }
 
   async updateUser(req, res) {
-    const id = req.params.id || req.body.id
+    const { id } = req.params
     try {
       const user = await userModel.findByIdAndUpdate(id, req.body)
       if (user) {
+        console.log(user)
         req.flash('message', messages.user_updated)
-        res.render('home')
+        res.redirect('/user/profile/' + id)
       }
     } catch (error) {
-      req.flash('error', messages.user_not_found)
-      res.render('home')
+      req.flash('error', messages.user_update_error)
+      res.redirect('/')
     }
   }
 
   async updateUserPassword(req, res, next) {
-    const { password, id } = req.body
-    const user = await userModel.findByIdAndUpdate(id, { password })
+    const { id } = req.params
+    const user = await userModel.findByIdAndUpdate(id, { ...req.body })
 
     if (user) {
+      req.flash('message', messages.user_updated)
       res.redirect(req.baseUrl)
     }
     else {
@@ -190,6 +193,7 @@ class UserController {
       next()
     }
   }
+
   async postRegister(req, res) {
     req.checkBody('name', 'Name should be greater than 5 characters').isLength(5)
     req.checkBody('name', 'Name cannot be empty').notEmpty()
