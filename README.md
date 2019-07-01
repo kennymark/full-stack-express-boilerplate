@@ -184,8 +184,8 @@ Welcome to Apple inc
 
 ## Todo
 
-- [ ] Account deletion
-- [ ] Update account
+- [X] Account deletion
+- [X] Update account
 - [X] Improved error handling
 - [X] Enable view-caching in production
 - [ ] Implement csrf via csurf or lusca config

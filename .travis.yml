@@ -10,13 +10,19 @@ cache:
     - "node_modules"
 install:
   - npm install
+
 script:
-  - npm run lint
   - npm test
   
 notifications:
-  email: false
-after_successs:
-  # npm run deploy 
+  email:
+    recipients:
+      - geniounico@hotmail.com
+    on_success: never # default: change
+    on_failure: always
+    
+
+after_failure:
+
 env:
 - NODE_ENV=DEVELOPEMENT

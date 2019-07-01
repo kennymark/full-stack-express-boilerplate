@@ -68,7 +68,7 @@ class UserController {
           if (user.is_admin) res.redirect('/user/profile/admin/')
           if (user.is_deleted) {
             req.flash('error', messages.user_not_found)
-            res.redirect('/')
+            res.redirect('/user/register')
           }
           else return res.redirect(302, '/user/profile/' + user.id)
         })
@@ -138,7 +138,7 @@ class UserController {
 
   async deleteUser(req, res) {
     const { id } = req.params
-    await userModel.findOneAndUpdate(id, { deleted: true })
+    await userModel.findOneAndUpdate(id, { is_deleted: true })
     req.flash('message', messages.account_deleted)
     req.logout()
     res.redirect('/')
@@ -180,17 +180,17 @@ class UserController {
     }
   }
 
-  async updateUserPassword(req, res, next) {
+  async updateUserPassword(req, res, ) {
     const { id } = req.params
-    const user = await userModel.findByIdAndUpdate(id, { ...req.body })
-
+    const { password } = req.body
+    const user = await userModel.findByIdAndUpdate(id, { password })
     if (user) {
       req.flash('message', messages.user_updated)
-      res.redirect(req.baseUrl)
+      res.redirect(req.originalUrl)
     }
     else {
       req.flash('error', messages.general_error)
-      next()
+      res.redirect(req.originalUrl)
     }
   }
 
