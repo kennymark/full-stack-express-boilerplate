@@ -57,14 +57,14 @@
   })
 
   function comparePasswords(e) {
-    if (e.target.value !== passwordVal) {
-      console.log(': comparePasswords -> value', e.target.value)
+    const { value } = e.target
+
+    if (value !== passwordVal) {
       pwd_confirmation.textContent = 'Passwords do not match'
       pwd_confirmation.classList.add('text-danger')
       pwd_confirmation.classList.remove('text-success')
       pwdUpdateBtn.disabled = true
     }
-
     else {
       pwd_confirmation.textContent = 'Passwords match correctly'
       pwd_confirmation.classList.remove('text-danger')

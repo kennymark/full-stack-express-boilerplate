@@ -20,7 +20,7 @@ passport.use('signup', new localStrategy({
   usernameField: 'email',
   passwordField: 'password',
   passReqToCallback: true
-}, async(req, email, password, done) => {
+}, async (req, email, password, done) => {
   try {
     const { name } = req.body
     const user = await userModel.findOne({ email })
@@ -38,7 +38,7 @@ passport.use('signup', new localStrategy({
 passport.use('login', new localStrategy({
   usernameField: 'email',
   passwordField: 'password'
-}, async(email, password, done) => {
+}, async (email, password, done) => {
 
   const user = await userModel.findOne({ email })
   try {
@@ -51,7 +51,7 @@ passport.use('login', new localStrategy({
     }
     return done(null, user, { message: messages.account_registered })
   } catch (err) {
-    return done(err, false, );
+    return done(err, false);
   }
 }))
 
@@ -59,9 +59,10 @@ passport.use('twitter', new twitterStrategy({
   consumerKey: process.env.TWITTER_CONSUMER_KEY,
   consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
   callbackURL: process.env.TWIITER_CALLBACK_URL
-}, async(token, refreshToken, profile, done) => {
+}, async (token, refreshToken, profile, done) => {
   const user = await userModel.findOne({ twitterId: profile.id })
   if (user) return done(null, user, { message: messages.login_sucess })
+
   else {
     const twitterUser = {
       twitterId: profile.id,
@@ -80,7 +81,7 @@ passport.use('google', new googleStrategy({
   clientID: process.env.GOOGLE_CLIENT_ID,
   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
   callbackURL: process.env.GOOGLE_CALLBACK_URL
-}, async(token, refreshToken, profile, done) => {
+}, async (token, refreshToken, profile, done) => {
 
   const user = await userModel.findOne({ googleId: profile.id })
   if (user) return done(null, user, { message: messages.login_sucess })
@@ -102,7 +103,7 @@ passport.use('facebook', new facebookStrategy({
   clientID: process.env.FB_CLIENT_ID,
   clientSecret: process.env.FB_CLIENT_SECRET,
   callbackURL: process.env.FB_CALLBACK_URL
-}, async(token, refreshToken, profile, done) => {
+}, async (token, refreshToken, profile, done) => {
   const user = await userModel.findOne({ facebookId: profile.id })
   if (user) return done(null, user, { message: messages.login_sucess })
   else {
@@ -124,7 +125,7 @@ passport.use('github', new githubStrategy({
   clientID: process.env.GITHUB_CLIENT_ID,
   clientSecret: process.env.GITHUB_CLIENT_SECRET,
   callbackURL: process.env.GITHUB_CALLBACK_URL,
-}, async(token, refreshToken, profile, done) => {
+}, async (token, refreshToken, profile, done) => {
   const user = await userModel.findOne({ githubId: profile.id })
   if (user) return done(null, user, { message: messages.login_sucess })
   else {

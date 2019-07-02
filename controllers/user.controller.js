@@ -82,18 +82,22 @@ class UserController {
   }
 
   twitterLogin(req, res, next) {
-    passport.authenticate('twitter', async (err, user, _info) => {
+    passport.authenticate('twitter', (_, user, info) => {
       try {
-        if (err || !user) return res.render('login', { error: messages.user_not_found })
-        req.login(user, err => {
-          return res.redirect('/user/profile/' + user.id)
-        })
-      } catch (error) { return next(error) }
+        if (user) {
+          req.login(user, _ => {
+            res.redirect('/user/profile/' + user.id)
+          })
+        }
+      } catch (error) {
+        req.flash('error', messages.login_failure)
+        res.redirect('/user/login')
+      }
     })(req, res, next)
   }
 
   facebookLogin(req, res, next) {
-    passport.authenticate('facebook', (_err, user, _info) => {
+    passport.authenticate('facebook', (_, user, _info) => {
       try {
         if (user) {
           req.login(user, _err => {
@@ -101,6 +105,7 @@ class UserController {
           })
         }
       } catch (error) {
+        req.flash('error', 'Error occurred whilst login')
         res.redirect('/user/login')
         return next(error)
       }

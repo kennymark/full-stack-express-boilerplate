@@ -15,10 +15,10 @@ describe('Test database activities', () => {
 
 
 
-  // afterAll(async () => {
-  //   // await db.connection.close()
-  //   await db.connection.dropCollection('nothing')
-  // });
+  afterAll(async () => {
+    await db.connection.close()
+    await db.connection.dropCollection('nothing')
+  });
 
   test('should connection successfully to the db', async () => {
     const dbState = await db.connection.readyState
@@ -27,7 +27,7 @@ describe('Test database activities', () => {
 
   test('should disconnect ', async () => {
     await db.connection.close().then(_ => {
-      const dbState = await db.connection.readyState
+      const dbState = db.connection.readyState
       expect(dbState).toBe(0)
     })
   })

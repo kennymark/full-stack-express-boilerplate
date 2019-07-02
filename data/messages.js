@@ -6,6 +6,7 @@ export default {
   invalid_password: 'The password is invalid',
   account_deleted: 'Your account has been sucessfully deleted',
   login_sucess: 'You have been sucessfully loggedin',
+  login_failure: 'Error occurred whilst logging in, please try again later',
   account_registered: 'You have been sucessfully registered, please check your email for confirmation and log in',
   email_confirmation: 'Please check your email',
   no_auth_header: 'Please login as request does not include auth header',
