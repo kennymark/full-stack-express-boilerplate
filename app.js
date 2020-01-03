@@ -17,7 +17,7 @@ import config from './config/config';
 import { setLocals } from './config/util';
 import indexRouter from './routes/index.routes';
 import userRouter from './routes/user.routes';
-
+import path from 'path'
 dotenv.config()
 
 
@@ -36,7 +36,7 @@ app.use(session(config.sessionConfig))
 app.use(passport.initialize())
 app.use(passport.session())
 app.use(lusca(config.luscaConfig))
-app.use(morgan('short'))
+app.use(morgan("tiny"))
 app.enable('trust proxy')
 
 
@@ -45,7 +45,7 @@ app.set('view engine', 'hbs')
 app.engine('hbs', hbs(config.hbsConfig))
 
 
-app.use(express.static('public'))
+app.use(express.static(path.join(__dirname, "public")))
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 
