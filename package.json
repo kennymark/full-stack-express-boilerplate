@@ -4,7 +4,8 @@
   "description": "A simple starter pack for express apps",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon -r esm app.js",
+    "start": "node -r esm app.js",
+    "start:dev": "nodemon -r esm app.js",
     "test": "jest  --verbose "
   },
   "jest": {
@@ -17,7 +18,8 @@
     "express starter pack"
   ],
   "engines": {
-    "node": "12.4.0"
+    "node": "12.4.0",
+    "npm": "6.13.4"
   },
   "author": "",
   "license": "ISC",
