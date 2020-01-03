@@ -3,9 +3,10 @@ import hbs from 'nodemailer-express-handlebars'
 import dotenv from 'dotenv'
 import sgTransport from 'nodemailer-sendgrid-transport';
 import inlineCss from 'nodemailer-juice'
+import path from 'path'
 dotenv.config({ path: '../.env' })
 
-
+import exphs from 'express-handlebars'
 const { SENDGRID_USERNAME, SENDGRID_API_KEY } = process.env
 
 const log = console.log;
@@ -14,8 +15,7 @@ class Email {
   constructor() {
     this.templateConfig()
   }
-
-  emailRoutes = process.cwd() + '/email-templates'
+  emailRoute = process.cwd() + '/email-templates'
   options = {
     auth: {
       api_user: SENDGRID_USERNAME,
@@ -35,6 +35,7 @@ class Email {
       viewPath: `${this.emailRoutes}/emails`,
       extName: '.hbs',
     }
+    console.log(this.config)
     this.transporter.use('compile', inlineCss())
     this.transporter.use('compile', hbs(config));
   }

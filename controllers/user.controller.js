@@ -82,12 +82,10 @@ class UserController {
   }
 
   twitterLogin(req, res, next) {
-    passport.authenticate('twitter', (_, user, info) => {
+    passport.authenticate('twitter', (err, user, info) => {
       try {
         if (user) {
-          req.login(user, _ => {
-            res.redirect('/user/profile/' + user.id)
-          })
+          req.login(user, _ => res.redirect('/user/profile/' + user.id))
         }
       } catch (error) {
         req.flash('error', messages.login_failure)
@@ -100,9 +98,7 @@ class UserController {
     passport.authenticate('facebook', (_, user, _info) => {
       try {
         if (user) {
-          req.login(user, _err => {
-            res.redirect('/user/profile/' + user.id)
-          })
+          req.login(user, _err => res.redirect('/user/profile/' + user.id))
         }
       } catch (error) {
         req.flash('error', 'Error occurred whilst login')
@@ -116,11 +112,10 @@ class UserController {
     passport.authenticate('github', (_err, user, _info) => {
       try {
         if (user) {
-          req.login(user, _ => {
-            res.redirect('/user/profile/' + user.id)
-          })
+          req.login(user, err => res.redirect('/user/profile/' + user.id))
         }
       } catch (error) {
+        req.flash('error', 'Error occurred whilst login')
         res.redirect('/user/login')
         return next(error)
       }
@@ -230,13 +225,13 @@ class UserController {
   async forgotPassword(req, res) {
     const { email } = req.body
     const user = await userModel.findOne({ email })
-    const website = 'http://localhost:3000'
+    const fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
     if (user) {
-      req.flash('message', messages.passwordResetSuccess(user))
       const token = await jwt.sign({ email: user.email }, config.jwtSecret, { expiresIn: '1h' })
       const { id, name, email } = user
 
       await userModel.findByIdAndUpdate(id, { resetToken: token })
+      req.flash('message', messages.passwordResetSuccess(user))
 
       const emailData = {
         from: 'mycompany@hotmail.com',
@@ -245,14 +240,14 @@ class UserController {
         template: 'password-reset',
         context: {
           name: name,
-          link: `${website}/user/reset-password/${token}/${id}`
+          link: `${fullUrl}/user/reset-password/${token}/${id}`
         }
       }
       emailController.send(emailData)
-      res.redirect('/user/reset-password')
+      res.redirect('/user/login')
 
     } else {
-      req.flash('error', messages.passwordResetFail(email))
+      req.flash('error', messages.passwordForgotFail(email))
       res.redirect('/user/forgot-password')
     }
   }
@@ -270,26 +265,24 @@ class UserController {
       req.flash('validationErrors', validationErrors)
     }
 
-    try {
-      const { resetToken } = await userModel.findById(id)
-      const userHasToken = await userModel.findOne({ resetToken })
-      if (userHasToken) {
-        const isTokenValid = await jwt.verify(token, config.jwtSecret)
-        if (isTokenValid) {
-          await userModel.findOneAndUpdate({ password })
-          req.flash('message', messages.password_reset_success)
-          res.redirect('/user/login')
-        }
-      } else {
-        req.flash('error', messages.pas)
+    const user = await userModel.findById(id)
+
+    if (user.resetToken) {
+      const isTokenValid = await jwt.verify(token, config.jwtSecret)
+      if (isTokenValid) {
+        await userModel.findOneAndUpdate({ password })
+        req.flash('message', messages.password_reset_success)
         res.redirect('/user/login')
       }
-
-    } catch (error) {
-      req.flash('error', error)
-      res.redirect('/user/reset-password')
+      else {
+        req.flash('error', messages.password_reset_fail)
+        res.redirect('/user/login')
+      }
     }
   }
+
+
+
 
 }
 export default new UserController()

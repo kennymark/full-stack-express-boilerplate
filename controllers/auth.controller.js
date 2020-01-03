@@ -112,7 +112,7 @@ passport.use('facebook', new facebookStrategy({
       name: profile.displayName,
       provider: profile.provider,
       gender: profile.gender,
-      email: profile.username + '@facebook.com',
+      email: profile.name + '@facebook.com',
       website: profile._json.url
     }
 

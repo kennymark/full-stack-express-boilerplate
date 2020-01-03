@@ -22,12 +22,14 @@ router.route('/login')
   .get(UserController.showLogin)
   .post(UserController.localLogin)
 
-router.post('/logout', ensureAuthenticated, UserController.logUserOut)
+
 
 router.get('/login/twitter', passport.authenticate('twitter'))
 router.get('/login/facebook', passport.authenticate('facebook'))
 router.get('/login/github', passport.authenticate('github'))
 router.get('/login/google', passport.authenticate('google', { scope: ['profile', 'email'] }))
+
+
 router.get('/logout', UserController.logUserOut)
 
 

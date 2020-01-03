@@ -23,7 +23,7 @@ export default {
     return `User ${user.email} already has been registered, login or reset password`
   },
 
-  passwordForgotSuccess(user) {
+  passwordResetSuccess(user) {
     return `The link to reset your password has been sent to ${user.email}, please check your email.`
   },
 
