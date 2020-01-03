@@ -2,6 +2,7 @@ import mailer from 'nodemailer'
 import hbs from 'nodemailer-express-handlebars'
 import dotenv from 'dotenv'
 import sgTransport from 'nodemailer-sendgrid-transport';
+import inlineCss from 'nodemailer-juice'
 dotenv.config({ path: '../.env' })
 
 
@@ -34,6 +35,7 @@ class Email {
       viewPath: `${this.emailRoutes}/emails`,
       extName: '.hbs',
     }
+    this.transporter.use('compile', inlineCss())
     this.transporter.use('compile', hbs(config));
   }
 

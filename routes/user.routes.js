@@ -17,6 +17,7 @@ export function isAdmin(req, res, next) {
   res.redirect('/')
 }
 
+
 router.route('/login')
   .get(UserController.showLogin)
   .post(UserController.localLogin)
