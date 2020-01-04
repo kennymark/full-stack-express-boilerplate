@@ -28,9 +28,9 @@ class Email {
     const config = {
       viewEngine: {
         extName: '.hbs',
-        partialsDir: `${this.emailRoutes}/partials`,
-        layoutsDir: `${this.emailRoutes}/`,
-        defaultLayout: `${this.emailRoutes}/main.hbs`,
+        partialsDir: `${this.emailRoute}/partials`,
+        layoutsDir: `${this.emailRoute}/`,
+        defaultLayout: `${this.emailRoute}/main.hbs`,
       },
       viewPath: `${this.emailRoutes}/emails`,
       extName: '.hbs',
