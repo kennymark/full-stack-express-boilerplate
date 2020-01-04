@@ -33,7 +33,6 @@ class Email {
       viewPath: `${this.emailRoute}/emails`,
       extName: '.hbs',
     }
-    console.log(this.config)
     this.transporter.use('compile', inlineCss())
     this.transporter.use('compile', hbs(config));
   }
