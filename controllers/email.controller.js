@@ -32,7 +32,7 @@ class Email {
         layoutsDir: `${this.emailRoute}/`,
         defaultLayout: `${this.emailRoute}/main.hbs`,
       },
-      viewPath: `${this.emailRoutes}/emails`,
+      viewPath: `${this.emailRoute}/emails`,
       extName: '.hbs',
     }
     console.log(this.config)
