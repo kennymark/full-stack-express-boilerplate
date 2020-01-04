@@ -231,7 +231,6 @@ class UserController {
       const { id, name, email } = user
 
       await userModel.findByIdAndUpdate(id, { resetToken: token })
-      req.flash('message', messages.passwordResetSuccess(user))
 
       const emailData = {
         from: 'mycompany@hotmail.com',
@@ -244,11 +243,14 @@ class UserController {
         }
       }
       emailController.send(emailData)
-      res.redirect('/user/login')
-
-    } else {
-      req.flash('error', messages.passwordForgotFail(email))
-      res.redirect('/user/forgot-password')
+        .then(x => {
+          req.flash('message', messages.passwordResetSuccess(user))
+          res.redirect('/user/login')
+        })
+        .catch(x => {
+          req.flash('error', x)
+          res.redirect('/user/forgot-password')
+        })
     }
   }
 

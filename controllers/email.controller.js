@@ -27,9 +27,7 @@ class Email {
   templateConfig() {
     const config = {
       viewEngine: {
-        extName: '.hbs',
-        partialsDir: `${this.emailRoute}/partials`,
-        layoutsDir: `${this.emailRoute}/`,
+        partialsDir: `${this.emailRoute}/partials/`,
         defaultLayout: `${this.emailRoute}/main.hbs`,
       },
       viewPath: `${this.emailRoute}/emails`,
@@ -42,10 +40,16 @@ class Email {
 
   send({ from, to, subject, template, context }) {
     const options = { from, to, subject, template, context }
-    this.transporter.sendMail(options, (err, data) => {
-      if (err) return log('Error occurs', err);
-      return log('Email sent!!!', data, new Date());
-    });
+    return new Promise((resolve, reject) => {
+      this.transporter.sendMail(options, (err, data) => {
+        if (err) return reject(`email sending occurs ${err}`);
+        if (data) {
+          log(data, new Date())
+          resolve('Email sent!!!')
+        }
+      });
+    })
+
 
   }
 }

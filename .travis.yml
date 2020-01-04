@@ -1,8 +1,6 @@
 sudo: false
 language: node_js
 node_js:
-  - "8"
-  - "10"
   - "12"
 services: mongodb  
 
@@ -15,6 +13,10 @@ install:
 script:
   - npm test
   
+after_success: 
+  - git checkout master 
+  - echo 'I am pretending to pull from master'
+
 notifications:
   email:
     recipients:
