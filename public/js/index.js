@@ -72,7 +72,7 @@
   }
 
   function selectDefaultGender() {
-    const currSex = localStorage.getItem('gender')
+    const currSex = sessionStorage.getItem('gender')
     if (url.href.includes('profile')) {
       const radios = document.querySelectorAll('input[name=gender]')
       radios.forEach(radio => {

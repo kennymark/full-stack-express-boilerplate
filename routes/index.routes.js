@@ -16,10 +16,10 @@ router.get('/pricing', indexController.showPricing)
 router.get('/about', indexController.showAbout)
 
 // Social Authentication for redirects 
-router.get('/oauth/google', userController.googleLogin)
-router.get('/oauth/facebook/', userController.facebookLogin)
-router.get('/oauth/github/', userController.githubLogin)
-router.get('/oauth/twitter/', userController.twitterLogin)
+router.get('/oauth/google', new userController().googleLogin)
+router.get('/oauth/facebook/', new userController().facebookLogin)
+router.get('/oauth/github/', new userController().githubLogin)
+router.get('/oauth/twitter/', new userController().twitterLogin)
 
 
 export default router

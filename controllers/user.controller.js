@@ -5,12 +5,14 @@ import messages from '../data/messages';
 import userModel from '../models/user.model';
 import emailController from './email.controller';
 class UserController {
-
-  showLogin(_, res) {
+  constructor() {
+    this.socialLogin = this.socialLogin.bind(this)
+  }
+  showLogin = (_, res) => {
     res.render('login', { title: 'Login' })
   }
 
-  showRegister(_, res) {
+  showRegister = (_, res) => {
     res.render('register', { title: 'Register' })
   }
 
@@ -20,7 +22,7 @@ class UserController {
     return res.render('profile', { title: 'Profile', user })
   }
 
-  showforgottenPassword(_, res) {
+  showforgottenPassword = (_, res) => {
     res.render('forgot-password', { title: ' Forgotten password' })
   }
 
@@ -77,26 +79,25 @@ class UserController {
     })(req, res, next)
   }
 
-  logUserOut(req, res) {
+  logUserOut(req, res, next, url = '/') {
     req.logout()
-    res.redirect('/')
+    res.redirect(url)
   }
 
-  twitterLogin(req, res, next) {
+  async twitterLogin(req, res, next) {
     this.socialLogin('twitter', req, res, next)
   }
 
   facebookLogin(req, res, next) {
-    this.socialLogin('facebook', req, res, next).bind(this)
+    this.socialLogin('facebook', req, res, next)
   }
 
   githubLogin(req, res, next) {
-    this.socialLogin('github', req, res, next).bind(this)
-
+    this.socialLogin('github', req, res, next)
   }
 
   googleLogin(req, res, next) {
-    this.socialLogin('google', req, res, next).bind(this)
+    this.socialLogin('google', req, res, next)
   }
 
   socialLogin(service, req, res, next) {
@@ -117,35 +118,31 @@ class UserController {
     const { id } = req.params
     await userModel.findOneAndUpdate(id, { is_deleted: true })
     req.flash('message', messages.account_deleted)
-    req.logout()
-    res.redirect('/')
+    this.logUserOut()
   }
 
   async deleteUserByAdmin(req, res) {
     const { id } = req.params
     await userModel.findOneAndUpdate(id, { is_deleted: true })
     req.flash('message', messages.account_deleted)
-    req.logout()
-    res.redirect('/')
+    this.logUserOut('/admin')
   }
+
   async freezeUser(req, res) {
     const { id } = req.params
     await userModel.findOneAndUpdate(id, { is_active: false })
     req.flash('message', messages.account_frozen)
-    req.logout()
-    res.redirect('/')
+    this.logUserOut()
   }
 
   async showEdituser(req, res) {
     const { id } = req.params
+    const user = await userModel.findById(id)
     try {
-      const user = await userModel.findById(id)
-      if (user) {
-        res.render('edit-user', { data: user })
-      }
+      res.render('edit-user', { data: user })
     } catch (error) {
       req.flash('error', error)
-      res.render('home')
+      res.redirect('/')
     }
   }
 
@@ -153,18 +150,16 @@ class UserController {
     const { id } = req.params
     console.log(req.body)
     try {
-      const user = await userModel.findByIdAndUpdate(id, req.body)
-      if (user) {
-        req.flash('message', messages.user_updated)
-        res.redirect('/user/profile/' + id)
-      }
+      await userModel.findByIdAndUpdate(id, req.body)
+      req.flash('message', messages.user_updated)
+      res.redirect('/user/profile/' + id)
     } catch (error) {
       req.flash('error', messages.user_update_error)
       res.redirect('/')
     }
   }
 
-  async updateUserPassword(req, res, ) {
+  async updateUserPassword(req, res) {
     const { id } = req.params
     const { password } = req.body
     const user = await userModel.findByIdAndUpdate(id, { password })
@@ -267,8 +262,7 @@ class UserController {
     }
   }
 
-
-
-
 }
-export default new UserController()
+
+
+export default UserController
