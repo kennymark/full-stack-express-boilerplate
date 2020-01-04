@@ -47,10 +47,11 @@ class UserController {
 
   async search(req, res) {
     const { search, query } = req.query
+    console.log({ search, query })
     const page = req.query.page || 1
     try {
-      const result = await userModel.paginate({
-        [query]: { $regex: `${search}` }
+      const result = await userModel.find({
+        [query]: { $regex: query, option: 'i' }
       }, { page, limit: 10 })
       console.log(': result', result)
       return res.render('admin', { title: 'Admin Page', data: result })
@@ -65,12 +66,12 @@ class UserController {
       try {
         if (err || !user) return res.render('login', { error: messages.user_not_found })
         req.login(user, _ => {
-          if (user.is_admin) res.redirect('/user/profile/admin/')
+          if (user.is_admin) return res.redirect('/user/profile/admin/')
           if (user.is_deleted) {
             req.flash('error', messages.user_not_found)
-            res.redirect('/user/register')
+            return res.redirect('/user/register')
           }
-          else return res.redirect(302, '/user/profile/' + user.id)
+          return res.redirect('/user/profile/' + user.id)
         })
       } catch (error) { return next(error) }
     })(req, res, next)
@@ -82,55 +83,31 @@ class UserController {
   }
 
   twitterLogin(req, res, next) {
-    passport.authenticate('twitter', (err, user, info) => {
-      try {
-        if (user) {
-          req.login(user, _ => res.redirect('/user/profile/' + user.id))
-        }
-      } catch (error) {
-        req.flash('error', messages.login_failure)
-        res.redirect('/user/login')
-      }
-    })(req, res, next)
+    this.socialLogin('twitter', req, res, next)
   }
 
   facebookLogin(req, res, next) {
-    passport.authenticate('facebook', (_, user, _info) => {
-      try {
-        if (user) {
-          req.login(user, _err => res.redirect('/user/profile/' + user.id))
-        }
-      } catch (error) {
-        req.flash('error', 'Error occurred whilst login')
-        res.redirect('/user/login')
-        return next(error)
-      }
-    })(req, res, next)
+    this.socialLogin('facebook', req, res, next).bind(this)
   }
 
   githubLogin(req, res, next) {
-    passport.authenticate('github', (_err, user, _info) => {
+    this.socialLogin('github', req, res, next).bind(this)
+
+  }
+
+  googleLogin(req, res, next) {
+    this.socialLogin('google', req, res, next).bind(this)
+  }
+
+  socialLogin(service, req, res, next) {
+    passport.authenticate(service, (_err, user, _info) => {
       try {
         if (user) {
           req.login(user, err => res.redirect('/user/profile/' + user.id))
         }
       } catch (error) {
-        req.flash('error', 'Error occurred whilst login')
+        req.flash('error', messages.login_failure)
         res.redirect('/user/login')
-        return next(error)
-      }
-    })(req, res, next)
-  }
-
-  googleLogin(req, res, next) {
-    passport.authenticate('google', (_err, user, _info) => {
-      try {
-        req.login(user, error => {
-          if (error) return next(error)
-          if (user.isAdmin) res.redirect('/user/profile/admin/')
-          else { return res.redirect(302, '/user/profile/' + user.id) }
-        })
-      } catch (error) {
         return next(error)
       }
     })(req, res, next)
@@ -144,6 +121,13 @@ class UserController {
     res.redirect('/')
   }
 
+  async deleteUserByAdmin(req, res) {
+    const { id } = req.params
+    await userModel.findOneAndUpdate(id, { is_deleted: true })
+    req.flash('message', messages.account_deleted)
+    req.logout()
+    res.redirect('/')
+  }
   async freezeUser(req, res) {
     const { id } = req.params
     await userModel.findOneAndUpdate(id, { is_active: false })
@@ -167,10 +151,10 @@ class UserController {
 
   async updateUser(req, res) {
     const { id } = req.params
+    console.log(req.body)
     try {
       const user = await userModel.findByIdAndUpdate(id, req.body)
       if (user) {
-        console.log(user)
         req.flash('message', messages.user_updated)
         res.redirect('/user/profile/' + id)
       }

@@ -32,8 +32,6 @@
     Array.from(page).forEach(child => {
       const val = child.textContent.toLowerCase()
       val == 'home' ? '/' : null;
-      console.log(val)
-      console.log(url.href.includes(val))
     })
   }
 
@@ -73,6 +71,17 @@
     }
   }
 
+  function selectDefaultGender() {
+    const currSex = localStorage.getItem('gender')
+    if (url.href.includes('profile')) {
+      const radios = document.querySelectorAll('input[name=gender]')
+      radios.forEach(radio => {
+        radio.value === currSex ? radio.checked = true : false
+      })
+    }
+  }
+
+  selectDefaultGender()
   scrollToLastPosition()
   setNavItemActive()
   paginate()

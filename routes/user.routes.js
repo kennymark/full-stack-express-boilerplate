@@ -44,6 +44,8 @@ router
   .route('/edit/:id')
   .get(ensureAuthenticated, UserController.showEdituser)
   .put(ensureAuthenticated, UserController.updateUser)
+  .post(ensureAuthenticated, UserController.updateUser)
+
 
 router.put('/update_password/:id', UserController.updateUserPassword)
 router.delete('/delete/:id', ensureAuthenticated, UserController.deleteUser)

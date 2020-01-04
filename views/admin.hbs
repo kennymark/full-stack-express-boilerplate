@@ -41,9 +41,8 @@
   <form class="input-group mt-4 mb-3" action="/user/profile/admin/search/">
     <div class="mr-2">
       <label class="mr-sm-2 sr-only" for="inlineFormCustomSelect">Preference</label>
-      <select class="custom-select mr-sm-2" name="field">
-        <option selected>Choose...</option>
-        <option value="name">Name</option>
+      <select class="custom-select mr-sm-2" name="query">
+        <option value="name" selected>Name</option>
         <option value="email">Email</option>
         <option value="provider">Provider</option>
         <option value="is_active">Active Users</option>
@@ -91,9 +90,11 @@
             </a>
           </td>
           <td id='deleteCol'>
-            <button data-id="{{this._id}}" class="btn w-100 deleteBtn btn-danger">
-              Delete
-            </button>
+            <a href="/user/delete/{{this._id}}?method_=">
+              <button data-id="{{this._id}}" class="btn w-100 deleteBtn btn-danger">
+                Delete
+              </button>
+            </a>
           </td>
         </tr>
       {{/each}}

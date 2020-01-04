@@ -21,15 +21,18 @@
               <label for="sex" class="col-sm-4 col-form-label">Sex</label>
               <div class="col">
                 <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" name="inlineRadioOptions" value="male">
+                  <script>
+                    localStorage.setItem('gender', "{{ gender }}")
+                  </script>
+                  <input class="form-check-input" type="radio" name="gender" value="male">
                   <label class="form-check-label" for="inlineRadio1">Male</label>
                 </div>
                 <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" name="inlineRadioOptions" value="female">
+                  <input class="form-check-input" type="radio" name="gender" value="female">
                   <label class="form-check-label" for="inlineRadio2">Female</label>
                 </div>
                 <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" name="inlineRadioOptions" value="other">
+                  <input class="form-check-input" type="radio" name="gender" value="other">
                   <label class="form-check-label" for="inlineRadio3">Other</label>
                 </div>
               </div>
