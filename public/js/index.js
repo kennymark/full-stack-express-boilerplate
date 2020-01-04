@@ -49,10 +49,12 @@
     }
   }
 
-  profile_new_pwd.addEventListener('keyup', comparePasswords)
-  profile_pwd.addEventListener('keyup', e => {
-    passwordVal = e.target.value
-  })
+  if (url.href.includes('profile')) {
+    profile_new_pwd.addEventListener('keyup', comparePasswords)
+    profile_pwd.addEventListener('keyup', e => {
+      passwordVal = e.target.value
+    })
+  }
 
   function comparePasswords(e) {
     const { value } = e.target
