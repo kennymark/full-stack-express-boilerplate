@@ -19,7 +19,8 @@ export function isAdmin(req, res, next) {
 }
 
 
-router.route('/login')
+router
+  .route('/login')
   .get(new UserController().showLogin)
   .post(new UserController().localLogin)
 
@@ -29,7 +30,6 @@ router.get('/login/twitter', passport.authenticate('twitter'))
 router.get('/login/facebook', passport.authenticate('facebook'))
 router.get('/login/github', passport.authenticate('github'))
 router.get('/login/google', passport.authenticate('google', { scope: ['profile', 'email'] }))
-
 
 router.get('/logout', new UserController().logUserOut)
 
@@ -41,17 +41,35 @@ router
 
 
 
+
+
+
 router
+  .all(ensureAuthenticated)
   .route('/edit/:id')
-  .get(ensureAuthenticated, new UserController().showEdituser)
-  .put(ensureAuthenticated, new UserController().updateUser)
-  .post(ensureAuthenticated, new UserController().updateUser)
+  .put(new UserController().updateUser)
+  .post(new UserController().updateUser)
 
+router
+  .all(ensureAuthenticated)
+  .route('/kenny/:id')
+  .put(new UserController().updateUser)
+  .post(new UserController().updateUser)
 
-router.put('/update_password/:id', new UserController().updateUserPassword)
-router.delete('/delete/:id', ensureAuthenticated, new UserController().deleteUser)
+// router
+//   .route('/admin-edit/:id')
+//   .get('/admin-edit/:id', (req, res) => res.send('fuck', req.params.id))
+//   .put(new UserController().updateUserByAdmin)
+//   .post(new UserController().updateUserByAdmin)
 
-router.put('/freeze/:id', ensureAuthenticated, new UserController().freezeUser)
+router
+  .put('/update_password/:id', ensureAuthenticated, new UserController().updateUserPassword)
+
+router
+  .delete('/delete/:id', ensureAuthenticated, new UserController().deleteUser)
+
+router
+  .put('/freeze/:id', ensureAuthenticated, new UserController().freezeUser)
 
 router
   .route('/forgot-password/')
@@ -63,8 +81,8 @@ router.post('/reset-password/', new UserController().resetPassword)
 
 
 //Authenticated routes
+router.get('/profile/:id', ensureAuthenticated, new UserController().showProfile)
 router.get('/profile/admin/', ensureAuthenticated, isAdmin, new UserController().showAdminProfile)
 router.get('/profile/admin/search/', ensureAuthenticated, isAdmin, new UserController().search)
-router.get('/profile/:id', ensureAuthenticated, new UserController().showProfile)
 
 export default router

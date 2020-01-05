@@ -145,11 +145,23 @@ class UserController {
 
   async updateUser(req, res) {
     const { id } = req.params
-    console.log(req.body)
     try {
       await userModel.findByIdAndUpdate(id, req.body)
       req.flash('message', messages.user_updated)
       res.redirect('/user/profile/' + id)
+    } catch (error) {
+      req.flash('error', messages.user_update_error)
+      res.redirect('/')
+    }
+  }
+
+  async updateUserByAdmin(req, res) {
+    console.log('welcome to update user by admin', req.params.id)
+    const { id } = req.params
+    try {
+      await userModel.findByIdAndUpdate(id, req.body)
+      req.flash('message', messages.user_updated)
+      res.redirect('/user/profile/admin')
     } catch (error) {
       req.flash('error', messages.user_update_error)
       res.redirect('/')
