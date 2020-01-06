@@ -47,17 +47,13 @@ class UserController {
 
   async search(req, res) {
     const { search, query } = req.query
-    console.log({ search, query })
     const page = req.query.page || 1
-    try {
-      const result = await userModel.find({
-        [query]: { $regex: query, option: 'i' }
-      }, { page, limit: 10 })
-      console.log(': result', result)
-      return res.render('admin', { title: 'Admin Page', data: result })
-    } catch (err) {
-      return res.render('admin', { title: 'Admin Error', msg: err, type: 'danger' })
+    const result = await userModel.paginate({ [query]: new RegExp(`${search}`, 'i') }, { page, limit: 10 })
+
+    if (!result) {
+      return res.render('admin', { title: 'Admin Error', msg: err, type: 'danger', data: result })
     }
+    return res.render('admin', { title: 'Admin Page', data: result })
   }
 
 
