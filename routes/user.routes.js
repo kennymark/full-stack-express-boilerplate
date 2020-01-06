@@ -46,6 +46,9 @@ router
   .put(ensureAuthenticated, UserController.updateUser)
   .post(ensureAuthenticated, UserController.updateUser)
 
+router
+  .route('/admin-edit/:id')
+  .put(ensureAuthenticated, UserController.updateUserByAdmin)
 
 router.put('/update_password/:id', UserController.updateUserPassword)
 router.delete('/delete/:id', ensureAuthenticated, UserController.deleteUser)

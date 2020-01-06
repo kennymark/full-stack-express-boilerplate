@@ -49,10 +49,7 @@ class UserController {
     const { search, query } = req.query
     const page = req.query.page || 1
     const result = await userModel.paginate({ [query]: new RegExp(`${search}`, 'i') }, { page, limit: 10 })
-
-    if (!result) {
-      return res.render('admin', { title: 'Admin Error', msg: err, type: 'danger', data: result })
-    }
+    console.log(result)
     return res.render('admin', { title: 'Admin Page', data: result })
   }
 
@@ -147,19 +144,28 @@ class UserController {
 
   async updateUser(req, res) {
     const { id } = req.params
-    console.log(req.body)
     try {
-      const user = await userModel.findByIdAndUpdate(id, req.body)
-      if (user) {
-        req.flash('message', messages.user_updated)
-        res.redirect('/user/profile/' + id)
-      }
+      await userModel.findByIdAndUpdate(id, req.body)
+      req.flash('message', messages.user_updated)
+      res.redirect('/user/profile/' + id)
+
     } catch (error) {
       req.flash('error', messages.user_update_error)
       res.redirect('/')
     }
   }
 
+  async updateUserByAdmin(req, res) {
+    const { id } = req.params
+    try {
+      await userModel.findByIdAndUpdate(id, req.body)
+      req.flash('message', messages.user_updated)
+      res.redirect('/user/profile/admin')
+    } catch (error) {
+      req.flash('error', messages.user_update_error)
+      res.redirect('/user/profile/admin')
+    }
+  }
   async updateUserPassword(req, res, ) {
     const { id } = req.params
     const { password } = req.body

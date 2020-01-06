@@ -56,6 +56,12 @@
     </div>
   </form>
 
+  {{#unless data.docs}}
+    <div class="container">
+      <h6 class="text-center my-5">No users match the search query. Please try again</h6>
+    </div>
+  {{/unless}}
+
   <table class="table table-borderless ">
     <thead>
       <tr>
@@ -132,16 +138,5 @@
     </span>
 
   </div>
-  {{!-- <nav aria-label="...">
-    <ul class="pagination ">
 
-      {{#each pages}}
-        <li class="page-item">
-          <a class="page-link" href="/user/profile/admin/?page={{this}}">{{this}}
-          </a>
-        </li>
-      {{/each}}
-
-    </ul>
-  </nav> --}}
 </div>
