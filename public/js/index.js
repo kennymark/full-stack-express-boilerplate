@@ -49,7 +49,7 @@
     }
   }
 
-  if (url.href.includes('profile')) {
+  if (url.href.includes('profile') && !url.href.includes('admin')) {
     profile_new_pwd.addEventListener('keyup', comparePasswords)
     profile_pwd.addEventListener('keyup', e => {
       passwordVal = e.target.value
@@ -75,7 +75,7 @@
 
   function selectDefaultGender() {
     const currSex = sessionStorage.getItem('gender')
-    if (url.href.includes('profile')) {
+    if (url.href.includes('profile') || url.href.includes('user/edit/')) {
       const radios = document.querySelectorAll('input[name=gender]')
       radios.forEach(radio => {
         radio.value === currSex ? radio.checked = true : false
@@ -83,6 +83,23 @@
     }
   }
 
+  function isAdmin() {
+    const adminCheckbox = document.querySelector('input[name=is_admin]')
+    const is_admin = sessionStorage.getItem('is_admin')
+
+    console.log('is_admin', is_admin)
+    console.dir(adminCheckbox)
+
+    if (Boolean(is_admin) === true) {
+      // adminCheckbox.checked = true
+    }
+    else if (Boolean(is_admin) === false) {
+      adminCheckbox.checked = false
+    }
+
+  }
+
+  isAdmin()
   selectDefaultGender()
   scrollToLastPosition()
   setNavItemActive()
