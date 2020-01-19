@@ -18,7 +18,7 @@ import { setLocals } from './config/util';
 import indexRouter from './routes/index.routes';
 import userRouter from './routes/user.routes';
 import path from 'path'
-dotenv.config()
+import 'dotenv/config'
 
 
 const app = express()
@@ -60,7 +60,7 @@ app.use('/user', userRouter)
 //error 404
 app.get('*', (req, res) => res.render('error404', { data: req.originalUrl }))
 
-process.env.NODE_ENV.includes('prod') ? app.set('view cache', true) : app.set('view cache', false)
+// process.env.NODE_ENV.includes('prod') ? app.set('view cache', true) : app.set('view cache', false)
 
 app.listen(port)
   .on('listening', async () => {

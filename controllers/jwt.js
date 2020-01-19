@@ -2,9 +2,6 @@ import jwt from 'jsonwebtoken'
 import config from '../utils/config'
 import messages from '../data/messages'
 class JwtConfig {
-  encode(payload) {
-    return jwt.sign(payload, config.jwtSecret, config.jwtOptions)
-  }
 
   async extractAndVerify(req, res, next) {
     const header = req.headers.authorization

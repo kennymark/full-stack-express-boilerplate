@@ -99,8 +99,8 @@
 
   }
 
-  isAdmin()
   selectDefaultGender()
+  isAdmin()
   scrollToLastPosition()
   setNavItemActive()
   paginate()

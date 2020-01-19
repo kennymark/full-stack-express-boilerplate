@@ -6,7 +6,6 @@ import inlineCss from 'nodemailer-juice'
 import path from 'path'
 dotenv.config({ path: '../.env' })
 
-import exphs from 'express-handlebars'
 const { SENDGRID_USERNAME, SENDGRID_API_KEY } = process.env
 
 const log = console.log;

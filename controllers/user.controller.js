@@ -4,6 +4,7 @@ import config from '../config/config';
 import messages from '../data/messages';
 import userModel from '../models/user.model';
 import emailController from './email.controller';
+
 class UserController {
 
   showLogin(_, res) {
@@ -15,8 +16,7 @@ class UserController {
   }
 
   async showProfile(req, res) {
-    const { id } = req.params
-    const user = await userModel.findById(id)
+    const user = await userModel.findById(req.session.passport.user)
     return res.render('profile', { title: 'Profile', user })
   }
 
@@ -64,7 +64,7 @@ class UserController {
             req.flash('error', messages.user_not_found)
             return res.redirect('/user/register')
           }
-          return res.redirect('/user/profile/' + user.id)
+          return res.redirect('/user/profile/')
         })
       } catch (error) { return next(error) }
     })(req, res, next)
@@ -76,28 +76,10 @@ class UserController {
   }
 
   twitterLogin(req, res, next) {
-    this.socialLogin('twitter', req, res, next)
-  }
-
-  facebookLogin(req, res, next) {
-    this.socialLogin('facebook', req, res, next).bind(this)
-  }
-
-  githubLogin(req, res, next) {
-    this.socialLogin('github', req, res, next).bind(this)
-
-  }
-
-  googleLogin(req, res, next) {
-    this.socialLogin('google', req, res, next).bind(this)
-  }
-
-  socialLogin(service, req, res, next) {
-    passport.authenticate(service, (_err, user, _info) => {
+    this.socials()
+    passport.authenticate('twitter', (err, user, _info) => {
       try {
-        if (user) {
-          req.login(user, err => res.redirect('/user/profile/' + user.id))
-        }
+        req.login(user, err => res.redirect('/user/profile/'))
       } catch (error) {
         req.flash('error', messages.login_failure)
         res.redirect('/user/login')
@@ -106,9 +88,48 @@ class UserController {
     })(req, res, next)
   }
 
+  socials() {
+    console.log('sociaalss', new Date())
+  }
+  facebookLogin(req, res, next) {
+    passport.authenticate('facebook', (_err, user, _info) => {
+      try {
+        req.login(user, err => res.redirect('/user/profile/'))
+      } catch (error) {
+        req.flash('error', messages.login_failure)
+        res.redirect('/user/login')
+        return next(error)
+      }
+    })(req, res, next)
+  }
+
+  githubLogin(req, res, next) {
+    passport.authenticate('github', (_err, user, _info) => {
+      try {
+        req.login(user, err => res.redirect('/user/profile/'))
+      } catch (error) {
+        req.flash('error', messages.login_failure)
+        res.redirect('/user/login')
+        return next(error)
+      }
+    })(req, res, next)
+  }
+
+  googleLogin(req, res, next) {
+    passport.authenticate('google', (_err, user, _info) => {
+      try {
+        req.login(user, err => res.redirect('/user/profile/'))
+      } catch (error) {
+        req.flash('error', messages.login_failure)
+        res.redirect('/user/login')
+        return next(error)
+      }
+    })(req, res, next)
+  }
+
+
   async deleteUser(req, res) {
-    const { id } = req.params
-    await userModel.findOneAndUpdate(id, { is_deleted: true })
+    await userModel.findOneAndUpdate(req.session.passport.user, { is_deleted: true })
     req.flash('message', messages.account_deleted)
     req.logout()
     res.redirect('/')
@@ -121,6 +142,7 @@ class UserController {
     req.logout()
     res.redirect('/')
   }
+
   async freezeUser(req, res) {
     const { id } = req.params
     await userModel.findOneAndUpdate(id, { is_active: false })
@@ -143,11 +165,11 @@ class UserController {
   }
 
   async updateUser(req, res) {
-    const { id } = req.params
+    const { user: id } = req.session.passport
     try {
       await userModel.findByIdAndUpdate(id, req.body)
       req.flash('message', messages.user_updated)
-      res.redirect('/user/profile/' + id)
+      res.redirect('/user/profile/')
 
     } catch (error) {
       req.flash('error', messages.user_update_error)
@@ -166,17 +188,17 @@ class UserController {
       res.redirect('/user/profile/admin')
     }
   }
+
   async updateUserPassword(req, res, ) {
-    const { id } = req.params
+    const { user: id } = req.session.passport
     const { password } = req.body
     const user = await userModel.findByIdAndUpdate(id, { password })
     if (user) {
       req.flash('message', messages.user_updated)
-      res.redirect(req.originalUrl)
-    }
-    else {
+      res.redirect('/user/profile/')
+    } else {
       req.flash('error', messages.general_error)
-      res.redirect(req.originalUrl)
+      res.redirect('/user/profile/')
     }
   }
 
@@ -194,15 +216,10 @@ class UserController {
 
     passport.authenticate('signup', async (err, user, info) => {
       try {
-        if (err || !user) {
-          req.flash('error', info.message)
-          return res.redirect('/user/register')
-        } else {
-          req.flash('message', info.message)
-          return res.redirect('/')
-        }
-      } catch (error) {
-        req.flash('message', error)
+        req.flash('message', info.message)
+        return res.redirect('/')
+      } catch (err) {
+        req.flash('message', info.message)
         res.redirect('/user/register?' + user_register_err)
       }
     })(req, res)
@@ -269,8 +286,9 @@ class UserController {
     }
   }
 
-
-
-
 }
+
+
+
+
 export default new UserController()

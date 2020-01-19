@@ -1,9 +1,9 @@
-import express from 'express'
+import { Router } from 'express'
 import UserController from '../controllers/user.controller'
 import passport from 'passport'
 import messages from '../data/messages';
 
-const router = express.Router()
+const router = Router()
 
 export function ensureAuthenticated(req, res, next) {
   if (req.isAuthenticated()) return next()
@@ -41,7 +41,7 @@ router
 
 
 router
-  .route('/edit/:id')
+  .route('/edit/')
   .get(ensureAuthenticated, UserController.showEdituser)
   .put(ensureAuthenticated, UserController.updateUser)
   .post(ensureAuthenticated, UserController.updateUser)
@@ -50,8 +50,8 @@ router
   .route('/admin-edit/:id')
   .put(ensureAuthenticated, UserController.updateUserByAdmin)
 
-router.put('/update_password/:id', UserController.updateUserPassword)
-router.delete('/delete/:id', ensureAuthenticated, UserController.deleteUser)
+router.put('/update_password', UserController.updateUserPassword)
+router.delete('/delete/', ensureAuthenticated, UserController.deleteUser)
 
 router.put('/freeze/:id', ensureAuthenticated, UserController.freezeUser)
 
@@ -67,6 +67,6 @@ router.post('/reset-password/', UserController.resetPassword)
 //Authenticated routes
 router.get('/profile/admin/', ensureAuthenticated, isAdmin, UserController.showAdminProfile)
 router.get('/profile/admin/search/', ensureAuthenticated, isAdmin, UserController.search)
-router.get('/profile/:id', ensureAuthenticated, UserController.showProfile)
+router.get('/profile/', ensureAuthenticated, UserController.showProfile)
 
 export default router

@@ -9,7 +9,7 @@
       <div class="row mt-4 mb-5">
 
         <div class="card-body">
-          <form action="/user/edit/{{id}}?_method=PUT" method="POST">
+          <form action="/user/edit/?_method=PUT" method="POST">
             <div class="form-group row">
               <label for="staticEmail" class="col-sm-4 col-form-label">Name</label>
               <div class="col">
@@ -22,7 +22,7 @@
               <div class="col">
                 <div class="form-check form-check-inline">
                   <script>
-                    sessionStorage.setItem('gender', "{{ gender }}")
+                    sessionStorage.setItem('gender', "{{gender}}")
                   </script>
                   <input class="form-check-input" type="radio" name="gender" value="male">
                   <label class="form-check-label" for="inlineRadio1">Male</label>
@@ -86,7 +86,7 @@
           <div class="card">
             <div class="card-body">
 
-              <form method="POST" action="/user/update_password/{{id}}?_method=PUT">
+              <form method="POST" action="/user/update_password/?_method=PUT">
                 <div class="form-group row">
                   <label for="staticEmail" class="col-sm-4 col-form-label">Password</label>
                   <div class="col">

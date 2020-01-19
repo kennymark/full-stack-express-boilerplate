@@ -1,8 +1,9 @@
-import express from 'express'
+import { Router } from 'express'
 import indexController from '../controllers/index.controller'
 import userController from '../controllers/user.controller'
 import contactController from '../controllers/contact.controller'
-const router = express.Router()
+
+const router = Router()
 
 
 router.get('/', indexController.showHome)

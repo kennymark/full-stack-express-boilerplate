@@ -1,8 +1,7 @@
-import mongoose from 'mongoose'
+import mongoose, { Schema } from 'mongoose'
 import paginate from 'mongoose-paginate-v2'
 import bcrypt from 'bcryptjs'
 
-const Schema = mongoose.Schema
 
 const userSchema = new Schema({
   name: { type: String, required: true, maxlength: 100 },

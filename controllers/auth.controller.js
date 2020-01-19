@@ -4,10 +4,10 @@ import TwiterStrategy from 'passport-twitter'
 import GoogleStrategy from 'passport-google-oauth2'
 import FacebookStrategy from 'passport-facebook'
 import GithubStrategy from 'passport-github'
-import dotenv from 'dotenv'
 import userModel from '../models/user.model'
 import messages from '../data/messages'
-dotenv.config()
+import 'dotenv/config'
+
 
 const { Strategy: localStrategy } = LocalStrategy
 const { Strategy: twitterStrategy } = TwiterStrategy
