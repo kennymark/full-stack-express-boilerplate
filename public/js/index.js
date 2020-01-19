@@ -88,7 +88,6 @@
     const is_admin = sessionStorage.getItem('is_admin')
 
     console.log('is_admin', is_admin)
-    console.dir(adminCheckbox)
 
     if (Boolean(is_admin) === true) {
       // adminCheckbox.checked = true
