@@ -16,8 +16,9 @@ class UserController {
   }
 
   async showProfile(req, res) {
-    const user = await userModel.findById(req.session.passport.user)
+    const user = await userModel.findById(req.user.id)
     return res.render('profile', { title: 'Profile', user })
+
   }
 
   showforgottenPassword(_, res) {
@@ -129,18 +130,19 @@ class UserController {
 
 
   async deleteUser(req, res) {
-    await userModel.findOneAndUpdate(id, { is_deleted: true })
-    req.flash('message', messages.account_deleted)
-    req.logout()
-    res.redirect('/')
-  }
-
-  async deleteUserByAdmin(req, res) {
     const { id } = req.params
+    if (!id) {
+      await userModel.findOneAndUpdate(req.user.id, { is_deleted: true })
+      req.flash('message', messages.account_deleted)
+      req.logout()
+      res.redirect('/')
+    }
     await userModel.findOneAndUpdate(id, { is_deleted: true })
     req.flash('message', messages.account_deleted)
     res.redirect('/user/profile/admin')
   }
+
+
 
   async freezeUser(req, res) {
     const { id } = req.params

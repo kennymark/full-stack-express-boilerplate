@@ -1,7 +1,6 @@
 import compression from 'compression';
 import flash from 'connect-flash';
 import cors from 'cors';
-import dotenv from 'dotenv';
 import express from 'express';
 import hbs from 'express-handlebars';
 import session from 'express-session';

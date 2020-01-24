@@ -52,9 +52,9 @@ router
 router.put('/update_password', UserController.updateUserPassword)
 
 router
-  .route('/delete/')
+  .route('/delete/:id?')
   .delete(ensureAuthenticated, UserController.deleteUser)
-  .delete(':id', ensureAuthenticated, UserController.deleteUserByAdmin)
+
 
 
 router.put('/freeze/:id', ensureAuthenticated, UserController.freezeUser)
