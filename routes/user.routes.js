@@ -41,17 +41,21 @@ router
 
 
 router
-  .route('/edit/')
+  .route('/edit/id')
   .get(ensureAuthenticated, UserController.showEdituser)
   .put(ensureAuthenticated, UserController.updateUser)
-  .post(ensureAuthenticated, UserController.updateUser)
 
 router
   .route('/admin-edit/:id')
   .put(ensureAuthenticated, UserController.updateUserByAdmin)
 
 router.put('/update_password', UserController.updateUserPassword)
-router.delete('/delete/', ensureAuthenticated, UserController.deleteUser)
+
+router
+  .route('/delete/')
+  .delete(ensureAuthenticated, UserController.deleteUser)
+  .delete(':id', ensureAuthenticated, UserController.deleteUserByAdmin)
+
 
 router.put('/freeze/:id', ensureAuthenticated, UserController.freezeUser)
 

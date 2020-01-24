@@ -39,5 +39,9 @@ userSchema.methods.isValidPassword = async function (password) {
   return compare;
 }
 
+userSchema.methods.findOrCreate = async function (service, id) {
+
+}
+
 
 export default mongoose.model('user', userSchema)

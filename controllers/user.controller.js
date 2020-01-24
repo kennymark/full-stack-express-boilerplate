@@ -129,7 +129,7 @@ class UserController {
 
 
   async deleteUser(req, res) {
-    await userModel.findOneAndUpdate(req.session.passport.user, { is_deleted: true })
+    await userModel.findOneAndUpdate(id, { is_deleted: true })
     req.flash('message', messages.account_deleted)
     req.logout()
     res.redirect('/')
@@ -139,8 +139,7 @@ class UserController {
     const { id } = req.params
     await userModel.findOneAndUpdate(id, { is_deleted: true })
     req.flash('message', messages.account_deleted)
-    req.logout()
-    res.redirect('/')
+    res.redirect('/user/profile/admin')
   }
 
   async freezeUser(req, res) {
