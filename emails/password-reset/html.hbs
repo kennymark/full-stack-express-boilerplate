@@ -5,7 +5,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Hi {{name}}, </title>
+  <link rel="stylesheet" href="/styles/bootstrap.min.css">
+  <title> </title>
   <style>
     body {
       background-color: white;
@@ -15,8 +16,8 @@
   </style>
 </head>
 
-<body>
-
+<body class="bg-white p-3">
+  Hi {{name}},
   <p>
     It looks like you have requested a password reset. Please complete your password reset by clicking the button below.
   </p>
@@ -29,16 +30,17 @@
   </p>
 
   <div>
-    </button>
-    <a href="{{link}}" class="btn a">Reset password</a>
-    <button>
+
+    <a class="btn btn-primary mx-auto mt-2" href="{{link}}">Reset Password</a>
+
   </div>
 
   <p>
     If you have issues clicking the visiting the link below
   </p>
 
-  <a href="{{link}}">{{link}}</a>
+  <a href="{{link}}" style="btn btn-primary">{{link}}</a>
+
 </body>
 
 </html>

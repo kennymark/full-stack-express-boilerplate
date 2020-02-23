@@ -10,7 +10,7 @@ export default {
   invalid_password: 'The password is invalid',
   confirm_email: 'Please confirm email to login',
   email_confirmation: 'Please check your email',
-  no_auth_header: 'Please login as request does not include auth header',
+  no_auth_header: 'Please login as request does not include authentication header',
   login_session_expired: 'Session has expired please login again',
   cant_access_resource: 'Please login to view this resource',
   cant_reuse_password: 'The same password cannot be used more than once',
@@ -30,6 +30,8 @@ export default {
   passwordForgotFail(email) {
     return `No such email ${email} exists in our database, please register for an account.`
   },
+
+  reset_token_expired: 'The link has expired, please request a new password',
 
   validation_errors: {
 

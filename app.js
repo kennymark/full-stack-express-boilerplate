@@ -43,6 +43,7 @@ app.enable('trust proxy')
 //view engineconfig
 app.set('view engine', 'hbs')
 app.engine('hbs', hbs(config.hbsConfig))
+app.set('views', path.join(__dirname, '/views'));
 
 
 app.use(express.static(path.join(__dirname, "public")))

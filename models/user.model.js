@@ -1,4 +1,4 @@
-import mongoose, { Schema } from 'mongoose'
+import { Schema, model } from 'mongoose'
 import paginate from 'mongoose-paginate-v2'
 import bcrypt from 'bcryptjs'
 
@@ -12,6 +12,7 @@ const userSchema = new Schema({
   is_confirmed: { type: Boolean, default: false },
   is_admin: { type: Boolean, default: false },
   provider: { type: String, default: 'local' },
+  pwd_change: { type: Boolean, default: false },
   website: String,
   twitterId: String,
   googleId: String,
@@ -44,4 +45,4 @@ userSchema.methods.findOrCreate = async function (service, id) {
 }
 
 
-export default mongoose.model('user', userSchema)
+export default model('user', userSchema)

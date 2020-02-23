@@ -8,25 +8,25 @@ import emailController from './email.controller';
 class UserController {
 
   showLogin(_, res) {
-    res.render('login', { title: 'Login', })
+    res.render('account/login', { title: 'Login', })
   }
 
   showRegister(_, res) {
-    res.render('register', { title: 'Register', })
+    res.render('account/register', { title: 'Register', })
   }
 
   async showProfile(req, res) {
     const user = await userModel.findById(req.user.id)
-    return res.render('profile', { title: 'Profile', user })
+    return res.render('account/profile', { title: 'Profile', user })
 
   }
 
   showforgottenPassword(_, res) {
-    res.render('forgot-password', { title: ' Forgotten password' })
+    res.render('account/forgot-password', { title: ' Forgotten password' })
   }
 
   showResetPassword(req, res) {
-    res.render('reset-password', { title: 'Reset Password', params: req.params })
+    res.render('account/reset-password', { title: 'Reset Password', params: req.params })
   }
 
   async showAdminProfile(req, res) {
@@ -58,7 +58,7 @@ class UserController {
   async localLogin(req, res, next) {
     passport.authenticate('login', async (err, user, _info) => {
       try {
-        if (err || !user) return res.render('login', { error: messages.user_not_found })
+        if (err || !user) return res.render('account/login', { error: messages.user_not_found })
         req.login(user, _ => {
           if (user.is_admin) return res.redirect('/user/profile/admin/')
           if (user.is_deleted) {
@@ -92,6 +92,7 @@ class UserController {
   socials() {
     console.log('sociaalss', new Date())
   }
+
   facebookLogin(req, res, next) {
     passport.authenticate('facebook', (_err, user, _info) => {
       try {
@@ -159,7 +160,7 @@ class UserController {
     try {
       const user = await userModel.findById(id)
       if (user) {
-        res.render('edit-user', { data: user })
+        res.render('account/edit-user', { data: user })
       }
     } catch (error) {
       req.flash('error', error)
@@ -235,27 +236,26 @@ class UserController {
     if (user) {
       const token = await jwt.sign({ email: user.email }, config.jwtSecret, { expiresIn: '1h' })
       const { id, name, email } = user
-
-
       await userModel.findByIdAndUpdate(id, { resetToken: token })
 
       const emailData = {
-        from: 'mycompany@hotmail.com',
         to: email,
         subject: 'Reset Password',
         template: 'password-reset',
-        context: {
+        locals: {
           name: name,
           link: `${fullUrl}/user/reset-password/${id}/${token}`
         }
       }
       emailController.send(emailData)
         .then(x => {
+          console.log(x.text)
           req.flash('message', messages.passwordResetSuccess(user))
           res.redirect('/user/login')
         })
         .catch(x => {
           req.flash('error', x)
+          console.log(x)
           res.redirect('/user/forgot-password')
         })
     }
@@ -267,10 +267,9 @@ class UserController {
     req.checkBody('password', 'Password is show not be empty').notEmpty()
     req.checkBody('new_password', 'Password is show not be empty').notEmpty()
     req.checkBody('password', 'Password should be greater than 5 characters').isLength({ min: 5 })
-    req.checkBody('password', 'Make ensure the passwords are equal').equals(new_password)
+    req.checkBody('password', 'Make ensure the passwords match').equals(new_password)
     const validationErrors = req.validationErrors()
 
-    console.log(req.body)
     if (validationErrors) {
       req.flash('validationErrors', validationErrors)
       res.redirect('/user/login')
