@@ -11,6 +11,8 @@
       <label for="inputPassword" class="sr-only">Password</label>
       <input type="password" name="password" class="form-control" placeholder="Password" required
         autocomplete="current-password">
+      <input type="hidden" name="_csrf" value="{{csrfToken}}">
+
       <div class="checkbox mb-3">
         <a href="/user/forgot-password" class="form-text text-primary">Forgotten password?
         </a>

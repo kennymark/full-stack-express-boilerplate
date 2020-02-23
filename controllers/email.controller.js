@@ -4,32 +4,37 @@ import dotenv from 'dotenv'
 import sgTransport from 'nodemailer-sendgrid-transport';
 import inlineCss from 'nodemailer-juice'
 import path from 'path'
+import email from 'email-templates'
+
 dotenv.config({ path: '../.env' })
+
 
 const { SENDGRID_USERNAME, SENDGRID_API_KEY } = process.env
 
 const log = console.log;
 
-class Email {
+const options = {
+  auth: {
+    api_user: SENDGRID_USERNAME,
+    api_key: SENDGRID_API_KEY
+  }
+}
+class Hermes {
   constructor() {
+    this.transporter = mailer.createTransport(sgTransport(options))
     this.templateConfig()
+    this.emailRoute = __dirname + '/email-templates'
   }
-  emailRoute = process.cwd() + '/email-templates'
-  options = {
-    auth: {
-      api_user: SENDGRID_USERNAME,
-      api_key: SENDGRID_API_KEY
-    }
-  }
-  transporter = mailer.createTransport(sgTransport(this.options))
 
   templateConfig() {
     const config = {
       viewEngine: {
-        partialsDir: `${this.emailRoute}/partials/`,
-        defaultLayout: `${this.emailRoute}/main.hbs`,
+        extName: '.hbs',
+        partialsDir: path.join(__dirname, '../email-templates', 'partials/'),
+        layoutsDir: path.join(__dirname, '../email-templates'),
+        defaultLayout: path.join(__dirname, '../email-templates', 'main.hbs'),
       },
-      viewPath: `${this.emailRoute}/emails`,
+      viewPath: path.join(__dirname, '../email-templates', 'emails'),
       extName: '.hbs',
     }
     this.transporter.use('compile', inlineCss())
@@ -47,21 +52,8 @@ class Email {
         }
       });
     })
-
-
   }
 }
 
 
-export default new Email()
-
-// const options = {
-//   from: 'marthekvernvik@hotmail.com',
-//   to: 'markcoffiekenneth@gmail.com',
-//   subject: 'Long time no see bro',
-//   template: 'welcome',
-//   context: {
-//     name: 'Kenny Mark',
-//     company_name: 'Big Corp Inc'
-//   }
-// }
+export default new Hermes()

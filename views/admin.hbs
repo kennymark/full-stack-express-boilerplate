@@ -89,18 +89,18 @@
             {{this.provider}}
           </td>
           <td>
-            <a href="/user/admin-edit/{{this._id}}">
-              <button data-id="{{this._id}}" class="btn w-100 editBtn btn-dark">
+            <a href="/user/admin-edit/{{this.id}}">
+              <button data-id="{{this.id}}" class="btn w-100 editBtn btn-dark">
                 Edit
               </button>
             </a>
           </td>
           <td id='deleteCol'>
-            <a href="/user/delete/{{this._id}}?method_=DELETE">
-              <button data-id="{{this._id}}" class="btn w-100 deleteBtn btn-danger">
+            <form action="/user/delete/{{this.id}}/?_method=DELETE" method="POST">
+              <button type="submit" data-id="{{this.id}}" class="btn w-100 deleteBtn btn-danger">
                 Delete
               </button>
-            </a>
+            </form>
           </td>
         </tr>
       {{/each}}

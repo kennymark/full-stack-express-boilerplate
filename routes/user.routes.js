@@ -41,12 +41,13 @@ router
 
 
 router
-  .route('/edit/id')
+  .route('/edit/:id?')
   .get(ensureAuthenticated, UserController.showEdituser)
   .put(ensureAuthenticated, UserController.updateUser)
 
 router
-  .route('/admin-edit/:id')
+  .route('/admin-edit/:id?')
+  .get(ensureAuthenticated, UserController.showEdituser)
   .put(ensureAuthenticated, UserController.updateUserByAdmin)
 
 router.put('/update_password', UserController.updateUserPassword)
@@ -64,7 +65,7 @@ router
   .post(UserController.forgotPassword)
   .get(UserController.showforgottenPassword)
 
-router.get('/reset-password/:token/:id', UserController.showResetPassword)
+router.get('/reset-password/:id/:token', UserController.showResetPassword)
 router.post('/reset-password/', UserController.resetPassword)
 
 

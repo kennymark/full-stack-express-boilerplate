@@ -8,11 +8,11 @@ import emailController from './email.controller';
 class UserController {
 
   showLogin(_, res) {
-    res.render('login', { title: 'Login' })
+    res.render('login', { title: 'Login', })
   }
 
   showRegister(_, res) {
-    res.render('register', { title: 'Register' })
+    res.render('register', { title: 'Register', })
   }
 
   async showProfile(req, res) {
@@ -25,8 +25,8 @@ class UserController {
     res.render('forgot-password', { title: ' Forgotten password' })
   }
 
-  showResetPassword(_, res) {
-    res.render('reset-password', { title: 'Reset Password' })
+  showResetPassword(req, res) {
+    res.render('reset-password', { title: 'Reset Password', params: req.params })
   }
 
   async showAdminProfile(req, res) {
@@ -131,14 +131,16 @@ class UserController {
 
   async deleteUser(req, res) {
     const { id } = req.params
-    if (!id) {
-      await userModel.findOneAndUpdate(req.user.id, { is_deleted: true })
-      req.flash('message', messages.account_deleted)
-      req.logout()
-      res.redirect('/')
-    }
-    await userModel.findOneAndUpdate(id, { is_deleted: true })
+    const deleteParams = { is_deleted: true, is_active: false };
+    // if (!id) {
+    //   await userModel.findOneAndUpdate(req.user.id, deleteParams)
+    //   req.flash('message', messages.account_deleted)
+    //   req.logout()
+    //   res.redirect('/')
+    // }
+    const user = await userModel.findOneAndUpdate(id, deleteParams)
     req.flash('message', messages.account_deleted)
+    console.log(user)
     res.redirect('/user/profile/admin')
   }
 
@@ -229,10 +231,11 @@ class UserController {
   async forgotPassword(req, res) {
     const { email } = req.body
     const user = await userModel.findOne({ email })
-    const fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
+    const fullUrl = req.protocol + '://' + req.get('host');
     if (user) {
       const token = await jwt.sign({ email: user.email }, config.jwtSecret, { expiresIn: '1h' })
       const { id, name, email } = user
+
 
       await userModel.findByIdAndUpdate(id, { resetToken: token })
 
@@ -243,7 +246,7 @@ class UserController {
         template: 'password-reset',
         context: {
           name: name,
-          link: `${fullUrl}/user/reset-password/${token}/${id}`
+          link: `${fullUrl}/user/reset-password/${id}/${token}`
         }
       }
       emailController.send(emailData)
@@ -259,32 +262,37 @@ class UserController {
   }
 
   async resetPassword(req, res) {
-    const { password, new_password } = req.body
-    const { token, id } = req.params
+    const { password, new_password, id, token } = req.body
+
     req.checkBody('password', 'Password is show not be empty').notEmpty()
     req.checkBody('new_password', 'Password is show not be empty').notEmpty()
-    req.checkBody('password', 'Password should be greater than 5 characters').isLength(5)
+    req.checkBody('password', 'Password should be greater than 5 characters').isLength({ min: 5 })
     req.checkBody('password', 'Make ensure the passwords are equal').equals(new_password)
     const validationErrors = req.validationErrors()
 
+    console.log(req.body)
     if (validationErrors) {
       req.flash('validationErrors', validationErrors)
+      res.redirect('/user/login')
+    }
+    else {
+      console.log({ id, token })
+      const user = await userModel.findById(id)
+
+      if (user.resetToken) {
+        const isTokenValid = await jwt.verify(token, config.jwtSecret)
+        if (isTokenValid) {
+          await userModel.findOneAndUpdate({ password })
+          req.flash('message', messages.password_reset_success)
+          res.redirect('/user/login')
+        }
+        else {
+          req.flash('error', messages.password_reset_fail)
+          res.redirect('/user/login')
+        }
+      }
     }
 
-    const user = await userModel.findById(id)
-
-    if (user.resetToken) {
-      const isTokenValid = await jwt.verify(token, config.jwtSecret)
-      if (isTokenValid) {
-        await userModel.findOneAndUpdate({ password })
-        req.flash('message', messages.password_reset_success)
-        res.redirect('/user/login')
-      }
-      else {
-        req.flash('error', messages.password_reset_fail)
-        res.redirect('/user/login')
-      }
-    }
   }
 
 }

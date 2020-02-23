@@ -12,7 +12,7 @@ export default {
     defaultLayout: 'main',
     extname: '.hbs',
     helpers: {
-      math: function(lvalue, operator, rvalue) {
+      math: function (lvalue, operator, rvalue) {
         lvalue = parseFloat(lvalue);
         rvalue = parseFloat(rvalue);
         return {
@@ -42,16 +42,6 @@ export default {
     reconnectTries: Number.MAX_VALUE,
     reconnectInterval: 1000,
     keepAlive: 300000,
-  },
-
-  luscaConfig: {
-    // csrf: true,
-    xframe: 'SAMEORIGIN',
-    p3p: 'ABCDEF',
-    hsts: { maxAge: 31536000, includeSubDomains: true, preload: true },
-    xssProtection: true,
-    nosniff: true,
-    referrerPolicy: 'same-origin'
   },
 
   jwtSecret: 'God bless america',

@@ -6,7 +6,6 @@ import hbs from 'express-handlebars';
 import session from 'express-session';
 import validator from 'express-validator';
 import helmet from 'helmet';
-import lusca from 'lusca';
 import mongoose from 'mongoose';
 import passport from 'passport';
 import morgan from 'morgan'
@@ -18,6 +17,9 @@ import indexRouter from './routes/index.routes';
 import userRouter from './routes/user.routes';
 import path from 'path'
 import 'dotenv/config'
+
+
+
 
 
 const app = express()
@@ -34,7 +36,6 @@ app.use(helmet())
 app.use(session(config.sessionConfig))
 app.use(passport.initialize())
 app.use(passport.session())
-app.use(lusca(config.luscaConfig))
 app.use(morgan("tiny"))
 app.enable('trust proxy')
 
