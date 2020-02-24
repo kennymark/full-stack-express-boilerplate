@@ -1,16 +1,18 @@
+import { Request, Response } from 'express';
+
 class IndexController {
-  showHome(_, res) {
+  showHome(req: Request, res: Response) {
     res.render('home', { title: 'Home' })
   }
-  showContact(_, res) {
+  showContact(req: Request, res: Response) {
     res.render('contact', { title: 'Contact' })
   }
 
-  showAbout(_, res) {
+  showAbout(req: Request, res: Response) {
     res.render('about', { title: 'About' })
   }
 
-  showPricing(_, res) {
+  showPricing(req: Request, res: Response) {
     res.render('pricing', { title: 'Pricing' })
   }
 }

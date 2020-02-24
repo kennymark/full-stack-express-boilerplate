@@ -3,11 +3,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var express_1 = require("express");
-var user_controller_1 = __importDefault(require("../controllers/user.controller"));
-var passport_1 = __importDefault(require("passport"));
-var messages_1 = __importDefault(require("../data/messages"));
-var router = express_1.Router();
+const express_1 = require("express");
+const user_controller_1 = __importDefault(require("../controllers/user.controller"));
+const passport_1 = __importDefault(require("passport"));
+const messages_1 = __importDefault(require("../data/messages"));
+const router = express_1.Router();
 function ensureAuthenticated(req, res, next) {
     if (req.isAuthenticated())
         return next();

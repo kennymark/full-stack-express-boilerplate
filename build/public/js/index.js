@@ -1,23 +1,23 @@
 "use strict";
 (function () {
-    var pagination = document.querySelector('.pagination');
-    var page = document.querySelectorAll('.nav-item');
-    var profile_pwd = document.querySelector('#profile_pwd');
-    var profile_new_pwd = document.querySelector('#profile_new_pwd');
-    var pwd_confirmation = document.querySelector('#pwd_confirmation');
-    var pwdUpdateBtn = document.querySelector('#update_pwd_btn');
-    var url = new URL(window.location.href);
-    var passwordVal = null;
-    var currSearch = url.searchParams.get('page');
-    var appAlert = document.querySelectorAll('.app-alert');
+    const pagination = document.querySelector('.pagination');
+    const page = document.querySelectorAll('.nav-item');
+    const profile_pwd = document.querySelector('#profile_pwd');
+    const profile_new_pwd = document.querySelector('#profile_new_pwd');
+    const pwd_confirmation = document.querySelector('#pwd_confirmation');
+    const pwdUpdateBtn = document.querySelector('#update_pwd_btn');
+    const url = new URL(window.location.href);
+    let passwordVal = null;
+    let currSearch = url.searchParams.get('page');
+    const appAlert = document.querySelectorAll('.app-alert');
     if (appAlert) {
-        setTimeout(function () {
-            appAlert.forEach(function (el) { return el.remove(); });
+        setTimeout(() => {
+            appAlert.forEach(el => el.remove());
         }, 1000 * 60 * 2);
     }
     function paginate() {
         if (pagination) {
-            Array.from(pagination.children).forEach(function (child) {
+            Array.from(pagination.children).forEach(child => {
                 if (!currSearch)
                     currSearch = 1;
                 if (parseInt(child.innerText) == currSearch) {
@@ -29,13 +29,13 @@
         }
     }
     function setNavItemActive() {
-        Array.from(page).forEach(function (child) {
-            var val = child.textContent.toLowerCase();
+        Array.from(page).forEach(child => {
+            const val = child.textContent.toLowerCase();
             val == 'home' ? '/' : null;
         });
     }
     function scrollToLastPosition() {
-        var lastYPos = localStorage.getItem('sPosition');
+        let lastYPos = localStorage.getItem('sPosition');
         window.addEventListener('scroll', setDefaultScrollPosition);
         if (location.href.includes('user')) {
             window.scrollTo(0, lastYPos);
@@ -46,12 +46,12 @@
     }
     if (url.href.includes('profile') && !url.href.includes('admin')) {
         profile_new_pwd.addEventListener('keyup', comparePasswords);
-        profile_pwd.addEventListener('keyup', function (e) {
+        profile_pwd.addEventListener('keyup', e => {
             passwordVal = e.target.value;
         });
     }
     function comparePasswords(e) {
-        var value = e.target.value;
+        const { value } = e.target;
         if (value !== passwordVal) {
             pwd_confirmation.textContent = 'Passwords do not match';
             pwd_confirmation.classList.add('text-danger');
@@ -66,17 +66,17 @@
         }
     }
     function selectDefaultGender() {
-        var currSex = sessionStorage.getItem('gender');
+        const currSex = sessionStorage.getItem('gender');
         if (url.href.includes('profile') || url.href.includes('user/edit/')) {
-            var radios = document.querySelectorAll('input[name=gender]');
-            radios.forEach(function (radio) {
+            const radios = document.querySelectorAll('input[name=gender]');
+            radios.forEach(radio => {
                 radio.value === currSex ? radio.checked = true : false;
             });
         }
     }
     function isAdmin() {
-        var adminCheckbox = document.querySelector('input[name=is_admin]');
-        var is_admin = sessionStorage.getItem('is_admin');
+        const adminCheckbox = document.querySelector('input[name=is_admin]');
+        const is_admin = sessionStorage.getItem('is_admin');
         console.log('is_admin', is_admin);
         if (Boolean(is_admin) === true) {
             // adminCheckbox.checked = true

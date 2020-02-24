@@ -20,14 +20,14 @@ exports.default = {
     password_reset_fail: 'Looks like your password reset time has expired, please resetting your password again',
     general_error: 'An error has occurred, please try again later',
     admin_only: 'Page is restricted to admins only',
-    userAlreadyExists: function (user) {
-        return "User " + user.email + " already has been registered, login or reset password";
+    userAlreadyExists(user) {
+        return `User ${user.email} already has been registered, login or reset password`;
     },
-    passwordResetSuccess: function (user) {
-        return "The link to reset your password has been sent to " + user.email + ", please check your email.";
+    passwordResetSuccess(user) {
+        return `The link to reset your password has been sent to ${user.email}, please check your email.`;
     },
-    passwordForgotFail: function (email) {
-        return "No such email " + email + " exists in our database, please register for an account.";
+    passwordForgotFail(email) {
+        return `No such email ${email} exists in our database, please register for an account.`;
     },
     reset_token_expired: 'The link has expired, please request a new password',
     validation_errors: {},

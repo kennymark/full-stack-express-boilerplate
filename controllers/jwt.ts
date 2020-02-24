@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken'
-import config from '../utils/config'
+import config from '../config/config'
 import messages from '../data/messages'
 class JwtConfig {
 

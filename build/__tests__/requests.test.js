@@ -4,59 +4,59 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 //@ts-nocheck
-var supertest_1 = __importDefault(require("supertest"));
-var app_1 = __importDefault(require("../app"));
-describe('Test routes', function () {
-    test('home route return a 2000', function () {
+const supertest_1 = __importDefault(require("supertest"));
+const app_1 = __importDefault(require("../app"));
+describe('Test routes', () => {
+    test('home route return a 2000', () => {
         supertest_1.default(app_1.default)
             .get('/')
-            .then(function (response) {
+            .then(response => {
             expect(response.status).toBe(200);
         });
     });
-    test('login route returns a 2000', function () {
+    test('login route returns a 2000', () => {
         supertest_1.default(app_1.default)
             .get('/user/login')
-            .then(function (response) {
+            .then(response => {
             expect(response.status).toBe(200);
         });
     });
-    test('register route returns a 2000', function () {
+    test('register route returns a 2000', () => {
         supertest_1.default(app_1.default)
             .get('/user/register')
-            .then(function (response) {
+            .then(response => {
             expect(response.status).toBe(200);
         });
     });
-    test('contact route returns a 2000', function () {
+    test('contact route returns a 2000', () => {
         supertest_1.default(app_1.default)
             .get('/contact')
-            .then(function (response) {
+            .then(response => {
             expect(response.status).toBe(200);
         });
     });
-    test('about page returns a 2000', function () {
+    test('about page returns a 2000', () => {
         supertest_1.default(app_1.default)
             .get('/about')
-            .then(function (response) {
+            .then(response => {
             expect(response.status).toBe(200);
         });
     });
-    test('pricing page returns a 2000', function () {
+    test('pricing page returns a 2000', () => {
         supertest_1.default(app_1.default)
             .get('/pricing')
-            .then(function (response) {
+            .then(response => {
             expect(response.status).toBe(200);
         });
     });
-    test('incorrect route', function () {
+    test('incorrect route', () => {
         supertest_1.default(app_1.default)
             .get('/4084084ng')
-            .then(function (response) {
+            .then(response => {
             expect(response.status).toBe(404);
         });
     });
-    test('redirect user after login', function () {
+    test('redirect user after login', () => {
         supertest_1.default(app_1.default)
             .post('/user/login')
             .send({
@@ -64,11 +64,11 @@ describe('Test routes', function () {
             password: 'test1'
         })
             .set('Accept', 'application/json')
-            .then(function (res) {
+            .then(res => {
             expect(res.redirect).toBe(true);
         });
     });
-    test('goes to user profile after login', function () {
+    test('goes to user profile after login', () => {
         supertest_1.default(app_1.default)
             .post('/user/login')
             .send({
@@ -76,12 +76,12 @@ describe('Test routes', function () {
             password: 'test'
         })
             .set('Accept', 'application/json')
-            .then(function (res) {
+            .then(res => {
             expect(res.redirect).toBe(true);
             expect(res.status).toBe(302);
         });
     });
-    test('does not to user profile after login', function () {
+    test('does not to user profile after login', () => {
         supertest_1.default(app_1.default)
             .post('/user/login')
             .send({
@@ -89,15 +89,15 @@ describe('Test routes', function () {
             password: 'test'
         })
             .set('Accept', 'application/json')
-            .then(function (res) {
+            .then(res => {
             expect(res.redirect).toBe(true);
             expect(res.status).toBe(302);
         });
     });
-    test('logs user out sucessfully', function () {
+    test('logs user out sucessfully', () => {
         supertest_1.default(app_1.default)
             .get('/user/logout')
-            .then(function (res) {
+            .then(res => {
             expect(res.redirect).toBe(true);
         });
     });
