@@ -26,23 +26,23 @@ const userSchema = new Schema({
 userSchema.plugin(paginate);
 
 userSchema.pre('save', async function (next) {
+  //@ts-ignore
   if (this.password) {
+    //@ts-ignore
     let hash = await bcrypt.hash(this.password, 10)
+    //@ts-ignore
     this.password = hash
   }
   next()
 })
 
 
-userSchema.methods.isValidPassword = async function (password) {
-  const user = this;
-  const compare = await bcrypt.compare(password, user.password);
+userSchema.methods.isValidPassword = async function (password: string) {
+  const compare = await bcrypt.compare(password, this.password);
   return compare;
 }
 
-userSchema.methods.findOrCreate = async function (service, id) {
 
-}
 
 
 export default model('user', userSchema)

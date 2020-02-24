@@ -1,10 +1,10 @@
-const db = require('mongoose')
-const dotenv = require('dotenv')
+import db from 'mongoose'
+import dotenv from 'dotenv'
 
 dotenv.config()
 process.env.NODE_ENV = 'test';
 
-db.connect(process.env.DB_URL, { useNewUrlParser: true })
+db.connect(process.env.DB_URL as string, { useNewUrlParser: true })
 
 
 describe('Test database activities', () => {

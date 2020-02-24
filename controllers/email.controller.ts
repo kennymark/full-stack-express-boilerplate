@@ -15,7 +15,7 @@ const options = {
 
 class Hermes {
 
-  send({ to, locals, template, subject }) {
+  send({ to, locals, template, subject }: Emailer) {
     const email = new Email({
       message: { from: EMAIL_FROM, },
       send: true,
@@ -27,8 +27,6 @@ class Hermes {
           relativeTo: path.resolve('public')
         },
       },
-
-      transport: { jsonTransport: true },
       views: { options: { extension: 'hbs' } },
       transport: mailer.createTransport(sgTransport(options)),
 
@@ -39,5 +37,11 @@ class Hermes {
 }
 
 
-
 export default new Hermes()
+
+interface Emailer {
+  to: string;
+  locals: Object;
+  template: string;
+  subject: string;
+}

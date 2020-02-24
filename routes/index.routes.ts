@@ -11,7 +11,7 @@ router.get('/', indexController.showHome)
 router
   .route('/contact')
   .get(indexController.showContact)
-  .post(contactController.receiveAndSend)
+  .post(contactController)
 
 router.get('/pricing', indexController.showPricing)
 router.get('/about', indexController.showAbout)

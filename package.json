@@ -2,14 +2,12 @@
   "name": "express-starter",
   "version": "1.0.0",
   "description": "A simple starter pack for express apps",
-  "main": "index.js",
+  "main": "app",
   "scripts": {
-    "start": "node -r esm app.js",
-    "dev": "nodemon -r esm app.js",
-    "test": "jest  --verbose "
-  },
-  "jest": {
-    "testEnvironment": "node"
+    "start": "ts-node app",
+    "dev": "ts-node-dev --respawn app.ts",
+    "test": "jest  --verbose ",
+    "build": "tsc"
   },
   "keywords": [
     "node",
@@ -31,7 +29,6 @@
     "csurf": "^1.11.0",
     "dotenv": "8.0.0",
     "email-templates": "^7.0.4",
-    "esm": "^3.2.25",
     "express": "4.17.0",
     "express-handlebars": "3.1.0",
     "express-session": "1.16.1",
@@ -55,20 +52,32 @@
     "passport-twitter": "^1.0.4"
   },
   "devDependencies": {
-    "@babel/core": "^7.4.5",
-    "@babel/plugin-proposal-class-properties": "^7.4.4",
-    "@babel/preset-env": "^7.4.5",
+    "@types/bcryptjs": "^2.4.2",
+    "@types/compression": "^1.7.0",
+    "@types/connect-flash": "0.0.35",
+    "@types/cors": "^2.8.6",
+    "@types/email-templates": "^6.0.2",
     "@types/express": "^4.17.0",
-    "@types/jest": "^24.0.13",
-    "babel-cli": "^6.26.0",
-    "babel-core": "^6.7.2",
-    "babel-jest": "^24.8.0",
-    "babel-loader": "^6.2.4",
-    "babel-plugin-transform-es2015-modules-commonjs": "^6.26.2",
-    "babel-preset-env": "^1.7.0",
-    "babel-preset-es2015": "^6.6.0",
+    "@types/express-handlebars": "^3.1.0",
+    "@types/express-session": "^1.15.16",
+    "@types/helmet": "0.0.45",
+    "@types/jest": "^24.9.1",
+    "@types/jsonwebtoken": "^8.3.7",
+    "@types/method-override": "0.0.31",
+    "@types/mongoose": "^5.7.1",
+    "@types/mongoose-paginate-v2": "^1.3.1",
+    "@types/morgan": "^1.7.37",
+    "@types/nodemailer": "^6.4.0",
+    "@types/passport": "^1.0.2",
+    "@types/passport-facebook": "^2.1.9",
+    "@types/passport-google-oauth2": "^0.1.3",
+    "@types/passport-local": "^1.0.33",
+    "@types/passport-twitter": "^1.0.34",
     "jest": "^24.8.0",
     "superagent": "^5.0.6",
-    "supertest": "^4.0.2"
+    "supertest": "^4.0.2",
+    "ts-jest": "^25.2.1",
+    "ts-node-dev": "^1.0.0-pre.44",
+    "typescript": "^3.8.2"
   }
 }

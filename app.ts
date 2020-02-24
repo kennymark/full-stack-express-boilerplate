@@ -25,7 +25,7 @@ import 'dotenv/config'
 const app = express()
 const port = process.env.PORT || 3000
 
-
+//@ts-ignore
 mongoose.connect(process.env.DB_URL, config.dbOptions)
 mongoose.connection.on('error', error => console.log(error));
 

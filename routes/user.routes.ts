@@ -2,17 +2,18 @@ import { Router } from 'express'
 import UserController from '../controllers/user.controller'
 import passport from 'passport'
 import messages from '../data/messages';
-
+import { Request, Response, NextFunction } from 'express'
 const router = Router()
 
-export function ensureAuthenticated(req, res, next) {
+export function ensureAuthenticated(req: Request, res: Response, next: NextFunction) {
   if (req.isAuthenticated()) return next()
   req.flash('error', messages.cant_access_resource)
   res.redirect('/user/login?user_login_err')
 }
 
-export function isAdmin(req, res, next) {
-  if (req.user.is_admin) return next()
+export function isAdmin(req: Request, res: Response, next: NextFunction) {
+  //@ts-ignore
+  if (req.user?.is_admin) return next()
   req.flash('error', messages.cant_access_resource)
   res.redirect('/')
 }

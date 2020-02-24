@@ -1,9 +1,9 @@
+//@ts-nocheck
 import session from 'express-session'
 import db from 'mongoose'
 import MongoStore from 'connect-mongo'
 
 const Store = MongoStore(session)
-
 
 
 export default {
@@ -12,7 +12,7 @@ export default {
     defaultLayout: 'main',
     extname: '.hbs',
     helpers: {
-      math: function (lvalue, operator, rvalue) {
+      math: function (lvalue: any, operator: any, rvalue: any) {
         lvalue = parseFloat(lvalue);
         rvalue = parseFloat(rvalue);
         return {
@@ -27,9 +27,8 @@ export default {
     secret: 'keyboard cat',
     resave: false,
     key: 'sid',
-    cookie: { maxAge: 24 * 60 * 60 * 1000 },
+    cookie: { maxAge: 24 * 60 * 60 * 1000, secure: false },
     saveUninitialized: false,
-    cookie: { secure: false },
     store: new Store({
       mongooseConnection: db.connection
     })

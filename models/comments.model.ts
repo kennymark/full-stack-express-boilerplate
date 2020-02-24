@@ -1,6 +1,6 @@
-import db from 'mongoose'
+import { Schema, model } from 'mongoose'
 
-const commentSchema = new db.Schema({
+const commentSchema = new Schema({
 	title: String,
 	text: String,
 	date: {
@@ -10,4 +10,4 @@ const commentSchema = new db.Schema({
 	author: { type: Schema.Types.ObjectId, ref: 'User' }
 })
 
-export default db.model('comment', commentSchema)
+export default model('comment', commentSchema)

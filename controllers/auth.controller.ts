@@ -1,3 +1,4 @@
+//@ts-nocheck
 import passport from 'passport'
 import LocalStrategy from 'passport-local'
 import TwiterStrategy from 'passport-twitter'
@@ -7,7 +8,6 @@ import GithubStrategy from 'passport-github'
 import userModel from '../models/user.model'
 import messages from '../data/messages'
 import 'dotenv/config'
-
 
 const { Strategy: localStrategy } = LocalStrategy
 const { Strategy: twitterStrategy } = TwiterStrategy
@@ -103,7 +103,7 @@ passport.use('facebook', new facebookStrategy({
   clientID: process.env.FB_CLIENT_ID,
   clientSecret: process.env.FB_CLIENT_SECRET,
   callbackURL: process.env.FB_CALLBACK_URL
-}, async (token, refreshToken, profile, done) => {
+}, async (token: string, refreshToken, profile, done) => {
   const user = await userModel.findOne({ facebookId: profile.id })
   if (user) return done(null, user, { message: messages.login_sucess })
   else {
