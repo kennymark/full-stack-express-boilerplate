@@ -5,6 +5,8 @@ import messages from '../data/messages';
 import userModel from '../models/user.model';
 import emailController from './email.controller';
 import { Request, Response, NextFunction } from 'express'
+import { getUrl } from '../config/util';
+
 class UserController {
 
   showLogin(req: Request, res: Response) {
@@ -78,7 +80,6 @@ class UserController {
   }
 
   twitterLogin(req: Request, res: Response, next: NextFunction) {
-    this.socials()
     passport.authenticate('twitter', (err, user, _info) => {
       try {
         req.login(user, err => res.redirect('/user/profile/'))
@@ -208,21 +209,28 @@ class UserController {
   }
 
   async postRegister(req: Request, res: Response) {
-    req.checkBody('name', 'Name should be greater than 5 characters').isLength({ min: 5 })
-    req.checkBody('name', 'Name cannot be empty').notEmpty()
-    req.checkBody('email', 'Email is not valid').isEmail()
-    req.checkBody('password', 'Password should be greater than 5 characters').isLength({ min: 5 })
-    req.checkBody('password', 'Password is show not be empty').notEmpty()
+    const { email, name, } = req.body
+    req.checkBody('name', messages.validation_errors.name).isLength({ min: 5 }).notEmpty()
+    req.checkBody('email', messages.validation_errors.emailNotEmpty).isEmail()
+    req.checkBody('password', messages.validation_errors.password).isLength({ min: 5 }).notEmpty()
+    const link = `${getUrl(req)}/user/login`
+
+    const emailInfo = {
+      to: email,
+      template: 'welcome',
+      subject: 'Thanks for signing up with',
+      locals: { name: name, company_name: process.env.APP_NAME, link }
+    }
 
     if (req.validationErrors()) {
       //@ts-ignore
       req.flash('validationErrors', req.validationErrors())
       return res.redirect('/user/register')
     }
-
     passport.authenticate('signup', async (err, user, info) => {
       try {
         req.flash('message', info.message)
+        emailController.send(emailInfo)
         return res.redirect('/')
       } catch (err) {
         req.flash('message', info.message)
@@ -234,22 +242,22 @@ class UserController {
   async forgotPassword(req: Request, res: Response) {
     const { email } = req.body
     const user = await userModel.findOne({ email })
-    const fullUrl = req.protocol + '://' + req.get('host');
+
     if (user) {
       const token = await jwt.sign({ email: user.email }, config.jwtSecret, { expiresIn: '1h' })
       const { id, name, email } = user
       await userModel.findByIdAndUpdate(id, { resetToken: token })
 
-      const emailData = {
+      const emailInfo = {
         to: email,
         subject: 'Reset Password',
         template: 'password-reset',
         locals: {
           name: name,
-          link: `${fullUrl}/user/reset-password/${id}/${token}`
+          link: `${getUrl(req)}/user/reset-password/${id}/${token}`
         }
       }
-      emailController.send(emailData)
+      emailController.send(emailInfo)
         .then((x: { text: any; }) => {
           console.log(x.text)
           req.flash('message', messages.passwordResetSuccess(user))
@@ -265,11 +273,8 @@ class UserController {
 
   async resetPassword(req: Request, res: Response) {
     const { password, new_password, id, token } = req.body
-
-    req.checkBody('password', 'Password is show not be empty').notEmpty()
-    req.checkBody('new_password', 'Password is show not be empty').notEmpty()
-    req.checkBody('password', 'Password should be greater than 5 characters').isLength({ min: 5 })
-    req.checkBody('password', 'Make ensure the passwords match').equals(new_password)
+    req.checkBody('password', messages.validation_errors.password).isLength({ min: 5 }).notEmpty()
+    req.checkBody('password', messages.validation_errors.passwordMatch).equals(new_password)
     const validationErrors = req.validationErrors()
 
     if (validationErrors) {

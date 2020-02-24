@@ -34,7 +34,10 @@ export default {
   reset_token_expired: 'The link has expired, please request a new password',
 
   validation_errors: {
-
+    name: "Name should not be empty and greater than five characters",
+    password: "Password should not be empty and greater than five characters",
+    passwordMatch: "Passwords do not match, please ensure they do",
+    emailNotEmpty: 'Email is not valid'
   },
 
 }

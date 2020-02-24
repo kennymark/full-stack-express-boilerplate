@@ -8,11 +8,10 @@ import validator from 'express-validator';
 import helmet from 'helmet';
 import mongoose from 'mongoose';
 import passport from 'passport';
-import morgan from 'morgan'
 import methodOverride from 'method-override'
 import './controllers/auth.controller'; //runs passport authentication 
 import config from './config/config';
-import { setLocals } from './config/util';
+import { setLocals, logger } from './config/util';
 import indexRouter from './routes/index.routes';
 import userRouter from './routes/user.routes';
 import path from 'path'
@@ -36,11 +35,10 @@ app.use(helmet())
 app.use(session(config.sessionConfig))
 app.use(passport.initialize())
 app.use(passport.session())
-app.use(morgan("tiny"))
 app.enable('trust proxy')
 
 
-//view engineconfig
+//view-engine config
 app.set('view engine', 'hbs')
 app.engine('hbs', hbs(config.hbsConfig))
 app.set('views', path.join(__dirname, '/views'));
@@ -53,6 +51,7 @@ app.use(express.json())
 app.use(flash())
 app.use(validator())
 app.use(setLocals)
+app.use(logger)
 
 // routes
 app.use('/', indexRouter)
