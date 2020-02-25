@@ -41,7 +41,6 @@ passport.use('login', new LocalStrategy({ usernameField: 'email', passwordField:
     if (isValid) return done(null, user, { message: messages.login_sucess });
     return done(null, false, { message: messages.invalid_password });
   }
-
 }));
 
 passport.use('twitter', new TwitterStrategy({
@@ -51,18 +50,7 @@ passport.use('twitter', new TwitterStrategy({
 }, async (token, refreshToken, profile, done) => {
   const user = await userModel.findOne({ twitterId: profile.id })
   if (user) return done(null, user, { message: messages.login_sucess })
-
-  else {
-    const twitterUser = {
-      twitterId: profile.id,
-      email: profile.username + '@twitter.com',
-      name: profile.displayName,
-      gender: profile.gender,
-      provider: profile.provider,
-    }
-    const newUser = await userModel.create(twitterUser)
-    return done(null, newUser, { message: messages.account_registered })
-  }
+  socialStrategy(user, 'twitter')
 }))
 
 passport.use('google', new GoogleStrategy({
@@ -70,20 +58,8 @@ passport.use('google', new GoogleStrategy({
   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
   callbackURL: process.env.GOOGLE_CALLBACK_URL
 }, async (token, refreshToken, profile, done) => {
-
   const user = await userModel.findOne({ googleId: profile.id })
-  if (user) return done(null, user, { message: messages.login_sucess })
-  else {
-    const googleUser = {
-      googleId: profile.id,
-      email: profile.email,
-      name: profile.displayName,
-      gender: profile.gender,
-      provider: profile.provider,
-    }
-    const newUser = await userModel.create(googleUser)
-    return done(null, newUser, { message: messages.account_registered })
-  }
+  socialStrategy(user, 'google')
 }));
 
 
@@ -93,20 +69,8 @@ passport.use('facebook', new FacebookStrategy({
   callbackURL: process.env.FB_CALLBACK_URL
 }, async (token: string, refreshToken, profile, done) => {
   const user = await userModel.findOne({ facebookId: profile.id })
-  if (user) return done(null, user, { message: messages.login_sucess })
-  else {
-    const fbUser = {
-      facebookId: profile.id,
-      name: profile.displayName,
-      provider: profile.provider,
-      gender: profile.gender,
-      email: profile.name + '@facebook.com',
-      website: profile._json.url
-    }
+  socialStrategy(user, 'facebook')
 
-    const newUser = await userModel.create(fbUser)
-    return done(null, newUser, { message: messages.account_registered })
-  }
 }))
 
 passport.use('github', new GithubStrategy({
@@ -115,21 +79,25 @@ passport.use('github', new GithubStrategy({
   callbackURL: process.env.GITHUB_CALLBACK_URL,
 }, async (token, refreshToken, profile, done) => {
   const user = await userModel.findOne({ githubId: profile.id })
+  socialStrategy(user, 'github')
+}))
+
+
+function socialStrategy(user, service) {
   if (user) return done(null, user, { message: messages.login_sucess })
   else {
-    const githubUser = {
-      githubId: profile.id,
+    const account = {
       name: profile.displayName,
       provider: profile.provider,
       gender: profile.gender,
-      email: profile.username + '@github.com',
-      website: profile._json.blog
+      email: `${profile.name}@${service}.com`,
+      website: profile._json.url
     }
-    const newUser = await userModel.create(githubUser)
+    account[`${service}Id`] = profile.id
+    const newUser = await userModel.create(account)
     return done(null, newUser, { message: messages.account_registered })
   }
-}))
-
+}
 
 // used to serialize the user for the session
 passport.serializeUser((user, done) => done(null, user.id))

@@ -268,7 +268,7 @@ class UserController {
 }
 
 
-function loginWithSocial(social, req, res, next) {
+function loginWithSocial(social: string, req: Request, res: Response, next: NextFunction) {
   return passport.authenticate(social, (err, user, _info) => {
     try {
       req.login(user, err => res.redirect('/user/profile/'))
