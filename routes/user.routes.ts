@@ -8,8 +8,11 @@ const router = Router()
 export function ensureAuthenticated(req: Request, res: Response, next: NextFunction) {
   if (req.isAuthenticated()) return next()
   req.flash('error', messages.cant_access_resource)
-  res.redirect('/user/login?user_login_err')
+  res.redirect('/user/login')
 }
+
+
+
 
 export function isAdmin(req: Request, res: Response, next: NextFunction) {
   //@ts-ignore
@@ -38,7 +41,6 @@ router
   .route('/register')
   .get(UserController.showRegister)
   .post(UserController.postRegister)
-
 
 
 router

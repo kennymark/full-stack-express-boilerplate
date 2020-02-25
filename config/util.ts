@@ -30,5 +30,5 @@ const getDurationInMilliseconds = (start) => {
 }
 
 export function getUrl(req: Request) {
-  return `${req.protocol}://${req.host}`
+  return `${req.protocol}://${req.get('host')}`
 }

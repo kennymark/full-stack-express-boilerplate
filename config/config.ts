@@ -37,6 +37,7 @@ export default {
   dbOptions: {
     useNewUrlParser: true,
     useFindAndModify: false,
+    useCreateIndex: true,
     autoReconnect: true,
     reconnectTries: Number.MAX_VALUE,
     reconnectInterval: 1000,

@@ -9,13 +9,15 @@ import helmet from 'helmet';
 import mongoose from 'mongoose';
 import passport from 'passport';
 import methodOverride from 'method-override'
-import './controllers/auth.controller'; //runs passport authentication 
-import config from './config/config';
-import { setLocals, logger } from './config/util';
-import indexRouter from './routes/index.routes';
-import userRouter from './routes/user.routes';
+import '../controllers/auth.controller'; //runs passport authentication 
+import config from '../config/config';
+import { setLocals, logger } from '../config/util';
+import indexRouter from '../routes/index.routes';
+import userRouter from '../routes/user.routes';
 import path from 'path'
 import 'dotenv/config'
+
+
 
 
 
@@ -39,10 +41,10 @@ app.enable('trust proxy')
 //view-engine config
 app.set('view engine', 'hbs')
 app.engine('hbs', hbs(config.hbsConfig))
-app.set('views', path.join(__dirname, '/views'));
+app.set('views', path.join(__dirname, '../views'));
 
 
-app.use(express.static(path.join(__dirname, "public")))
+app.use(express.static(path.join(__dirname, "../public")))
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 
@@ -58,7 +60,12 @@ app.use('/user', userRouter)
 //error 404
 app.get('*', (req, res) => res.render('error404', { data: req.originalUrl }))
 
-app.listen(port), () => console.log(`Listening at http://localhost:${port}`)
+// process.env.NODE_ENV.includes('prod') ? app.set('view cache', true) : app.set('view cache', false)
+
+app.listen(port)
+  .on('listening', async () => {
+    await console.log(`Listening at http://localhost:${port}`)
+  })
 
 
 export default app

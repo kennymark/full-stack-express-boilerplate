@@ -6,8 +6,10 @@ import userModel from '../models/user.model';
 import emailController from './email.controller';
 import { Request, Response, NextFunction } from 'express'
 import { getUrl } from '../config/util';
+import { IVerifyOptions } from 'passport-local';
 
 class UserController {
+
 
   showLogin(req: Request, res: Response) {
     res.render('account/login', { title: 'Login', })
@@ -37,17 +39,9 @@ class UserController {
     const activeUsers = await userModel.find({ is_active: true })
     const deletedUsers = await userModel.find({ is_deleted: true })
     const result = await userModel.paginate({ is_deleted: false }, { page, limit: 10 })
-    let pagesArr = []
-    res.render('admin', {
-      title: 'Admin Page',
-      // pages: pagesArr,
-      data: result,
-      deletedUsers,
-      activeUsers
-    })
+
+    res.render('admin', { title: 'Admin Page', data: result, deletedUsers, activeUsers })
   }
-
-
 
   async search(req: Request, res: Response) {
     const { search, query } = req.query
@@ -57,94 +51,64 @@ class UserController {
     return res.render('admin', { title: 'Admin Page', data: result })
   }
 
+  socialLogin() {
+    console.log('socials tho')
+  }
+
 
   async localLogin(req: Request, res: Response, next: NextFunction) {
-    passport.authenticate('login', async (err, user, _info) => {
-      try {
-        if (err || !user) return res.render('account/login', { error: messages.user_not_found })
-        req.login(user, _ => {
-          if (user.is_admin) return res.redirect('/user/profile/admin/')
-          if (user.is_deleted) {
-            req.flash('error', messages.user_not_found)
-            return res.redirect('/user/register')
-          }
-          return res.redirect('/user/profile/')
-        })
-      } catch (error) { return next(error) }
-    })(req, res, next)
+    this.socialLogin()
+    passport.authenticate("login", (err: Error, user, info: IVerifyOptions) => {
+      if (err) { return next(err); }
+      if (!user) {
+        req.flash("error", info.message);
+        return res.redirect("/user/login");
+      }
+      req.logIn(user, (err) => {
+        if (err) { return next(err); }
+        req.flash("message", info.message);
+        res.redirect("/user/profile");
+      });
+    })(req, res, next);
   }
 
   logUserOut(req: Request, res: Response) {
     req.logout()
-    res.redirect('/')
+    req.session.destroy(() => {
+      res.redirect('/')
+    })
   }
 
   twitterLogin(req: Request, res: Response, next: NextFunction) {
-    passport.authenticate('twitter', (err, user, _info) => {
-      try {
-        req.login(user, err => res.redirect('/user/profile/'))
-      } catch (error) {
-        req.flash('error', messages.login_failure)
-        res.redirect('/user/login')
-        return next(error)
-      }
-    })(req, res, next)
-  }
-
-  socials() {
-    console.log('sociaalss', new Date())
+    loginWithSocial('twitter', req, res, next)
   }
 
   facebookLogin(req: Request, res: Response, next: NextFunction) {
-    passport.authenticate('facebook', (_err, user, _info) => {
-      try {
-        req.login(user, err => res.redirect('/user/profile/'))
-      } catch (error) {
-        req.flash('error', messages.login_failure)
-        res.redirect('/user/login')
-        return next(error)
-      }
-    })(req, res, next)
+    loginWithSocial('facebook', req, res, next)
   }
 
   githubLogin(req: Request, res: Response, next: NextFunction) {
-    passport.authenticate('github', (_err, user, _info) => {
-      try {
-        req.login(user, err => res.redirect('/user/profile/'))
-      } catch (error) {
-        req.flash('error', messages.login_failure)
-        res.redirect('/user/login')
-        return next(error)
-      }
-    })(req, res, next)
+    loginWithSocial('github', req, res, next)
   }
 
   googleLogin(req: Request, res: Response, next: NextFunction) {
-    passport.authenticate('google', (_err, user, _info) => {
-      try {
-        req.login(user, err => res.redirect('/user/profile/'))
-      } catch (error) {
-        req.flash('error', messages.login_failure)
-        res.redirect('/user/login')
-        return next(error)
-      }
-    })(req, res, next)
+    loginWithSocial('google', req, res, next)
   }
 
 
   async deleteUser(req: Request, res: Response) {
     const { id } = req.params
     const deleteParams = { is_deleted: true, is_active: false };
-    // if (!id) {
-    //   await userModel.findOneAndUpdate(req.user.id, deleteParams)
-    //   req.flash('message', messages.account_deleted)
-    //   req.logout()
-    //   res.redirect('/')
-    // }
     const user = await userModel.findOneAndUpdate(id, deleteParams)
     req.flash('message', messages.account_deleted)
-    console.log(user)
-    res.redirect('/user/profile/admin')
+    if (user.is_admin) {
+      res.redirect('/user/profile/admin')
+    }
+    else {
+      req.logout()
+      req.flash('error', messages.account_deleted)
+      req.session.destroy(err => res.redirect('/'))
+    }
   }
 
 
@@ -242,12 +206,10 @@ class UserController {
   async forgotPassword(req: Request, res: Response) {
     const { email } = req.body
     const user = await userModel.findOne({ email })
-
     if (user) {
       const token = await jwt.sign({ email: user.email }, config.jwtSecret, { expiresIn: '1h' })
       const { id, name, email } = user
       await userModel.findByIdAndUpdate(id, { resetToken: token })
-
       const emailInfo = {
         to: email,
         subject: 'Reset Password',
@@ -261,14 +223,14 @@ class UserController {
         .then((x: { text: any; }) => {
           console.log(x.text)
           req.flash('message', messages.passwordResetSuccess(user))
-          res.redirect('/user/login')
-        })
-        .catch((x: string) => {
-          req.flash('error', x)
-          console.log(x)
-          res.redirect('/user/forgot-password')
-        })
+          return res.redirect('/user/login')
+        }).catch((err: string) => console.log(err))
     }
+    else {
+      req.flash('error', messages.user_not_found)
+      res.redirect('/user/forgot-password')
+    }
+
   }
 
   async resetPassword(req: Request, res: Response) {
@@ -303,6 +265,19 @@ class UserController {
 
   }
 
+}
+
+
+function loginWithSocial(social, req, res, next) {
+  return passport.authenticate(social, (err, user, _info) => {
+    try {
+      req.login(user, err => res.redirect('/user/profile/'))
+    } catch (error) {
+      req.flash('error', messages.login_failure)
+      res.redirect('/user/login')
+      return next(error)
+    }
+  })(req, res, next)
 }
 
 

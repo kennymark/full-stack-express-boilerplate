@@ -17,5 +17,5 @@ export default function receiveAndSend(req: Request, res: Response) {
 
   hermes.send(emailData)
 
-  res.redirect(req.baseUrl)
+  res.redirect('/user/login')
 }

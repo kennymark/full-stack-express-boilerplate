@@ -1,1 +1,1 @@
-web:node -r esm app.js
+web:node build/app.js

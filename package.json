@@ -5,6 +5,7 @@
   "main": "app",
   "scripts": {
     "start": "node build/app.js",
+    "prestart": "npm run build",
     "dev": "ts-node-dev --respawn app.ts",
     "test": "jest  --verbose ",
     "build": "tsc"
@@ -17,6 +18,10 @@
   "engines": {
     "node": "12.4.0",
     "npm": "6.13.4"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node"
   },
   "author": "",
   "license": "ISC",

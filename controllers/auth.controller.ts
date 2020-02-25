@@ -1,22 +1,18 @@
 //@ts-nocheck
 import passport from 'passport'
-import LocalStrategy from 'passport-local'
-import TwiterStrategy from 'passport-twitter'
-import GoogleStrategy from 'passport-google-oauth2'
-import FacebookStrategy from 'passport-facebook'
-import GithubStrategy from 'passport-github'
+import { Strategy as LocalStrategy } from 'passport-local'
+import { Strategy as TwitterStrategy } from 'passport-twitter'
+import { Strategy as GoogleStrategy } from 'passport-google-oauth2'
+import { Strategy as FacebookStrategy } from 'passport-facebook'
+import { Strategy as GithubStrategy } from 'passport-github'
 import userModel from '../models/user.model'
 import messages from '../data/messages'
 import 'dotenv/config'
 
-const { Strategy: localStrategy } = LocalStrategy
-const { Strategy: twitterStrategy } = TwiterStrategy
-const { Strategy: googleStrategy } = GoogleStrategy
-const { Strategy: facebookStrategy } = FacebookStrategy
-const { Strategy: githubStrategy } = GithubStrategy
+
 
 //passport middle to handle user registration
-passport.use('signup', new localStrategy({
+passport.use('signup', new LocalStrategy({
   usernameField: 'email',
   passwordField: 'password',
   passReqToCallback: true
@@ -35,27 +31,20 @@ passport.use('signup', new localStrategy({
   }
 }))
 
-passport.use('login', new localStrategy({
-  usernameField: 'email',
-  passwordField: 'password'
-}, async (email, password, done) => {
-
+passport.use('login', new LocalStrategy({ usernameField: 'email', passwordField: 'password' }, async (email, password, done) => {
   const user = await userModel.findOne({ email })
-  try {
-    const validate = await user.isValidPassword(password);
-    if (!user) {
-      return done(null, false, { message: messages.user_not_found })
-    }
-    if (!validate) {
-      return done(null, false, { message: messages.invalid_password })
-    }
-    return done(null, user, { message: messages.account_registered })
-  } catch (err) {
-    return done(err, false);
+  if (!user) {
+    return done(null, false, { message: messages.user_not_found });
   }
-}))
+  else {
+    const isValid = await user.validatePassword(password)
+    if (isValid) return done(null, user, { message: messages.login_sucess });
+    return done(null, false, { message: messages.invalid_password });
+  }
 
-passport.use('twitter', new twitterStrategy({
+}));
+
+passport.use('twitter', new TwitterStrategy({
   consumerKey: process.env.TWITTER_CONSUMER_KEY,
   consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
   callbackURL: process.env.TWIITER_CALLBACK_URL
@@ -74,10 +63,9 @@ passport.use('twitter', new twitterStrategy({
     const newUser = await userModel.create(twitterUser)
     return done(null, newUser, { message: messages.account_registered })
   }
-
 }))
 
-passport.use('google', new googleStrategy({
+passport.use('google', new GoogleStrategy({
   clientID: process.env.GOOGLE_CLIENT_ID,
   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
   callbackURL: process.env.GOOGLE_CALLBACK_URL
@@ -99,7 +87,7 @@ passport.use('google', new googleStrategy({
 }));
 
 
-passport.use('facebook', new facebookStrategy({
+passport.use('facebook', new FacebookStrategy({
   clientID: process.env.FB_CLIENT_ID,
   clientSecret: process.env.FB_CLIENT_SECRET,
   callbackURL: process.env.FB_CALLBACK_URL
@@ -121,7 +109,7 @@ passport.use('facebook', new facebookStrategy({
   }
 }))
 
-passport.use('github', new githubStrategy({
+passport.use('github', new GithubStrategy({
   clientID: process.env.GITHUB_CLIENT_ID,
   clientSecret: process.env.GITHUB_CLIENT_SECRET,
   callbackURL: process.env.GITHUB_CALLBACK_URL,
