@@ -68,7 +68,7 @@ router
   .post(UserController.forgotPassword)
   .get(UserController.showforgottenPassword)
 
-router.get('/reset-password/:id/:token', UserController.showResetPassword)
+router.get('/reset-password/:id?/:token?', UserController.showResetPassword)
 router.post('/reset-password/', UserController.resetPassword)
 
 

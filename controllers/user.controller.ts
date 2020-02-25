@@ -7,6 +7,7 @@ import emailController from './email.controller';
 import { Request, Response, NextFunction } from 'express'
 import { getUrl } from '../config/util';
 import { IVerifyOptions } from 'passport-local';
+import { Document } from 'mongoose';
 
 class UserController {
 
@@ -221,7 +222,6 @@ class UserController {
       }
       emailController.send(emailInfo)
         .then((x: { text: any; }) => {
-          console.log(x.text)
           req.flash('message', messages.passwordResetSuccess(user))
           return res.redirect('/user/login')
         }).catch((err: string) => console.log(err))
@@ -233,35 +233,28 @@ class UserController {
 
   }
 
-  async resetPassword(req: Request, res: Response) {
-    const { password, new_password, id, token } = req.body
-    req.checkBody('password', messages.validation_errors.password).isLength({ min: 5 }).notEmpty()
-    req.checkBody('password', messages.validation_errors.passwordMatch).equals(new_password)
-    const validationErrors = req.validationErrors()
+  async resetPassword(req: Request, res: Response, next: NextFunction) {
+    const { id, token, password } = req.body
+    req.checkBody("password", "Password must be at least 5 characters long").isLength({ min: 4 })
+    req.checkBody("new_password", "Passwords do not match").equals(req.body.password)
 
-    if (validationErrors) {
+    const errors = req.validationErrors();
+    if (errors) {
       //@ts-ignore
-      req.flash('validationErrors', validationErrors)
-      res.redirect('/user/login')
+      req.flash('validationErrors', errors)
+      res.redirect('/user/reset-password')
     }
-    else {
-      console.log({ id, token })
-      const user = await userModel.findById(id)
 
-      if (user.resetToken) {
-        const isTokenValid = await jwt.verify(token, config.jwtSecret)
-        if (isTokenValid) {
-          //@ts-ignore
-          await userModel.findOneAndUpdate({ password })
-          req.flash('message', messages.password_reset_success)
-          res.redirect('/user/login')
-        }
-        else {
-          req.flash('error', messages.password_reset_fail)
-          res.redirect('/user/login')
-        }
-      }
-    }
+    userModel.findById(id, (err, user) => {
+      if (err) { return next(err); }
+      user.password = password;
+      user.resetToken = null
+      user.save((err) => {
+        if (err) { return next(err); }
+        req.flash("success", messages.password_reset_success);
+        res.redirect("/user/profile");
+      });
+    });
 
   }
 

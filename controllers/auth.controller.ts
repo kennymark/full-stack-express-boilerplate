@@ -83,7 +83,7 @@ passport.use('github', new GithubStrategy({
 }))
 
 
-function socialStrategy(user, service) {
+async function socialStrategy(user, service) {
   if (user) return done(null, user, { message: messages.login_sucess })
   else {
     const account = {
@@ -101,7 +101,6 @@ function socialStrategy(user, service) {
 
 // used to serialize the user for the session
 passport.serializeUser((user, done) => done(null, user.id))
-
 // used to deserialize the user
 passport.deserializeUser((id, done) => {
   userModel.findById(id, (err, user) => {
