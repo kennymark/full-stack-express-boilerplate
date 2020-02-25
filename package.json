@@ -4,10 +4,9 @@
   "description": "A simple starter pack for express apps",
   "main": "app",
   "scripts": {
-    "start": "node build/app.js",
+    "start": "npm run dev",
     "dev": "ts-node-dev --respawn app.ts",
-    "test": "jest  --verbose ",
-    "build": "tsc"
+    "test": "jest  --verbose "
   },
   "keywords": [
     "node",
