@@ -7,40 +7,40 @@ import { Account } from '../data/routes';
 describe('Test routes', () => {
 
   test('home route return a 2000', async () => {
-    const res = request(app).get('/')
+    const res = await request(app).get('/')
     expect(res.status).toBe(200);
   });
 
   test('login route returns a 2000', async () => {
-    const res = request(app).get(accountify(Account.login))
+    const res = await request(app).get(accountify(Account.login))
     expect(res.status).toBe(200);
   });
 
   test('register route returns a 2000', async () => {
-    const res = request(app).get(accountify(Account.register))
+    const res = await request(app).get(accountify(Account.register))
     expect(res.status).toBe(200);
   });
 
   test('contact route returns a 2000', async () => {
-    const res = request(app).get('/contact')
+    const res = await request(app).get('/contact')
     expect(res.status).toBe(200);
   });
 
   test('about page returns a 2000', async () => {
-    const res = request(app).get('/about')
+    const res = await request(app).get('/about')
 
     expect(res.status).toBe(200);
 
   });
 
   test('pricing page returns a 2000', async () => {
-    const res = request(app).get('/pricing')
+    const res = await request(app).get('/pricing')
     expect(res.status).toBe(200);
 
   });
 
   test('incorrect route', async () => {
-    const res = request(app).get('/4084084ng')
+    const res = await request(app).get('/4084084ng')
     expect(res.status).toBe(404);
   });
 
@@ -66,8 +66,8 @@ describe('Test routes', () => {
 
   });
 
-  test('does not to user profile after login', () => {
-    const res = request(app)
+  test('does not to user profile after login', async () => {
+    const res = await request(app)
       .post(accountify(Account.login))
       .send({ email: 'test@test.com', password: 'test' })
       .set('Accept', 'application/json')
@@ -79,7 +79,7 @@ describe('Test routes', () => {
 
 
   test('logs user out sucessfully', async () => {
-    const res = request(app).get('/user/logout')
+    const res = await request(app).get('/user/logout')
     expect(res.redirect).toBe(true);
   });
 })
