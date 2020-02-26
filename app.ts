@@ -56,7 +56,7 @@ app.use('/', indexRouter)
 app.use('/account', accountRouter)
 
 //error 404
-app.get('*', (req, res) => res.render('error404', { data: req.originalUrl }))
+app.get('*', (req, res) => res.status(404).render('error404', { data: req.originalUrl }))
 
 app.listen(port), () => console.log(`Listening at http://localhost:${port}`)
 

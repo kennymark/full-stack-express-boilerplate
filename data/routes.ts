@@ -2,6 +2,7 @@
 
 export enum Account {
   login = 'login',
+  logout = 'logout',
   register = 'register',
   profile = 'profile',
   profile_admin = 'profile/admin',
