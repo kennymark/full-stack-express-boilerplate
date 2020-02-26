@@ -18,6 +18,7 @@ export default {
   password_reset_fail: 'Looks like your password reset time has expired, please resetting your password again',
   general_error: 'An error has occurred, please try again later',
   admin_only: 'Page is restricted to admins only',
+  logout_to_view: 'You can only access this resource if logged out',
 
   userAlreadyExists(user) {
     return `User ${user.email} already has been registered, login or reset password`

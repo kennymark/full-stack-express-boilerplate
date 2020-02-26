@@ -238,9 +238,10 @@ class UserController {
     }
     const user = await userModel.findById(id)
     const tokenValid = await jwt.verify(token, config.jwtSecret)
-    console.log({ user, password, new_password, token, id })
+    console.log({ tokenValid, password, new_password, token, id })
     if (tokenValid && user) {
       user.password = password
+      user.resetToken = null
       const savedUser = await user.save()
       const emailInfo = {
         to: savedUser.email,
@@ -271,7 +272,8 @@ function sendEmail(req, res, user, emailInfo) {
     .then((x: { text: any; }) => {
       req.flash('message', messages.passwordResetSuccess(user))
       return res.redirect(accountify(Account.login))
-    }).catch((err: string) => console.log(err))
+    })
+    .catch((err: string) => console.log(err))
 }
 
 

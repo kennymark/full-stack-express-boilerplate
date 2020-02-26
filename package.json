@@ -6,7 +6,7 @@
   "scripts": {
     "start": "npm run dev",
     "dev": "ts-node-dev --respawn app.ts",
-    "test": "jest  --verbose "
+    "test": "jest --verbose"
   },
   "keywords": [
     "node",
@@ -37,7 +37,6 @@
     "express-session": "1.16.1",
     "express-validator": "5.3.1",
     "helmet": "^3.21.2",
-    "is-offline": "^2.1.1",
     "jsonwebtoken": "8.5.1",
     "lodash": "^4.17.15",
     "method-override": "^3.0.0",
@@ -77,8 +76,8 @@
     "@types/passport-local": "^1.0.33",
     "@types/passport-twitter": "^1.0.34",
     "jest": "^24.8.0",
-    "superagent": "^5.0.6",
     "supertest": "^4.0.2",
+    "superagent": "5.2.2",
     "ts-jest": "^25.2.1",
     "ts-node-dev": "^1.0.0-pre.44",
     "typescript": "^3.8.2"

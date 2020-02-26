@@ -1,8 +1,8 @@
-import { Router } from 'express'
+
 import UserController, { accountify } from '../controllers/user.controller'
 import passport from 'passport'
 import messages from '../data/messages';
-import { Request, Response, NextFunction } from 'express'
+import { Request, Response, NextFunction, Router } from 'express'
 import { Account } from '../data/routes';
 const router = Router()
 
@@ -14,11 +14,9 @@ export function ensureAuthenticated(req: Request, res: Response, next: NextFunct
 
 export function ensureNotAuthenticated(req: Request, res: Response, next: NextFunction) {
   if (!req.isAuthenticated()) return next()
+  req.flash('error', messages.logout_to_view)
   res.redirect(accountify(Account.profile))
 }
-
-
-
 
 export function isAdmin(req: Request, res: Response, next: NextFunction) {
   //@ts-ignore
@@ -29,7 +27,7 @@ export function isAdmin(req: Request, res: Response, next: NextFunction) {
 
 
 router.route('/login')
-  .get(UserController.showLogin, ensureNotAuthenticated)
+  .get(ensureNotAuthenticated, UserController.showLogin)
   .post(UserController.localLogin)
 
 
@@ -45,7 +43,7 @@ router.get('/logout', UserController.logUserOut, ensureAuthenticated)
 
 router
   .route('/register')
-  .get(UserController.showRegister, ensureNotAuthenticated)
+  .get(ensureNotAuthenticated, UserController.showRegister)
   .post(UserController.postRegister)
 
 
