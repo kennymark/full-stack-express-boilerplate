@@ -1,0 +1,142 @@
+{{>flash}}
+
+<div class="container mt-header">
+
+
+  <div class="row mt-3">
+    <div class="col">
+      <div class="card bg-primary shadow">
+        <div class="card-body">
+          <h4 class="display-4 text-white">{{data.totalDocs}}
+            <p class="lead text-white">Total Users</p>
+          </h4>
+        </div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="card bg-success shadow">
+        <div class="card-body">
+          <h4 class="display-4 text-white">
+            {{data.totalDocs}}
+            <p class="lead text-white">Active Users</p>
+          </h4>
+        </div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="card bg-danger shadow">
+        <div class="card-body">
+          <h4 class="display-4 text-white">
+            23
+            <p class="lead text-white">Deleted Users</p>
+          </h4>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <form class="input-group mt-4 mb-3" action="/account/profile/admin/search/">
+    <div class="mr-2">
+      <label class="mr-sm-2 sr-only" for="inlineFormCustomSelect">Preference</label>
+      <select class="custom-select mr-sm-2" name="query">
+        <option value="name" selected>Name</option>
+        <option value="email">Email</option>
+        <option value="provider">Provider</option>
+        <option value="is_active">Active Users</option>
+        <option value="is_deleted">Deleted Users</option>
+        <option value="is_confirmed">Confirmed Users</option>
+      </select>
+    </div>
+    <input type="text" class="form-control" id='searchUser' name="search" placeholder="Search for user here">
+    <div class="input-group-append">
+      <button class="btn btn-primary" type="submit" id='submitSearch'>Search</button>
+    </div>
+  </form>
+
+  {{#unless data.docs}}
+  <div class="container">
+    <h6 class="text-center my-5">No users match the search query. Please try again</h6>
+  </div>
+  {{/unless}}
+
+  <table class="table table-borderless ">
+    <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Email</th>
+        <th scope="col">Provider</th>
+        <th scope="col" style="text-align:center">Edit
+          <ion-icon name="create" style="color:black"></ion-icon>
+        </th>
+        <th scope="col" style="text-align: center" sorted="">Delete
+          <ion-icon name="trash" style="color:black"></ion-icon>
+        </th>
+      </tr>
+    </thead>
+    <tbody id='tBody'>
+      {{#each data.docs}}
+      <tr>
+        <td>
+          {{this.name}}
+        </td>
+        <td>
+          {{this.email}}
+        </td>
+        <td>
+          {{this.provider}}
+        </td>
+        <td>
+          <a href="/account/admin-edit/{{this.id}}">
+            <button data-id="{{this.id}}" class="btn w-100 editBtn btn-dark">
+              Edit
+            </button>
+          </a>
+        </td>
+        <td id='deleteCol'>
+          <form action="/account/delete/{{this.id}}/?_method=DELETE" method="POST">
+            <button type="submit" data-id="{{this.id}}" class="btn w-100 deleteBtn btn-danger">
+              Delete
+            </button>
+          </form>
+        </td>
+      </tr>
+      {{/each}}
+
+    </tbody>
+  </table>
+
+</div>
+
+<div class="container mb-4">
+  <div class="list-group-item d-flex justify-content-between align-items-center">
+    <span>
+      {{#if data.prevPage}}
+      <a class="nav-link" href="/account/profile/admin/?page={{data.prevPage}}">
+        {{!-- <ion-icon name="arrow-dropleft" style="color: black"></ion-icon> --}}
+        Prev
+      </a>
+      {{else}}
+      <a class="nav-link" aria-disabled="true">Prev</a>
+      {{/if}}
+    </span>
+
+    <span>
+      <strong>Page {{data.page}} of {{data.totalPages}}</strong>
+    </span>
+
+    <span>
+      {{#if data.nextPage}}
+      <a class="nav-link" href="/account/profile/admin/?page={{data.nextPage}}">Next
+        {{!-- <ion-icon name="arrow-dropright" style="color:black"></ion-icon> --}}
+      </a>
+      {{else}}
+      <a class="disabled" aria-disabled="true">Next</a>
+      {{/if}}
+    </span>
+
+  </div>
+
+</div>

@@ -9,15 +9,13 @@ import helmet from 'helmet';
 import mongoose from 'mongoose';
 import passport from 'passport';
 import methodOverride from 'method-override'
-import '../controllers/auth.controller'; //runs passport authentication 
-import config from '../config/config';
-import { setLocals, logger } from '../config/util';
-import indexRouter from '../routes/index.routes';
-import userRouter from '../routes/user.routes';
+import './controllers/auth.controller'; //runs passport authentication 
+import config from './config/config';
+import { setLocals, logger } from './config/util';
+import indexRouter from './routes/index.routes';
+import accountRouter from './routes/user.routes';
 import path from 'path'
 import 'dotenv/config'
-
-
 
 
 
@@ -55,17 +53,12 @@ app.use(logger)
 
 // routes
 app.use('/', indexRouter)
-app.use('/account', userRouter)
+app.use('/account', accountRouter)
 
 //error 404
-app.get('*', (req, res) => res.render('error404', { data: req.originalUrl }))
+app.get('*', (req, res) => res.status(404).render('error404', { data: req.originalUrl }))
 
-// process.env.NODE_ENV.includes('prod') ? app.set('view cache', true) : app.set('view cache', false)
-
-app.listen(port)
-  .on('listening', async () => {
-    await console.log(`Listening at http://localhost:${port}`)
-  })
+app.listen(port), () => console.log(`Listening at http://localhost:${port}`)
 
 
 export default app

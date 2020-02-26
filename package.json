@@ -5,8 +5,10 @@
   "main": "app",
   "scripts": {
     "start": "npm run dev",
-    "dev": "ts-node-dev --respawn app.ts",
-    "test": "jest --verbose"
+    "dev": "ts-node-dev --respawn src/app.ts",
+    "test": "jest --verbose",
+    "copy": "ts-node shell.ts",
+    "build": "npm run copy && tsc"
   },
   "keywords": [
     "node",
@@ -51,7 +53,8 @@
     "passport-github": "^1.1.0",
     "passport-google-oauth2": "^0.2.0",
     "passport-local": "^1.0.0",
-    "passport-twitter": "^1.0.4"
+    "passport-twitter": "^1.0.4",
+    "shelljs": "^0.8.3"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",
