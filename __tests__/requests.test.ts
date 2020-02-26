@@ -1,6 +1,8 @@
 
 import request from 'supertest';
 import app from '../app';
+import { accountify } from '../controllers/user.controller';
+import { Account } from '../data/routes';
 
 describe('Test routes', () => {
 
@@ -10,12 +12,12 @@ describe('Test routes', () => {
   });
 
   test('login route returns a 2000', async () => {
-    const res = request(app).get('/user/login')
+    const res = request(app).get(accountify(Account.login))
     expect(res.status).toBe(200);
   });
 
   test('register route returns a 2000', async () => {
-    const res = request(app).get('/user/register')
+    const res = request(app).get(accountify(Account.register))
     expect(res.status).toBe(200);
   });
 
@@ -43,51 +45,41 @@ describe('Test routes', () => {
   });
 
 
-  test('redirect user after login', () => {
-    request(app)
+  test('redirect user after login', async () => {
+    const res = await request(app)
       .post('/user/login')
-      .send({
-        email: 'test@test.com',
-        password: 'test1'
-      })
+      .send({ email: 'test@test.com', password: 'test1' })
       .set('Accept', 'application/json')
-      .then(res => {
-        expect(res.redirect).toBe(true);
-      });
+
+    expect(res.redirect).toBe(true);
+
   });
 
-  test('goes to user profile after login', () => {
-    request(app)
+  test('goes to user profile after login', async () => {
+    const res = await request(app)
       .post('/user/login')
-      .send({
-        email: 'test@test.com',
-        password: 'test'
-      })
+      .send({ email: 'test@test.com', password: 'test' })
       .set('Accept', 'application/json')
-      .then(res => {
-        expect(res.redirect).toBe(true);
-        expect(res.status).toBe(302);
-      });
+
+    expect(res.redirect).toBe(true);
+    expect(res.status).toBe(302);
+
   });
 
   test('does not to user profile after login', () => {
-    request(app)
-      .post('/user/login')
-      .send({
-        email: 'test@test.com',
-        password: 'test'
-      })
+    const res = request(app)
+      .post(accountify(Account.login))
+      .send({ email: 'test@test.com', password: 'test' })
       .set('Accept', 'application/json')
-      .then(res => {
-        expect(res.redirect).toBe(true);
-        expect(res.status).toBe(302);
-      });
+
+    expect(res.redirect).toBe(true);
+    expect(res.status).toBe(302);
+
   });
 
 
   test('logs user out sucessfully', async () => {
     const res = request(app).get('/user/logout')
     expect(res.redirect).toBe(true);
-
   });
 })
