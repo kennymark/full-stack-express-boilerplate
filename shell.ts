@@ -1,5 +1,6 @@
 
 import shell from "shelljs";
 
-shell.cp("-R", "views", "build/");
-shell.cp("-R", "public", "build/");
+shell.cp("-rf", "views", "build/views");
+shell.cp("-rf", "public", "build/public");
+shell.cp("-rf", "emails", "build/emails");
