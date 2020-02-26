@@ -31,7 +31,7 @@ export default {
     return `No such email ${email} exists in our database, please register for an account.`
   },
 
-  reset_token_expired: 'The link has expired, please request a new password',
+  reset_token_expired: 'The provided reset token has expired, please request a new password',
 
   validation_errors: {
     name: "Name should not be empty and greater than 5 characters",

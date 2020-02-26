@@ -1,14 +1,15 @@
 import { Router } from 'express'
-import UserController from '../controllers/user.controller'
+import UserController, { accountify } from '../controllers/user.controller'
 import passport from 'passport'
 import messages from '../data/messages';
 import { Request, Response, NextFunction } from 'express'
+import { Account } from '../data/routes';
 const router = Router()
 
 export function ensureAuthenticated(req: Request, res: Response, next: NextFunction) {
   if (req.isAuthenticated()) return next()
   req.flash('error', messages.cant_access_resource)
-  res.redirect('/user/login')
+  res.redirect(accountify(Account.login))
 }
 
 

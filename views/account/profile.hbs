@@ -9,7 +9,7 @@
   <div class="row mt-4 mb-5">
 
     <div class="card-body">
-      <form action="/user/edit/?_method=PUT" method="POST">
+      <form action="/account/edit/?_method=PUT" method="POST">
         <div class="form-group row">
           <label for="staticEmail" class="col-sm-4 col-form-label">Name</label>
           <div class="col">
@@ -88,7 +88,7 @@
       <div class="card">
         <div class="card-body">
 
-          <form method="POST" action="/user/update_password/?_method=PUT">
+          <form method="POST" action="/account/update_password/?_method=PUT">
             <div class="form-group row">
               <label for="staticEmail" class="col-sm-4 col-form-label">Password</label>
               <div class="col">
@@ -127,7 +127,7 @@
           <h5 class="card-title">Modify Account</h5>
           <p class="card-text">Do you wish to delete your account?</p>
 
-          <form action="/user/delete/{{id}}?_method=DELETE" method="post">
+          <form action="/account/delete/{{id}}?_method=DELETE" method="post">
             <button type='submit' class="btn btn-danger">
               <ion-icon name="trash"></ion-icon>
               Delete Account
@@ -137,7 +137,7 @@
           <hr>
           <p class="card-text mt-3">Do you wish to freeze your account?</p>
 
-          <form action="/user/freeze/{{id}}?_method=PUT" method="post">
+          <form action="/account/freeze/{{id}}?_method=PUT" method="post">
             <button type="submit" class="btn btn-info">
               <ion-icon name="lock"></ion-icon>
               Freeze Account
@@ -158,7 +158,7 @@
 {{#unless user}}
 <div class="container-small">
   <h1 class="title-3">You need to login to view your profile</h1>
-  <a href="/user/login">
+  <a href="/account/login">
     <button class="btn btn-primary">
       Login
     </button>

@@ -38,7 +38,7 @@
 
   </div>
 
-  <form class="input-group mt-4 mb-3" action="/user/profile/admin/search/">
+  <form class="input-group mt-4 mb-3" action="/account/profile/admin/search/">
     <div class="mr-2">
       <label class="mr-sm-2 sr-only" for="inlineFormCustomSelect">Preference</label>
       <select class="custom-select mr-sm-2" name="query">
@@ -57,9 +57,9 @@
   </form>
 
   {{#unless data.docs}}
-    <div class="container">
-      <h6 class="text-center my-5">No users match the search query. Please try again</h6>
-    </div>
+  <div class="container">
+    <h6 class="text-center my-5">No users match the search query. Please try again</h6>
+  </div>
   {{/unless}}
 
   <table class="table table-borderless ">
@@ -78,31 +78,31 @@
     </thead>
     <tbody id='tBody'>
       {{#each data.docs}}
-        <tr>
-          <td>
-            {{this.name}}
-          </td>
-          <td>
-            {{this.email}}
-          </td>
-          <td>
-            {{this.provider}}
-          </td>
-          <td>
-            <a href="/user/admin-edit/{{this.id}}">
-              <button data-id="{{this.id}}" class="btn w-100 editBtn btn-dark">
-                Edit
-              </button>
-            </a>
-          </td>
-          <td id='deleteCol'>
-            <form action="/user/delete/{{this.id}}/?_method=DELETE" method="POST">
-              <button type="submit" data-id="{{this.id}}" class="btn w-100 deleteBtn btn-danger">
-                Delete
-              </button>
-            </form>
-          </td>
-        </tr>
+      <tr>
+        <td>
+          {{this.name}}
+        </td>
+        <td>
+          {{this.email}}
+        </td>
+        <td>
+          {{this.provider}}
+        </td>
+        <td>
+          <a href="/account/admin-edit/{{this.id}}">
+            <button data-id="{{this.id}}" class="btn w-100 editBtn btn-dark">
+              Edit
+            </button>
+          </a>
+        </td>
+        <td id='deleteCol'>
+          <form action="/account/delete/{{this.id}}/?_method=DELETE" method="POST">
+            <button type="submit" data-id="{{this.id}}" class="btn w-100 deleteBtn btn-danger">
+              Delete
+            </button>
+          </form>
+        </td>
+      </tr>
       {{/each}}
 
     </tbody>
@@ -114,12 +114,12 @@
   <div class="list-group-item d-flex justify-content-between align-items-center">
     <span>
       {{#if data.prevPage}}
-        <a class="nav-link" href="/user/profile/admin/?page={{data.prevPage}}">
-          {{!-- <ion-icon name="arrow-dropleft" style="color: black"></ion-icon> --}}
-          Prev
-        </a>
+      <a class="nav-link" href="/account/profile/admin/?page={{data.prevPage}}">
+        {{!-- <ion-icon name="arrow-dropleft" style="color: black"></ion-icon> --}}
+        Prev
+      </a>
       {{else}}
-        <a class="nav-link" aria-disabled="true">Prev</a>
+      <a class="nav-link" aria-disabled="true">Prev</a>
       {{/if}}
     </span>
 
@@ -129,11 +129,11 @@
 
     <span>
       {{#if data.nextPage}}
-        <a class="nav-link" href="/user/profile/admin/?page={{data.nextPage}}">Next
-          {{!-- <ion-icon name="arrow-dropright" style="color:black"></ion-icon> --}}
-        </a>
+      <a class="nav-link" href="/account/profile/admin/?page={{data.nextPage}}">Next
+        {{!-- <ion-icon name="arrow-dropright" style="color:black"></ion-icon> --}}
+      </a>
       {{else}}
-        <a class="disabled" aria-disabled="true">Next</a>
+      <a class="disabled" aria-disabled="true">Next</a>
       {{/if}}
     </span>
 

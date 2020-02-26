@@ -7,10 +7,9 @@ import emailController from './email.controller';
 import { Request, Response, NextFunction } from 'express'
 import { getUrl } from '../config/util';
 import { IVerifyOptions } from 'passport-local';
-import { Document } from 'mongoose';
+import { Account } from '../data/routes';
 
 class UserController {
-
 
   showLogin(req: Request, res: Response) {
     res.render('account/login', { title: 'Login', })
@@ -58,17 +57,16 @@ class UserController {
 
 
   async localLogin(req: Request, res: Response, next: NextFunction) {
-    this.socialLogin()
     passport.authenticate("login", (err: Error, user, info: IVerifyOptions) => {
       if (err) { return next(err); }
       if (!user) {
         req.flash("error", info.message);
-        return res.redirect("/user/login");
+        return res.redirect(accountify('login'));
       }
       req.logIn(user, (err) => {
         if (err) { return next(err); }
         req.flash("message", info.message);
-        res.redirect("/user/profile");
+        res.redirect(accountify('profile'));
       });
     })(req, res, next);
   }
@@ -103,7 +101,7 @@ class UserController {
     const user = await userModel.findOneAndUpdate(id, deleteParams)
     req.flash('message', messages.account_deleted)
     if (user.is_admin) {
-      res.redirect('/user/profile/admin')
+      res.redirect(accountify('profile/admin'))
     }
     else {
       req.logout()
@@ -140,7 +138,7 @@ class UserController {
     try {
       await userModel.findByIdAndUpdate(id, req.body)
       req.flash('message', messages.user_updated)
-      res.redirect('/user/profile/')
+      res.redirect(accountify('profile/'))
 
     } catch (error) {
       req.flash('error', messages.user_update_error)
@@ -153,10 +151,10 @@ class UserController {
     try {
       await userModel.findByIdAndUpdate(id, req.body)
       req.flash('message', messages.user_updated)
-      res.redirect('/user/profile/admin')
+      res.redirect(accountify('profile/admin'))
     } catch (error) {
       req.flash('error', messages.user_update_error)
-      res.redirect('/user/profile/admin')
+      res.redirect(accountify('profile/admin'))
     }
   }
 
@@ -166,10 +164,10 @@ class UserController {
     const user = await userModel.findByIdAndUpdate(id, { password })
     if (user) {
       req.flash('message', messages.user_updated)
-      res.redirect('/user/profile/')
+      res.redirect(accountify('profile/'))
     } else {
       req.flash('error', messages.general_error)
-      res.redirect('/user/profile/')
+      res.redirect(accountify('profile/'))
     }
   }
 
@@ -178,19 +176,19 @@ class UserController {
     req.checkBody('name', messages.validation_errors.name).isLength({ min: 5 }).notEmpty()
     req.checkBody('email', messages.validation_errors.emailNotEmpty).isEmail()
     req.checkBody('password', messages.validation_errors.password).isLength({ min: 5 }).notEmpty()
-    const link = `${getUrl(req)}/user/login`
+    const link = `${getUrl(req)}/account/login`
 
     const emailInfo = {
       to: email,
       template: 'welcome',
       subject: 'Thanks for signing up with',
-      locals: { name: name, company_name: process.env.APP_NAME, link }
+      locals: { name, company_name: process.env.APP_NAME, link }
     }
 
     if (req.validationErrors()) {
       //@ts-ignore
       req.flash('validationErrors', req.validationErrors())
-      return res.redirect('/user/register')
+      return res.redirect(accountify('register'))
     }
     passport.authenticate('signup', async (err, user, info) => {
       try {
@@ -199,7 +197,7 @@ class UserController {
         return res.redirect('/')
       } catch (err) {
         req.flash('message', info.message)
-        res.redirect('/user/register?' + info.message)
+        res.redirect(accountify(Account.register + info.message))
       }
     })(req, res)
   }
@@ -217,54 +215,57 @@ class UserController {
         template: 'password-reset',
         locals: {
           name: name,
-          link: `${getUrl(req)}/user/reset-password/${id}/${token}`
+          link: `${getUrl(req)}/account/reset-password/${id}/${token}`
         }
       }
       emailController.send(emailInfo)
         .then((x: { text: any; }) => {
           req.flash('message', messages.passwordResetSuccess(user))
-          return res.redirect('/user/login')
+          return res.redirect(accountify(Account.login))
         }).catch((err: string) => console.log(err))
     }
     else {
       req.flash('error', messages.user_not_found)
-      res.redirect('/user/forgot-password')
+      res.redirect(accountify(Account.forgot_password))
     }
 
   }
 
   async resetPassword(req: Request, res: Response, next: NextFunction) {
-    const { id, token, password } = req.body
+    const { id, token, password, new_password } = req.body
     req.checkBody("password", "Password must be at least 5 characters long").isLength({ min: 4 })
-    req.checkBody("new_password", "Passwords do not match").equals(req.body.password)
+    req.checkBody("new_password", "Passwords do not match").equals(new_password)
+    const errors = req.validationErrors() as any;
 
-    const errors = req.validationErrors();
     if (errors) {
-      //@ts-ignore
       req.flash('validationErrors', errors)
-      res.redirect('/user/reset-password')
+      res.redirect(accountify(Account.password_reset))
     }
-
-    userModel.findById(id, (err, user) => {
-      if (err) { return next(err); }
-      user.password = password;
-      user.resetToken = null
-      user.save((err) => {
-        if (err) { return next(err); }
-        req.flash("success", messages.password_reset_success);
-        res.redirect("/user/profile");
-      });
-    });
-
+    const user = await userModel.findById(id)
+    // const tokenValid = jwt.verify(token, config.jwtOptions)
+    console.log({ user, password, new_password, token, id })
+    if (user) {
+      user.password = password
+      await user.save()
+      req.flash('message', messages.password_reset_success)
+      res.redirect(accountify(Account.login))
+    } else {
+      req.flash('error', messages.reset_token_expired)
+      res.redirect(accountify(Account.password_reset))
+    }
   }
 
+}
+
+export function accountify(route) {
+  return `/account/${route}`
 }
 
 
 function loginWithSocial(social: string, req: Request, res: Response, next: NextFunction) {
   return passport.authenticate(social, (err, user, _info) => {
     try {
-      req.login(user, err => res.redirect('/user/profile/'))
+      req.login(user, err => res.redirect(accountify(Account.login)))
     } catch (error) {
       req.flash('error', messages.login_failure)
       res.redirect('/user/login')

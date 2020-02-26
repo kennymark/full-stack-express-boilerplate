@@ -13,36 +13,36 @@
     <form class="form-inline my-2 my-lg-0">
       <ul class="navbar-nav">
         {{#unless user}}
-          <li class="nav-item">
-            <a class="nav-link" href="/user/login">Login</a>
-          </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/account/login">Login</a>
+        </li>
 
-          <li class="nav-item">
-            <a class="nav-link" href="/user/register">Register</a>
-          </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/account/register">Register</a>
+        </li>
 
-          <li class="nav-item">
-            <a class="nav-link" href="/contact">Contact</a>
-          </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/contact">Contact</a>
+        </li>
         {{/unless}}
 
         {{#if user}}
-          <div class="dropdown">
-            <a class="btn btn-light dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
-              aria-haspopup="true" aria-expanded="false">
-              {{user.name}}
-            </a>
+        <div class="dropdown">
+          <a class="btn btn-light dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
+            {{user.name}}
+          </a>
 
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink" style="margin-left: -67px;">
-              <a class="dropdown-item" href="/user/profile/">Profile
-              </a>
-              {{#if user.is_admin}}
-                <a class="dropdown-item" href="/user/profile/admin/">Admin Page
-                </a>
-              {{/if}}
-              <a class="dropdown-item" href="/user/logout">Log Out</a>
-            </div>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuLink" style="margin-left: -67px;">
+            <a class="dropdown-item" href="/account/profile/">Profile
+            </a>
+            {{#if user.is_admin}}
+            <a class="dropdown-item" href="/account/profile/admin/">Admin Page
+            </a>
+            {{/if}}
+            <a class="dropdown-item" href="/account/logout">Log Out</a>
           </div>
+        </div>
         {{/if}}
       </ul>
 

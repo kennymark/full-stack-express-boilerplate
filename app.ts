@@ -13,7 +13,7 @@ import './controllers/auth.controller'; //runs passport authentication
 import config from './config/config';
 import { setLocals, logger } from './config/util';
 import indexRouter from './routes/index.routes';
-import userRouter from './routes/user.routes';
+import accountRouter from './routes/user.routes';
 import path from 'path'
 import 'dotenv/config'
 
@@ -53,7 +53,7 @@ app.use(logger)
 
 // routes
 app.use('/', indexRouter)
-app.use('/user', userRouter)
+app.use('/account', accountRouter)
 
 //error 404
 app.get('*', (req, res) => res.render('error404', { data: req.originalUrl }))

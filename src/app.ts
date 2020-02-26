@@ -55,7 +55,7 @@ app.use(logger)
 
 // routes
 app.use('/', indexRouter)
-app.use('/user', userRouter)
+app.use('/account', userRouter)
 
 //error 404
 app.get('*', (req, res) => res.render('error404', { data: req.originalUrl }))

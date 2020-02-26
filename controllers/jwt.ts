@@ -8,9 +8,9 @@ class JwtConfig {
   async extractAndVerify(req: Request, res, next) {
     //Find the header
     const header = req.headers.authorization
-    if (!header) return res.redirect('/user/login')
     const token = header.split(' ')[1]
     const decoded = await jwt.verify(token, config.jwtSecret)
+    if (!header) return res.redirect('/account/login')
     if (!decoded) req.flash('error', messages.login_session_expired)
     next()
   }

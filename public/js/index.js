@@ -75,7 +75,7 @@
 
   function selectDefaultGender() {
     const currSex = sessionStorage.getItem('gender')
-    if (url.href.includes('profile') || url.href.includes('user/edit/')) {
+    if (url.href.includes('profile') || url.href.includes('account/edit/')) {
       const radios = document.querySelectorAll('input[name=gender]')
       radios.forEach(radio => {
         radio.value === currSex ? radio.checked = true : false

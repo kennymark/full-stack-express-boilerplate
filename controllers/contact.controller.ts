@@ -2,6 +2,8 @@
 import hermes from './email.controller'
 import dotenv from 'dotenv'
 import { Request, Response } from 'express'
+import { accountify } from './user.controller'
+import { Account } from '../data/routes'
 dotenv.config()
 
 
@@ -17,5 +19,5 @@ export default function receiveAndSend(req: Request, res: Response) {
 
   hermes.send(emailData)
 
-  res.redirect('/user/login')
+  res.redirect(accountify(Account.login))
 }
