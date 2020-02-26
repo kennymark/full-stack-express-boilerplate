@@ -1,4 +1,4 @@
-import { Schema, model, Error } from 'mongoose'
+import { Schema, model } from 'mongoose'
 import paginate from 'mongoose-paginate-v2'
 import bcrypt from 'bcryptjs'
 
@@ -30,9 +30,8 @@ userSchema.pre('save', async function save(next) {
   const user = this
   if (!this.isModified('password')) return next();
   try {
-    const salt = await bcrypt.genSalt(10);
     //@ts-ignore
-    this.password = await bcrypt.hash(user.password, salt);
+    this.password = await bcrypt.hash(user.password, 10);
     return next();
   } catch (err) {
     return next(err);
@@ -43,8 +42,6 @@ userSchema.pre('save', async function save(next) {
 userSchema.methods.validatePassword = async function validatePassword(pass) {
   return bcrypt.compare(pass, this.password);
 };
-
-
 
 
 export default model('user', userSchema)

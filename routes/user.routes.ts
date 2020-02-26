@@ -12,6 +12,11 @@ export function ensureAuthenticated(req: Request, res: Response, next: NextFunct
   res.redirect(accountify(Account.login))
 }
 
+export function ensureNotAuthenticated(req: Request, res: Response, next: NextFunction) {
+  if (!req.isAuthenticated()) return next()
+  res.redirect(accountify(Account.profile))
+}
+
 
 
 
@@ -24,7 +29,7 @@ export function isAdmin(req: Request, res: Response, next: NextFunction) {
 
 
 router.route('/login')
-  .get(UserController.showLogin)
+  .get(UserController.showLogin, ensureNotAuthenticated)
   .post(UserController.localLogin)
 
 
@@ -35,12 +40,12 @@ router.get('/login/github', passport.authenticate('github'))
 router.get('/login/google', passport.authenticate('google', { scope: ['profile', 'email'] }))
 
 
-router.get('/logout', UserController.logUserOut)
+router.get('/logout', UserController.logUserOut, ensureAuthenticated)
 
 
 router
   .route('/register')
-  .get(UserController.showRegister)
+  .get(UserController.showRegister, ensureNotAuthenticated)
   .post(UserController.postRegister)
 
 

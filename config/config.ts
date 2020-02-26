@@ -1,4 +1,4 @@
-//@ts-nocheck
+
 import session from 'express-session'
 import db from 'mongoose'
 import MongoStore from 'connect-mongo'
@@ -7,7 +7,6 @@ const Store = MongoStore(session)
 
 
 export default {
-
   hbsConfig: {
     defaultLayout: 'main',
     extname: '.hbs',

@@ -186,14 +186,13 @@ class UserController {
     }
 
     if (req.validationErrors()) {
-      //@ts-ignore
-      req.flash('validationErrors', req.validationErrors())
+      req.flash('validationErrors', req.validationErrors() as any)
       return res.redirect(accountify('register'))
     }
     passport.authenticate('signup', async (err, user, info) => {
       try {
         req.flash('message', info.message)
-        emailController.send(emailInfo)
+        await emailController.send(emailInfo)
         return res.redirect('/')
       } catch (err) {
         req.flash('message', info.message)
@@ -218,11 +217,7 @@ class UserController {
           link: `${getUrl(req)}/account/reset-password/${id}/${token}`
         }
       }
-      emailController.send(emailInfo)
-        .then((x: { text: any; }) => {
-          req.flash('message', messages.passwordResetSuccess(user))
-          return res.redirect(accountify(Account.login))
-        }).catch((err: string) => console.log(err))
+      sendEmail(req, res, user, emailInfo)
     }
     else {
       req.flash('error', messages.user_not_found)
@@ -242,11 +237,21 @@ class UserController {
       res.redirect(accountify(Account.password_reset))
     }
     const user = await userModel.findById(id)
-    // const tokenValid = jwt.verify(token, config.jwtOptions)
+    const tokenValid = await jwt.verify(token, config.jwtSecret)
     console.log({ user, password, new_password, token, id })
-    if (user) {
+    if (tokenValid && user) {
       user.password = password
-      await user.save()
+      const savedUser = await user.save()
+      const emailInfo = {
+        to: savedUser.email,
+        subject: 'Password reset succesful',
+        template: 'password-reset/success',
+        locals: {
+          name: savedUser.name,
+          link: `${getUrl(req)}/account/login`
+        }
+      }
+      await emailController.send(emailInfo)
       req.flash('message', messages.password_reset_success)
       res.redirect(accountify(Account.login))
     } else {
@@ -259,6 +264,14 @@ class UserController {
 
 export function accountify(route) {
   return `/account/${route}`
+}
+
+function sendEmail(req, res, user, emailInfo) {
+  emailController.send(emailInfo)
+    .then((x: { text: any; }) => {
+      req.flash('message', messages.passwordResetSuccess(user))
+      return res.redirect(accountify(Account.login))
+    }).catch((err: string) => console.log(err))
 }
 
 
