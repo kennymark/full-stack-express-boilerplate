@@ -47,26 +47,20 @@ class UserController {
     const { search, query } = req.query
     const page = req.query.page || 1
     const result = await userModel.paginate({ [query]: new RegExp(`${search}`, 'i') }, { page, limit: 10 })
-    console.log(result)
     return res.render('admin', { title: 'Admin Page', data: result })
   }
-
-  socialLogin() {
-    console.log('socials tho')
-  }
-
-
+  ss
   async localLogin(req: Request, res: Response, next: NextFunction) {
     passport.authenticate("login", (err: Error, user, info: IVerifyOptions) => {
       if (err) { return next(err); }
       if (!user) {
         req.flash("error", info.message);
-        return res.redirect(accountify('login'));
+        return res.redirect(accountify(Account.login));
       }
       req.logIn(user, (err) => {
         if (err) { return next(err); }
         req.flash("message", info.message);
-        res.redirect(accountify('profile'));
+        res.redirect(accountify(Account.profile));
       });
     })(req, res, next);
   }
@@ -94,14 +88,13 @@ class UserController {
     loginWithSocial('google', req, res, next)
   }
 
-
   async deleteUser(req: Request, res: Response) {
     const { id } = req.params
     const deleteParams = { is_deleted: true, is_active: false };
     const user = await userModel.findOneAndUpdate(id, deleteParams)
     req.flash('message', messages.account_deleted)
     if (user.is_admin) {
-      res.redirect(accountify('profile/admin'))
+      res.redirect(accountify(Account.profile_admin))
     }
     else {
       req.logout()
@@ -109,7 +102,6 @@ class UserController {
       req.session.destroy(err => res.redirect('/'))
     }
   }
-
 
 
   async freezeUser(req: Request, res: Response) {
@@ -124,9 +116,8 @@ class UserController {
     const { id } = req.params
     try {
       const user = await userModel.findById(id)
-      if (user) {
-        res.render('account/edit-user', { data: user })
-      }
+      res.render('account/edit-user', { data: user })
+
     } catch (error) {
       req.flash('error', error)
       res.render('home')
@@ -139,7 +130,6 @@ class UserController {
       await userModel.findByIdAndUpdate(id, req.body)
       req.flash('message', messages.user_updated)
       res.redirect(accountify('profile/'))
-
     } catch (error) {
       req.flash('error', messages.user_update_error)
       res.redirect('/')
@@ -151,10 +141,10 @@ class UserController {
     try {
       await userModel.findByIdAndUpdate(id, req.body)
       req.flash('message', messages.user_updated)
-      res.redirect(accountify('profile/admin'))
+      res.redirect(accountify(Account.profile_admin))
     } catch (error) {
       req.flash('error', messages.user_update_error)
-      res.redirect(accountify('profile/admin'))
+      res.redirect(accountify(Account.profile_admin))
     }
   }
 
@@ -164,18 +154,18 @@ class UserController {
     const user = await userModel.findByIdAndUpdate(id, { password })
     if (user) {
       req.flash('message', messages.user_updated)
-      res.redirect(accountify('profile/'))
+      res.redirect(accountify(Account.profile))
     } else {
       req.flash('error', messages.general_error)
-      res.redirect(accountify('profile/'))
+      res.redirect(accountify(Account.profile))
     }
   }
 
   async postRegister(req: Request, res: Response) {
     const { email, name, } = req.body
-    req.checkBody('name', messages.validation_errors.name).isLength({ min: 5 }).notEmpty()
+    req.checkBody('name', messages.validation_errors.name).isLength({ min: 5 })
     req.checkBody('email', messages.validation_errors.emailNotEmpty).isEmail()
-    req.checkBody('password', messages.validation_errors.password).isLength({ min: 5 }).notEmpty()
+    req.checkBody('password', messages.validation_errors.password).isLength({ min: 5 })
     const link = `${getUrl(req)}/account/login`
 
     const emailInfo = {

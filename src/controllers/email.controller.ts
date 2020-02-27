@@ -4,7 +4,7 @@ import Email from 'email-templates'
 import path from 'path'
 
 
-const { SENDGRID_USERNAME, SENDGRID_API_KEY, EMAIL_FROM } = process.env
+const { SENDGRID_USERNAME, SENDGRID_API_KEY, EMAIL_FROM, NODE_ENV } = process.env
 
 const options = {
   auth: {
@@ -18,7 +18,7 @@ class Hermes {
   send({ to, locals, template, subject }: Emailer) {
     const email = new Email({
       message: { from: EMAIL_FROM, },
-      send: true,
+      send: NODE_ENV === 'production' ? true : false,
       juice: true,
       juiceResources: {
         preserveImportant: true,

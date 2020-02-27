@@ -98,7 +98,7 @@ async function socialStrategy(user, service, done, profile) {
 }
 
 function getDevProdCallbackUrl(service: string) {
-  if (process.env.NODE_ENV = 'development') {
+  if (process.env.NODE_ENV.includes('development')) {
     return `http://localhost:3000/oauth/${service}`
   } else {
     return `https://express-kenny.herokuapp.com/auth/${service}`
