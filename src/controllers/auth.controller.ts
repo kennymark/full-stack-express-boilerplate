@@ -31,7 +31,7 @@ passport.use('signup', new LocalStrategy({
   }
 }))
 
-passport.use('login', new LocalStrategy({ usernameField: 'email', passwordField: 'password' }, async (email, password, done) => {
+passport.use('login', new LocalStrategy({ usernameField: 'email' }, async (email, password, done) => {
   const user = await userModel.findOne({ email })
   if (!user) {
     return done(null, false, { message: messages.user_not_found });
@@ -46,7 +46,7 @@ passport.use('login', new LocalStrategy({ usernameField: 'email', passwordField:
 passport.use('twitter', new TwitterStrategy({
   consumerKey: process.env.TWITTER_CONSUMER_KEY,
   consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
-  callbackURL: process.env.TWIITER_CALLBACK_URL
+  callbackURL: getDevProdCallbackUrl('twitter')
 }, async (token, refreshToken, profile, done) => {
   const user = await userModel.findOne({ twitterId: profile.id })
   if (user) return done(null, user, { message: messages.login_sucess })
@@ -56,7 +56,7 @@ passport.use('twitter', new TwitterStrategy({
 passport.use('google', new GoogleStrategy({
   clientID: process.env.GOOGLE_CLIENT_ID,
   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-  callbackURL: process.env.GOOGLE_CALLBACK_URL
+  callbackURL: getDevProdCallbackUrl('google')
 }, async (token, refreshToken, profile, done) => {
   const user = await userModel.findOne({ googleId: profile.id })
   socialStrategy(user, 'google')
@@ -66,7 +66,7 @@ passport.use('google', new GoogleStrategy({
 passport.use('facebook', new FacebookStrategy({
   clientID: process.env.FB_CLIENT_ID,
   clientSecret: process.env.FB_CLIENT_SECRET,
-  callbackURL: process.env.FB_CALLBACK_URL
+  callbackURL: getDevProdCallbackUrl('facebook')
 }, async (token: string, refreshToken, profile, done) => {
   const user = await userModel.findOne({ facebookId: profile.id })
   socialStrategy(user, 'facebook')
@@ -76,7 +76,7 @@ passport.use('facebook', new FacebookStrategy({
 passport.use('github', new GithubStrategy({
   clientID: process.env.GITHUB_CLIENT_ID,
   clientSecret: process.env.GITHUB_CLIENT_SECRET,
-  callbackURL: process.env.GITHUB_CALLBACK_URL,
+  callbackURL: getDevProdCallbackUrl('github'),
 }, async (token, refreshToken, profile, done) => {
   const user = await userModel.findOne({ githubId: profile.id })
   socialStrategy(user, 'github')
@@ -99,6 +99,13 @@ async function socialStrategy(user, service) {
   }
 }
 
+function getDevProdCallbackUrl(service: string) {
+  if (process.env.NODE_ENV = 'development') {
+    return `http://localhost:3000/oauth/${service}`
+  } else {
+    return `https://express-kenny.herokuapp.com/auth/${service}`
+  }
+}
 // used to serialize the user for the session
 passport.serializeUser((user, done) => done(null, user.id))
 // used to deserialize the user
