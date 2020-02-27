@@ -14,7 +14,6 @@ export function ensureAuthenticated(req: Request, res: Response, next: NextFunct
 
 export function ensureNotAuthenticated(req: Request, res: Response, next: NextFunction) {
   if (!req.isAuthenticated()) return next()
-  req.flash('error', messages.logout_to_view)
   res.redirect(accountify(Account.profile))
 }
 

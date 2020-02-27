@@ -1,26 +1,22 @@
-import { Router, Request, Response, NextFunction } from 'express'
+import { Router } from 'express'
 import indexController from '../controllers/index.controller'
 import userController from '../controllers/user.controller'
 import contactController from '../controllers/contact.controller'
+import { ensureNotAuthenticated } from './user.routes'
 
 const router = Router()
 
-export function preventVisitingNormal(req: Request, res: Response, next: NextFunction) {
-  if (req.isAuthenticated()) {
-    return res.redirect("/");
-  }
-  next()
-}
+
 
 router.get('/', indexController.showHome)
 
 router
   .route('/contact')
-  .get(indexController.showContact, preventVisitingNormal)
+  .get(indexController.showContact)
   .post(contactController)
 
-router.get('/pricing', indexController.showPricing)
-router.get('/about', indexController.showAbout, preventVisitingNormal)
+router.get('/pricing', indexController.showPricing, ensureNotAuthenticated)
+router.get('/about', indexController.showAbout, ensureNotAuthenticated)
 
 // Social Authentication for redirects 
 router.get('/oauth/google', userController.googleLogin)

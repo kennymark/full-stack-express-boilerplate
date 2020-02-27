@@ -1,4 +1,3 @@
-//@ts-nocheck
 import passport from 'passport'
 import { Strategy as LocalStrategy } from 'passport-local'
 import { Strategy as TwitterStrategy } from 'passport-twitter'
@@ -49,8 +48,7 @@ passport.use('twitter', new TwitterStrategy({
   callbackURL: getDevProdCallbackUrl('twitter')
 }, async (token, refreshToken, profile, done) => {
   const user = await userModel.findOne({ twitterId: profile.id })
-  if (user) return done(null, user, { message: messages.login_sucess })
-  socialStrategy(user, 'twitter')
+  socialStrategy(user, 'twitter', done, profile)
 }))
 
 passport.use('google', new GoogleStrategy({
@@ -59,7 +57,7 @@ passport.use('google', new GoogleStrategy({
   callbackURL: getDevProdCallbackUrl('google')
 }, async (token, refreshToken, profile, done) => {
   const user = await userModel.findOne({ googleId: profile.id })
-  socialStrategy(user, 'google')
+  socialStrategy(user, 'google', done, profile)
 }));
 
 
@@ -69,7 +67,7 @@ passport.use('facebook', new FacebookStrategy({
   callbackURL: getDevProdCallbackUrl('facebook')
 }, async (token: string, refreshToken, profile, done) => {
   const user = await userModel.findOne({ facebookId: profile.id })
-  socialStrategy(user, 'facebook')
+  socialStrategy(user, 'facebook', done, profile)
 
 }))
 
@@ -79,11 +77,11 @@ passport.use('github', new GithubStrategy({
   callbackURL: getDevProdCallbackUrl('github'),
 }, async (token, refreshToken, profile, done) => {
   const user = await userModel.findOne({ githubId: profile.id })
-  socialStrategy(user, 'github')
+  socialStrategy(user, 'github', done, profile)
 }))
 
 
-async function socialStrategy(user, service) {
+async function socialStrategy(user, service, done, profile) {
   if (user) return done(null, user, { message: messages.login_sucess })
   else {
     const account = {
@@ -107,12 +105,15 @@ function getDevProdCallbackUrl(service: string) {
   }
 }
 // used to serialize the user for the session
-passport.serializeUser((user, done) => done(null, user.id))
+
+passport.serializeUser((user: UserDoc, done) => done(null, user.id))
 // used to deserialize the user
 passport.deserializeUser((id, done) => {
-  userModel.findById(id, (err, user) => {
-    done(err, user)
-  })
+  userModel.findById(id, (err, user) => done(err, user))
 })
+
+interface UserDoc {
+  id: string
+}
 
 export default passport
