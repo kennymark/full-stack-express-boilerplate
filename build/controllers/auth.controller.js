@@ -43,7 +43,7 @@ passport_1.default.use('signup', new passport_local_1.Strategy({
         done(error);
     }
 })));
-passport_1.default.use('login', new passport_local_1.Strategy({ usernameField: 'email', passwordField: 'password' }, (email, password, done) => __awaiter(void 0, void 0, void 0, function* () {
+passport_1.default.use('login', new passport_local_1.Strategy({ usernameField: 'email' }, (email, password, done) => __awaiter(void 0, void 0, void 0, function* () {
     const user = yield user_model_1.default.findOne({ email });
     if (!user) {
         return done(null, false, { message: messages_1.default.user_not_found });
@@ -58,7 +58,7 @@ passport_1.default.use('login', new passport_local_1.Strategy({ usernameField: '
 passport_1.default.use('twitter', new passport_twitter_1.Strategy({
     consumerKey: process.env.TWITTER_CONSUMER_KEY,
     consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
-    callbackURL: process.env.TWIITER_CALLBACK_URL
+    callbackURL: getDevProdCallbackUrl('twitter')
 }, (token, refreshToken, profile, done) => __awaiter(void 0, void 0, void 0, function* () {
     const user = yield user_model_1.default.findOne({ twitterId: profile.id });
     if (user)
@@ -68,7 +68,7 @@ passport_1.default.use('twitter', new passport_twitter_1.Strategy({
 passport_1.default.use('google', new passport_google_oauth2_1.Strategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: process.env.GOOGLE_CALLBACK_URL
+    callbackURL: getDevProdCallbackUrl('google')
 }, (token, refreshToken, profile, done) => __awaiter(void 0, void 0, void 0, function* () {
     const user = yield user_model_1.default.findOne({ googleId: profile.id });
     socialStrategy(user, 'google');
@@ -76,7 +76,7 @@ passport_1.default.use('google', new passport_google_oauth2_1.Strategy({
 passport_1.default.use('facebook', new passport_facebook_1.Strategy({
     clientID: process.env.FB_CLIENT_ID,
     clientSecret: process.env.FB_CLIENT_SECRET,
-    callbackURL: process.env.FB_CALLBACK_URL
+    callbackURL: getDevProdCallbackUrl('facebook')
 }, (token, refreshToken, profile, done) => __awaiter(void 0, void 0, void 0, function* () {
     const user = yield user_model_1.default.findOne({ facebookId: profile.id });
     socialStrategy(user, 'facebook');
@@ -84,7 +84,7 @@ passport_1.default.use('facebook', new passport_facebook_1.Strategy({
 passport_1.default.use('github', new passport_github_1.Strategy({
     clientID: process.env.GITHUB_CLIENT_ID,
     clientSecret: process.env.GITHUB_CLIENT_SECRET,
-    callbackURL: process.env.GITHUB_CALLBACK_URL,
+    callbackURL: getDevProdCallbackUrl('github'),
 }, (token, refreshToken, profile, done) => __awaiter(void 0, void 0, void 0, function* () {
     const user = yield user_model_1.default.findOne({ githubId: profile.id });
     socialStrategy(user, 'github');
@@ -106,6 +106,14 @@ function socialStrategy(user, service) {
             return done(null, newUser, { message: messages_1.default.account_registered });
         }
     });
+}
+function getDevProdCallbackUrl(service) {
+    if (process.env.NODE_ENV = 'development') {
+        return `http://localhost:3000/oauth/${service}`;
+    }
+    else {
+        return `https://express-kenny.herokuapp.com/auth/${service}`;
+    }
 }
 // used to serialize the user for the session
 passport_1.default.serializeUser((user, done) => done(null, user.id));
