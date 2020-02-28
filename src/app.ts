@@ -26,6 +26,7 @@ const port = process.env.PORT || 3000
 mongoose.connect(process.env.DB_URL, config.dbOptions)
 mongoose.connection.on('error', error => console.log(error));
 
+app.use(compression())
 app.use(cors())
 app.use(methodOverride('_method'))
 app.use(compression())

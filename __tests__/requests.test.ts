@@ -1,7 +1,7 @@
 import request from 'supertest';
-import app from '../app';
-import { accountify } from '../controllers/user.controller';
-import { Account } from '../data/routes';
+import app from '../src/app';
+import { accountify } from '../src/controllers/user.controller';
+import { Routes as Account } from '../src/data/routes'
 
 
 const timeout = 20000
