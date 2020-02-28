@@ -1,7 +1,7 @@
 import { Schema, model } from 'mongoose'
 import paginate from 'mongoose-paginate-v2'
 import bcrypt from 'bcryptjs'
-import { UserDoc } from 'main';
+import { User } from 'main';
 
 
 const userSchema = new Schema({
@@ -44,4 +44,4 @@ userSchema.methods.validatePassword = async function validatePassword(pass) {
 };
 
 
-export default model<UserDoc>('user', userSchema)
+export default model<User>('user', userSchema)

@@ -38,6 +38,7 @@ class UserController {
     const page = req.query.page || 1
     const activeUsers = await userModel.find({ is_active: true })
     const deletedUsers = await userModel.find({ is_deleted: true })
+    //@ts-ignore
     const result = await userModel.paginate({ is_deleted: false }, { page, limit: 10 })
 
     res.render('admin', { title: 'Admin Page', data: result, deletedUsers, activeUsers })
@@ -46,6 +47,7 @@ class UserController {
   async search(req: Request, res: Response) {
     const { search, query } = req.query
     const page = req.query.page || 1
+    //@ts-ignore
     const result = await userModel.paginate({ [query]: new RegExp(`${search}`, 'i') }, { page, limit: 10 })
     return res.render('admin', { title: 'Admin Page', data: result })
   }
