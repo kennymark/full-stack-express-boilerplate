@@ -6,13 +6,14 @@ import { Routes as Account } from '../src/data/routes'
 
 const timeout = 20000
 
-describe('Account routes', async () => {
+describe('Account routes', () => {
 
   afterAll(async () => {
     server.close(() => {
       console.log('Closed out remaining connections');
     });
   });
+
   test('home route return a 2000', async () => {
     const res = await request(app).get('/')
     expect(res.status).toBe(200);
