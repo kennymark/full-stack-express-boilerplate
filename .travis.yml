@@ -25,7 +25,7 @@ notifications:
     on_failure: always
     
 
-after_failure:
+
 
 env:
 - NODE_ENV=production
