@@ -11,7 +11,7 @@ install:
   - npm install
   
 script:
-  - npm test
+  -./node_modules/.bin/jest
   
 after_success: 
   - git checkout master 
