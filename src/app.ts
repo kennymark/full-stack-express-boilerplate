@@ -59,7 +59,8 @@ app.use('/account', accountRouter)
 //error 404
 app.get('*', (req, res) => res.status(404).render('error404', { data: req.originalUrl }))
 
-app.listen(port), () => console.log(`Listening at http://localhost:${port}`)
+export const server = app.listen(port)
+  .on('listening', () => console.log(`Listening at http://localhost:${port}`))
 
 
 export default app

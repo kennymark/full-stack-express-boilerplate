@@ -1,13 +1,18 @@
 import request from 'supertest';
-import app from '../src/app';
+import app, { server } from '../src/app';
 import { accountify } from '../src/controllers/user.controller';
 import { Routes as Account } from '../src/data/routes'
 
 
 const timeout = 20000
 
-describe('Account routes', () => {
+describe('Account routes', async () => {
 
+  afterAll(async () => {
+    server.close(() => {
+      console.log('Closed out remaining connections');
+    });
+  });
   test('home route return a 2000', async () => {
     const res = await request(app).get('/')
     expect(res.status).toBe(200);
