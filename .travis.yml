@@ -9,9 +9,11 @@ before_install:
   
 install:
   - npm install
+  - npm install -g jest
+
   
 script:
-  -./node_modules/.bin/jest
+  - npm test
   
 after_success: 
   - git checkout master 
@@ -24,8 +26,5 @@ notifications:
     on_success: never # default: change
     on_failure: always
     
-
-
-
 env:
-- NODE_ENV=production
+- NODE_ENV=development

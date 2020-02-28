@@ -18,7 +18,7 @@ export function ensureNotAuthenticated(req: Request, res: Response, next: NextFu
 }
 
 export function isAdmin(req: Request, res: Response, next: NextFunction) {
-  //@ts-ignore
+  // @ts-ignore
   if (req.user?.is_admin) return next()
   req.flash('error', messages.cant_access_resource)
   res.redirect('/')
@@ -34,7 +34,7 @@ router.route('/login')
 router.get('/login/twitter', passport.authenticate('twitter'))
 router.get('/login/facebook', passport.authenticate('facebook'))
 router.get('/login/github', passport.authenticate('github'))
-router.get('/login/google', passport.authenticate('google', { scope: ['profile', 'email'] }))
+router.get('/login/google', passport.authenticate('google'))
 
 
 router.get('/logout', UserController.logUserOut, ensureAuthenticated)

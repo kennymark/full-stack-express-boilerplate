@@ -13,7 +13,7 @@ import 'dotenv/config'
 //passport middle to handle user registration
 passport.use('signup', new LocalStrategy({
   usernameField: 'email',
-  passReqToCallback: true
+  passReqToCallback: true,
 }, async (req, email, password, done) => {
   try {
     const { name } = req.body
@@ -30,22 +30,24 @@ passport.use('signup', new LocalStrategy({
 }))
 
 // Logs user in locally
-passport.use('login', new LocalStrategy({ usernameField: 'email' }, async (email, password, done) => {
-  const user = await userModel.findOne({ email })
-  if (!user) {
-    return done(null, false, { message: messages.user_not_found });
-  }
-  else {
-    const isValid = await user.validatePassword(password)
-    if (isValid) return done(null, user, { message: messages.login_sucess });
-    return done(null, false, { message: messages.invalid_password });
-  }
-}));
+passport.use('login', new LocalStrategy({ usernameField: 'email' },
+  async (email, password, done) => {
+    const user = await userModel.findOne({ email })
+    if (!user) {
+      return done(null, false, { message: messages.user_not_found });
+    }
+    else {
+      const isValid = await user.validatePassword(password)
+      if (isValid) return done(null, user, { message: messages.login_sucess });
+      return done(null, false, { message: messages.invalid_password });
+    }
+  }));
 
 passport.use('twitter', new TwitterStrategy({
   consumerKey: process.env.TWITTER_CONSUMER_KEY,
   consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
-  callbackURL: getDevProdCallbackUrl('twitter')
+  callbackURL: getDevProdCallbackUrl('twitter'),
+  includeEmail: true
 }, async (token, refreshToken, profile, done) => {
   const user = await userModel.findOne({ twitterId: profile.id })
   executeSocialStrategy(user, 'twitter', done, profile)
@@ -54,7 +56,8 @@ passport.use('twitter', new TwitterStrategy({
 passport.use('google', new GoogleStrategy({
   clientID: process.env.GOOGLE_CLIENT_ID,
   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-  callbackURL: getDevProdCallbackUrl('google')
+  callbackURL: getDevProdCallbackUrl('google'),
+  scope: ['profile', 'email']
 }, async (token, refreshToken, profile, done) => {
   const user = await userModel.findOne({ googleId: profile.id })
   executeSocialStrategy(user, 'google', done, profile)
@@ -64,11 +67,10 @@ passport.use('google', new GoogleStrategy({
 passport.use('facebook', new FacebookStrategy({
   clientID: process.env.FB_CLIENT_ID,
   clientSecret: process.env.FB_CLIENT_SECRET,
-  callbackURL: getDevProdCallbackUrl('facebook')
+  callbackURL: getDevProdCallbackUrl('facebook'),
 }, async (token, refreshToken, profile, done) => {
   const user = await userModel.findOne({ facebookId: profile.id })
   executeSocialStrategy(user, 'facebook', done, profile)
-
 }))
 
 passport.use('github', new GithubStrategy({
@@ -85,11 +87,11 @@ async function executeSocialStrategy(user, service, done, profile) {
   if (user) return done(null, user, { message: messages.login_sucess })
   else {
     const account = {
-      name: profile.displayName,
-      provider: profile.provider,
-      gender: profile.gender,
-      email: `${profile.name}@${service}.com`,
-      website: profile._json.url
+      name: profile?.displayName,
+      provider: profile?.provider,
+      gender: profile?.gender,
+      email: `${profile?.name}@${service}.com`,
+      website: profile?._json.url
     }
     account[`${service}Id`] = profile.id
     const newUser = await userModel.create(account)

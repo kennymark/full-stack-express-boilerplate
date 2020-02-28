@@ -6,15 +6,17 @@ import path from 'path'
 
 const { SENDGRID_USERNAME, SENDGRID_API_KEY, EMAIL_FROM, NODE_ENV } = process.env
 
-const options = {
-  auth: {
-    api_user: SENDGRID_USERNAME,
-    api_key: SENDGRID_API_KEY
-  }
-}
+
 
 // The central nerve system for sending emails across the application
 class Hermes {
+
+  private options = {
+    auth: {
+      api_user: SENDGRID_USERNAME,
+      api_key: SENDGRID_API_KEY
+    }
+  }
 
   send({ to, locals, template, subject }: Emailer) {
     const email = new Email({
@@ -29,7 +31,7 @@ class Hermes {
         },
       },
       views: { options: { extension: 'hbs' } },
-      transport: mailer.createTransport(sgTransport(options)),
+      transport: mailer.createTransport(sgTransport(this.options)),
 
     });
     return email.send({ template, locals, message: { to, subject, } })

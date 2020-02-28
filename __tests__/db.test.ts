@@ -1,15 +1,15 @@
 import db from 'mongoose'
 import dotenv from 'dotenv'
-
+import 'jest'
 dotenv.config()
 process.env.NODE_ENV = 'test';
 
-db.connect(process.env.DB_URL as string, { useNewUrlParser: true })
 
 const timeOut = 25000
 describe('Test database activities', () => {
 
   beforeAll(() => {
+    db.connect(process.env.DB_URL as string, { useNewUrlParser: true })
     // console.log(db.modelNames())
   })
 
