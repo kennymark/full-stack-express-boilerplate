@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node build/app.js",
     "dev": "ts-node-dev --respawn src/app.ts",
-    "test": "jest --verbose",
+    "test": "./node_modules/.bin/jest --verbose",
     "copy": "ts-node shell.ts",
     "build": "tsc && npm run copy"
   },
