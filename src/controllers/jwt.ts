@@ -1,11 +1,11 @@
 import jwt from 'jsonwebtoken'
 import config from '../config/config'
 import messages from '../data/messages'
-import { Request } from 'express'
+import { Request, Response, NextFunction } from 'express'
 class JwtConfig {
 
   // Extracts a jwt
-  async extractAndVerify(req: Request, res, next) {
+  async extractAndVerify(req: Request, res: Response, next: NextFunction) {
     //Find the header
     const header = req.headers.authorization
     const token = header.split(' ')[1]

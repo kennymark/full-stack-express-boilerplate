@@ -13,6 +13,7 @@ const options = {
   }
 }
 
+// The central nerve system for sending emails across the application
 class Hermes {
 
   send({ to, locals, template, subject }: Emailer) {

@@ -13,7 +13,6 @@ import 'dotenv/config'
 //passport middle to handle user registration
 passport.use('signup', new LocalStrategy({
   usernameField: 'email',
-  passwordField: 'password',
   passReqToCallback: true
 }, async (req, email, password, done) => {
   try {
@@ -30,6 +29,7 @@ passport.use('signup', new LocalStrategy({
   }
 }))
 
+// Logs user in locally
 passport.use('login', new LocalStrategy({ usernameField: 'email' }, async (email, password, done) => {
   const user = await userModel.findOne({ email })
   if (!user) {
@@ -48,7 +48,7 @@ passport.use('twitter', new TwitterStrategy({
   callbackURL: getDevProdCallbackUrl('twitter')
 }, async (token, refreshToken, profile, done) => {
   const user = await userModel.findOne({ twitterId: profile.id })
-  socialStrategy(user, 'twitter', done, profile)
+  executeSocialStrategy(user, 'twitter', done, profile)
 }))
 
 passport.use('google', new GoogleStrategy({
@@ -57,7 +57,7 @@ passport.use('google', new GoogleStrategy({
   callbackURL: getDevProdCallbackUrl('google')
 }, async (token, refreshToken, profile, done) => {
   const user = await userModel.findOne({ googleId: profile.id })
-  socialStrategy(user, 'google', done, profile)
+  executeSocialStrategy(user, 'google', done, profile)
 }));
 
 
@@ -65,9 +65,9 @@ passport.use('facebook', new FacebookStrategy({
   clientID: process.env.FB_CLIENT_ID,
   clientSecret: process.env.FB_CLIENT_SECRET,
   callbackURL: getDevProdCallbackUrl('facebook')
-}, async (token: string, refreshToken, profile, done) => {
+}, async (token, refreshToken, profile, done) => {
   const user = await userModel.findOne({ facebookId: profile.id })
-  socialStrategy(user, 'facebook', done, profile)
+  executeSocialStrategy(user, 'facebook', done, profile)
 
 }))
 
@@ -77,11 +77,11 @@ passport.use('github', new GithubStrategy({
   callbackURL: getDevProdCallbackUrl('github'),
 }, async (token, refreshToken, profile, done) => {
   const user = await userModel.findOne({ githubId: profile.id })
-  socialStrategy(user, 'github', done, profile)
+  executeSocialStrategy(user, 'github', done, profile)
 }))
 
 
-async function socialStrategy(user, service, done, profile) {
+async function executeSocialStrategy(user, service, done, profile) {
   if (user) return done(null, user, { message: messages.login_sucess })
   else {
     const account = {
@@ -104,10 +104,11 @@ function getDevProdCallbackUrl(service: string) {
     return `https://express-kenny.herokuapp.com/auth/${service}`
   }
 }
-// used to serialize the user for the session
 
+// used to serialize the user for the session
 passport.serializeUser((user: UserDoc, done) => done(null, user.id))
-// used to deserialize the user
+
+// used to deserialize the user for when u want to use req.user
 passport.deserializeUser((id, done) => {
   userModel.findById(id, (err, user) => done(err, user))
 })

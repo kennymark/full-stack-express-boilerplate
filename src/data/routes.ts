@@ -1,6 +1,6 @@
 
 
-export enum Account {
+export enum Routes {
   login = 'login',
   logout = 'logout',
   register = 'register',

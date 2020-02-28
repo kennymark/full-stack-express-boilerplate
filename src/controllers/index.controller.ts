@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 
+// Shows all the main routes in the application
 class IndexController {
   showHome(req: Request, res: Response) {
     res.render('home', { title: 'Home' })

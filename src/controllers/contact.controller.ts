@@ -1,12 +1,11 @@
-//@ts-nocheck
+
 import hermes from './email.controller'
-import dotenv from 'dotenv'
 import { Request, Response } from 'express'
 import { accountify } from './user.controller'
-import { Account } from '../data/routes'
-dotenv.config()
+import { Routes } from '../data/routes'
 
 
+// Responsible for sending contact emails send on the contact page
 export default function receiveAndSend(req: Request, res: Response) {
   const { email, name, message, reason } = req.body
   const emailData = {
@@ -19,5 +18,5 @@ export default function receiveAndSend(req: Request, res: Response) {
 
   hermes.send(emailData)
 
-  res.redirect(accountify(Account.login))
+  res.redirect(accountify(Routes.login))
 }

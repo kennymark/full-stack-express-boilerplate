@@ -7,7 +7,6 @@ import { ensureNotAuthenticated } from './user.routes'
 const router = Router()
 
 
-
 router.get('/', indexController.showHome)
 
 router
@@ -15,8 +14,8 @@ router
   .get(indexController.showContact)
   .post(contactController)
 
-router.get('/pricing', indexController.showPricing, ensureNotAuthenticated)
-router.get('/about', indexController.showAbout, ensureNotAuthenticated)
+router.get('/pricing', indexController.showPricing)
+router.get('/about', indexController.showAbout)
 
 // Social Authentication for redirects 
 router.get('/oauth/google', userController.googleLogin)

@@ -6,7 +6,7 @@ const date = time.format('MMMM Do YYYY')
 /** This function make its possible to set data that is universally available in every template without 
  * having to pass in data via the render method
  */
-export function setLocals(req: Request, res: Response, next: NextFunction) {
+export function setLocals(req: Request, res: Response, next: NextFunction): void {
   res.locals.year = time.year()
   res.locals.date = date
   res.locals.user = req.user
@@ -16,19 +16,20 @@ export function setLocals(req: Request, res: Response, next: NextFunction) {
   next()
 }
 
+// Logs basic info about a request
 export function logger(req: Request, res: Response, next: NextFunction) {
   const durationInMilliseconds = getDurationInMilliseconds(process.hrtime())
   console.info(`${req.method} - ${req.url} - ${durationInMilliseconds.toString()} ms`)
   next()
 }
 
-const getDurationInMilliseconds = (start) => {
+const getDurationInMilliseconds = (start): number => {
   const NS_PER_SEC = 1e9
   const NS_TO_MS = 1e6
   const diff = process.hrtime(start)
   return (diff[0] * NS_PER_SEC + diff[1]) / NS_TO_MS
 }
 
-export function getUrl(req: Request) {
+export function getUrl(req: Request): string {
   return `${req.protocol}://${req.get('host')}`
 }

@@ -3,18 +3,18 @@ import UserController, { accountify } from '../controllers/user.controller'
 import passport from 'passport'
 import messages from '../data/messages';
 import { Request, Response, NextFunction, Router } from 'express'
-import { Account } from '../data/routes';
+import { Routes } from '../data/routes';
 const router = Router()
 
 export function ensureAuthenticated(req: Request, res: Response, next: NextFunction) {
   if (req.isAuthenticated()) return next()
   req.flash('error', messages.cant_access_resource)
-  res.redirect(accountify(Account.login))
+  res.redirect(accountify(Routes.login))
 }
 
 export function ensureNotAuthenticated(req: Request, res: Response, next: NextFunction) {
   if (!req.isAuthenticated()) return next()
-  res.redirect(accountify(Account.profile))
+  res.redirect(accountify(Routes.profile))
 }
 
 export function isAdmin(req: Request, res: Response, next: NextFunction) {
