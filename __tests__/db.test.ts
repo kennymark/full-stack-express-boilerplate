@@ -13,20 +13,23 @@ describe('Test database activities', () => {
     // console.log(db.modelNames())
   })
 
-  afterAll(async () => {
+  afterAll(async (done) => {
     await db.connection.close()
     await db.connection.dropCollection('nothing')
+    done()
   });
 
-  test('should connection successfully to the db', async () => {
+  test('should connection successfully to the db', async (done) => {
     const dbState = await db.connection.readyState
     expect(dbState).toBe(2)
+    done()
   }, timeOut)
 
-  test('should disconnect ', async () => {
+  test('should disconnect ', async (done) => {
     await db.connection.close().then(_ => {
       const dbState = db.connection.readyState
       expect(dbState).toBe(0)
+      done()
     })
   }, timeOut)
 
