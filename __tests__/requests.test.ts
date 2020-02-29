@@ -8,9 +8,7 @@ const timeout = 20000
 
 describe('Account routes', () => {
 
-  afterAll(async () => {
-    server.close(() => { });
-  });
+  afterAll(() => server.close());
 
   test('home route return a 2000', async () => {
     const res = await request(app).get('/')
