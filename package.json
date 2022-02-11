@@ -35,7 +35,7 @@
     "dotenv": "8.0.0",
     "email-templates": "^8.0.4",
     "express": "4.17.0",
-    "express-handlebars": "3.1.0",
+    "express-handlebars": "5.3.1",
     "express-session": "1.16.1",
     "express-validator": "5.3.1",
     "helmet": "^3.21.2",
