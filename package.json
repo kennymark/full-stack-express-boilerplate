@@ -39,7 +39,7 @@
     "express-session": "1.16.1",
     "express-validator": "5.3.1",
     "helmet": "^3.21.2",
-    "jsonwebtoken": "8.5.1",
+    "jsonwebtoken": "9.0.0",
     "lodash": "^4.17.15",
     "method-override": "^3.0.0",
     "moment": "^2.24.0",
